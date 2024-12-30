@@ -6,6 +6,7 @@ import constants
 class Command(enum.Enum):
     CLEAR = "clear"
     EXECUTE = "execute"
+    HELP = "help"
     JOIN = "join"
     LEAVE = "leave"
     PAUSE = "pause"

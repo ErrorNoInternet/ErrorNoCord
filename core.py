@@ -9,6 +9,7 @@ import disnake_paginator
 
 import commands
 import constants
+import core
 import utils
 
 
@@ -30,6 +31,16 @@ async def on_message(message):
     C = commands.Command
     try:
         match matched[0]:
+            case C.RELOAD if message.author.id in constants.OWNERS:
+                reloaded_modules = set()
+                for module in filter(
+                    lambda v: inspect.ismodule(v)
+                    and v.__name__ in constants.RELOADABLE_MODULES,
+                    globals().values(),
+                ):
+                    core.rreload(reloaded_modules, module)
+
+                await utils.add_check_reaction(message)
             case C.EXECUTE if message.author.id in constants.OWNERS:
                 code = message.content[len(tokens[0]) + 1 :].strip().strip("`")
                 for replacement in ["python", "py"]:
@@ -91,6 +102,8 @@ async def on_message(message):
                 await commands.voice.pause(message)
             case C.VOLUME:
                 await commands.voice.volume(message)
+            case C.HELP:
+                await commands.bot.help(message)
             case C.UPTIME:
                 await commands.bot.uptime(message)
     except Exception as e:
@@ -101,22 +114,16 @@ async def on_message(message):
 
 
 def rreload(reloaded_modules, module):
-    reloaded_modules.add(module)
+    reloaded_modules.add(module.__name__)
     importlib.reload(module)
     if "__reload_module__" in dir(module):
         module.__reload_module__()
 
     with contextlib.suppress(AttributeError):
-        for module in filter(
-            lambda m: m.__spec__.origin != "frozen",
-            filter(
-                lambda v: inspect.ismodule(v)
-                and (
-                    v.__name__.split(".")[-1]
-                    not in constants.RELOAD_BLACKLISTED_MODULES
-                )
-                and (v not in reloaded_modules),
-                map(lambda attr: getattr(module, attr), dir(module)),
-            ),
+        for submodule in filter(
+            lambda v: inspect.ismodule(v)
+            and (v.__name__.split(".")[-1] in constants.RELOADABLE_MODULES)
+            and v.__name__ not in reloaded_modules,
+            map(lambda attr: getattr(module, attr), dir(module)),
         ):
-            rreload(reloaded_modules, module)
+            rreload(reloaded_modules, submodule)

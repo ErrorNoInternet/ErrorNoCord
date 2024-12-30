@@ -178,10 +178,7 @@ async def volume(message):
 
     if args.volume:
         message.guild.voice_client.source.volume = float(args.volume) / 100.0
-        await utils.reply(
-            message,
-            f"{args.volume}",
-        )
+        await utils.add_check_reaction(message)
     else:
         await utils.reply(
             message,

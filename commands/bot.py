@@ -6,6 +6,15 @@ import utils
 from state import start_time
 
 
+async def help(message):
+    await utils.reply(
+        message,
+        ", ".join(
+            [f"`{command.value}`" for command in commands.Command.__members__.values()]
+        ),
+    )
+
+
 async def uptime(message):
     tokens = commands.tokenize(message.content)
     parser = arguments.ArgumentParser(
