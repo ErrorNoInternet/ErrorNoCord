@@ -7,6 +7,7 @@ class Command(enum.Enum):
     RELOAD = "reload"
     EXECUTE = "execute"
     CLEAR = "clear"
+    PURGE = "purge"
     JOIN = "join"
     LEAVE = "leave"
     QUEUE = "queue"

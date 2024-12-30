@@ -23,14 +23,15 @@ async def on_message(message):
 
     if len(matched) > 1:
         await message.reply(
-            f"ambiguous command, could be {' or '.join(['`' + match.value + '`' for match in matched])}",
+            f"ambiguous command, could be {' or '.join([f'`{match.value}`' for match in matched])}",
             mention_author=False,
         )
         return
 
+    C = commands.Command
     try:
         match matched[0]:
-            case commands.Command.EXECUTE if message.author.id in constants.OWNERS:
+            case C.EXECUTE if message.author.id in constants.OWNERS:
                 code = message.content[len(tokens[0]) + 1 :].strip().strip("`")
                 for replacement in ["python", "py"]:
                     if code.startswith(replacement):
@@ -75,21 +76,21 @@ async def on_message(message):
                     await message.add_reaction("✅")
                 else:
                     await message.channel.send(output)
-            case commands.Command.CLEAR:
+            case C.CLEAR | C.PURGE:
                 await commands.tools.clear(message)
-            case commands.Command.JOIN:
+            case C.JOIN:
                 await commands.voice.join(message)
-            case commands.Command.LEAVE:
+            case C.LEAVE:
                 await commands.voice.leave(message)
-            case commands.Command.QUEUE | commands.Command.PLAY:
+            case C.QUEUE | C.PLAY:
                 await commands.voice.queue_or_play(message)
-            case commands.Command.SKIP:
+            case C.SKIP:
                 await commands.voice.skip(message)
-            case commands.Command.RESUME:
+            case C.RESUME:
                 await commands.voice.resume(message)
-            case commands.Command.PAUSE:
+            case C.PAUSE:
                 await commands.voice.pause(message)
-            case commands.Command.VOLUME:
+            case C.VOLUME:
                 await commands.voice.volume(message)
     except Exception as e:
         await message.reply(
@@ -100,7 +101,10 @@ async def on_message(message):
 
 def __reload_module__():
     for name, module in globals().items():
-        if inspect.ismodule(module) and name not in constants.RELOAD_BLACKLISTED_MODULES:
+        if (
+            inspect.ismodule(module)
+            and name not in constants.RELOAD_BLACKLISTED_MODULES
+        ):
             importlib.reload(module)
             if "__reload_module__" in dir(module) and name not in reloaded_modules:
                 reloaded_modules.add(name)
