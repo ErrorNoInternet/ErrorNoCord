@@ -1,9 +1,10 @@
 import os
+import sys
 
 EMBED_COLOR = 0xFF6600
 OWNERS = [531392146767347712]
 PREFIX = "%"
-RELOAD_BLACKLISTED_MODULES = ["re", "argparse"]
+RELOAD_BLACKLISTED_MODULES = [*sys.builtin_module_names]
 
 YTDL_OPTIONS = {
     "default_search": "auto",

@@ -1,6 +1,4 @@
 import contextlib
-import importlib
-import inspect
 import io
 import textwrap
 import traceback
@@ -10,7 +8,6 @@ import disnake_paginator
 import commands
 import constants
 import utils
-from state import reloaded_modules
 
 
 async def on_message(message):
@@ -99,15 +96,3 @@ async def on_message(message):
             message,
             f"exception occurred while processing command: ```\n{''.join(traceback.format_exception(e)).replace('`', '\\`')}```",
         )
-
-
-def __reload_module__():
-    for name, module in globals().items():
-        if (
-            inspect.ismodule(module)
-            and name not in constants.RELOAD_BLACKLISTED_MODULES
-        ):
-            importlib.reload(module)
-            if "__reload_module__" in dir(module) and name not in reloaded_modules:
-                reloaded_modules.add(name)
-                module.__reload_module__()
