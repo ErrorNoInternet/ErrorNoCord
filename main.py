@@ -36,7 +36,7 @@ async def on_message(message):
         commands.Command.RELOAD
     ]:
         for name, module in globals().items():
-            if inspect.ismodule(module):
+            if inspect.ismodule(module) and name not in constants.RELOAD_BLACKLISTED_MODULES:
                 importlib.reload(module)
                 if "__reload_module__" in dir(module) and name not in reloaded_modules:
                     reloaded_modules.add(name)
@@ -48,4 +48,4 @@ async def on_message(message):
     await events.on_message(message)
 
 
-client.run(constants.secrets["TOKEN"])
+client.run(constants.SECRETS["TOKEN"])

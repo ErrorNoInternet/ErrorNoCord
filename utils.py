@@ -14,7 +14,7 @@ async def invalid_user_handler(interaction):
 
 
 def filter_secrets(text: str) -> str:
-    for secret_name, secret in constants.secrets.items():
+    for secret_name, secret in constants.SECRETS.items():
         if not secret:
             continue
         text = text.replace(secret, f"<{secret_name}>")
