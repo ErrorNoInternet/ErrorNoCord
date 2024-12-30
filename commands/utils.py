@@ -4,17 +4,18 @@ import constants
 
 
 class Command(enum.Enum):
-    RELOAD = "reload"
-    EXECUTE = "execute"
     CLEAR = "clear"
-    PURGE = "purge"
+    EXECUTE = "execute"
     JOIN = "join"
     LEAVE = "leave"
-    QUEUE = "queue"
-    PLAY = "play"
-    SKIP = "skip"
-    RESUME = "resume"
     PAUSE = "pause"
+    PLAY = "play"
+    PURGE = "purge"
+    QUEUE = "queue"
+    RELOAD = "reload"
+    RESUME = "resume"
+    SKIP = "skip"
+    UPTIME = "uptime"
     VOLUME = "volume"
 
 

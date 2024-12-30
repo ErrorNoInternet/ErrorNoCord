@@ -92,6 +92,8 @@ async def on_message(message):
                 await commands.voice.pause(message)
             case C.VOLUME:
                 await commands.voice.volume(message)
+            case C.UPTIME:
+                await commands.bot.uptime(message)
     except Exception as e:
         await message.reply(
             f"exception occurred while processing command: ```\n{''.join(traceback.format_exception(e)).replace('`', '\\`')}```",

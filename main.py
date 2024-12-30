@@ -2,13 +2,12 @@ import importlib
 import inspect
 import time
 
-import commands
 import constants
 import core
 import events
-from state import client, reloaded_modules
+from state import client, reloaded_modules, start_time
 
-start_time = time.time()
+import commands
 
 
 @client.event
@@ -36,7 +35,10 @@ async def on_message(message):
         commands.Command.RELOAD
     ]:
         for name, module in globals().items():
-            if inspect.ismodule(module) and name not in constants.RELOAD_BLACKLISTED_MODULES:
+            if (
+                inspect.ismodule(module)
+                and name not in constants.RELOAD_BLACKLISTED_MODULES
+            ):
                 importlib.reload(module)
                 if "__reload_module__" in dir(module) and name not in reloaded_modules:
                     reloaded_modules.add(name)

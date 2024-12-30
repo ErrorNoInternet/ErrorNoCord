@@ -1,4 +1,8 @@
+import time
+
 import disnake
+
+start_time = time.time()
 
 playback_queue = {}
 reloaded_modules = set()
