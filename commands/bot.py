@@ -3,11 +3,10 @@ import inspect
 import time
 
 import arguments
-import constants
-from state import reloaded_modules, start_time
-
 import commands
+import constants
 import utils
+from state import reloaded_modules, start_time
 
 
 async def uptime(message):

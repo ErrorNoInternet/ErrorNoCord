@@ -2,12 +2,11 @@ import importlib
 import inspect
 import time
 
+import commands
 import constants
 import core
 import events
 from state import client, reloaded_modules, start_time
-
-import commands
 
 
 @client.event
