@@ -2,7 +2,7 @@ import arguments
 import commands
 import utils
 import ytdlp
-from state import client, playback_queue
+from state import client, player_queue
 
 
 async def queue_or_play(message):
@@ -10,8 +10,8 @@ async def queue_or_play(message):
     if not command_allowed(message):
         return
 
-    if message.guild.id not in playback_queue:
-        playback_queue[message.guild.id] = []
+    if message.guild.id not in player_queue:
+        player_queue[message.guild.id] = []
 
     tokens = commands.tokenize(message.content)
     parser = arguments.ArgumentParser(
@@ -28,7 +28,7 @@ async def queue_or_play(message):
         return
 
     if args.clear:
-        playback_queue[message.guild.id] = []
+        player_queue[message.guild.id] = []
         await message.add_reaction("✅")
         return
     elif query := args.query:
@@ -44,7 +44,7 @@ async def queue_or_play(message):
             )
             return
 
-        playback_queue[message.guild.id].append(
+        player_queue[message.guild.id].append(
             {"player": player, "queuer": message.author.id}
         )
 
@@ -71,26 +71,26 @@ async def queue_or_play(message):
                     lambda: f"**0.** {'**paused:** ' if message.guild.voice_client.is_paused() else ''}`{message.guild.voice_client.source.title}`"
                 )
                 if (
-                    not playback_queue[message.guild.id]
+                    not player_queue[message.guild.id]
                     and not message.guild.voice_client.source
                 ):
                     await utils.reply(
                         message,
                         "nothing is playing or queued!",
                     )
-                elif not playback_queue[message.guild.id]:
+                elif not player_queue[message.guild.id]:
                     await utils.reply(message, generate_currently_playing())
                 elif not message.guild.voice_client.source:
                     await utils.reply(
                         message,
-                        generate_queue_list(playback_queue[message.guild.id]),
+                        generate_queue_list(player_queue[message.guild.id]),
                     )
                 else:
                     await utils.reply(
                         message,
                         generate_currently_playing()
                         + "\n"
-                        + generate_queue_list(playback_queue[message.guild.id]),
+                        + generate_queue_list(player_queue[message.guild.id]),
                     )
         else:
             await utils.reply(
@@ -103,7 +103,7 @@ async def skip(message):
     if not command_allowed(message):
         return
 
-    if not playback_queue[message.guild.id]:
+    if not player_queue[message.guild.id]:
         message.guild.voice_client.stop()
         await utils.reply(
             message,
@@ -190,8 +190,8 @@ async def volume(message):
 
 
 async def play_next(message):
-    while playback_queue[message.guild.id]:
-        queued = playback_queue[message.guild.id].pop()
+    while player_queue[message.guild.id]:
+        queued = player_queue[message.guild.id].pop()
         await ensure_joined(message)
         message.guild.voice_client.stop()
         message.guild.voice_client.play(

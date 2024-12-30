@@ -4,7 +4,7 @@ import disnake
 
 start_time = time.time()
 
-playback_queue = {}
+player_queue = {}
 
 intents = disnake.Intents.default()
 intents.message_content = True
