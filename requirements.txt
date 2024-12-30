@@ -1,0 +1,5 @@
+audioop-lts
+disnake
+disnake_paginator
+PyNaCl
+yt-dlp
