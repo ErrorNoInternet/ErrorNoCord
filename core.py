@@ -1,3 +1,4 @@
+import asyncio
 import contextlib
 import importlib
 import inspect
@@ -11,6 +12,7 @@ import commands
 import constants
 import core
 import utils
+from state import command_locks
 
 
 async def on_message(message):
@@ -93,7 +95,10 @@ async def on_message(message):
             case C.LEAVE:
                 await commands.voice.leave(message)
             case C.QUEUE | C.PLAY:
-                await commands.voice.queue_or_play(message)
+                if message.guild.id not in command_locks:
+                    command_locks[message.guild.id] = asyncio.Lock()
+                async with command_locks[message.guild.id]:
+                    await commands.voice.queue_or_play(message)
             case C.SKIP:
                 await commands.voice.skip(message)
             case C.RESUME:

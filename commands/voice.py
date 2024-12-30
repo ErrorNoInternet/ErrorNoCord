@@ -63,7 +63,7 @@ async def queue_or_play(message):
             not message.guild.voice_client.is_playing()
             and not message.guild.voice_client.is_paused()
         ):
-            await message.channel.send(f"**now playing:** `{player.title}`")
+            await utils.reply(message, f"**now playing:** `{player.title}`")
             play_next(message)
         else:
             await utils.reply(
