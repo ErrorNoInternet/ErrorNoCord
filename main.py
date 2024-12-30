@@ -1,5 +1,3 @@
-import contextlib
-import importlib
 import inspect
 import time
 
@@ -18,14 +16,14 @@ async def on_ready():
 
 @client.event
 async def on_message_edit(before, after):
-    await core.trigger_message_handlers("on_message_edit", before, after)
+    await events.trigger_dynamic_handlers("on_message_edit", before, after)
 
     await on_message(after)
 
 
 @client.event
 async def on_message(message):
-    await core.trigger_message_handlers("on_message", message)
+    await events.trigger_dynamic_handlers("on_message", message)
 
     global reloaded_modules
 
@@ -41,34 +39,12 @@ async def on_message(message):
             and v.__name__ not in constants.RELOAD_BLACKLISTED_MODULES,
             globals().values(),
         ):
-            rreload(reloaded_modules, module)
+            core.rreload(reloaded_modules, module)
 
         await utils.add_check_reaction(message)
         return
 
-    await events.on_message(message)
-
-
-def rreload(reloaded_modules, module):
-    reloaded_modules.add(module)
-    importlib.reload(module)
-    if "__reload_module__" in dir(module):
-        module.__reload_module__()
-
-    with contextlib.suppress(AttributeError):
-        for module in filter(
-            lambda m: m.__spec__.origin != "frozen",
-            filter(
-                lambda v: inspect.ismodule(v)
-                and (
-                    v.__name__.split(".")[-1]
-                    not in constants.RELOAD_BLACKLISTED_MODULES
-                )
-                and (v not in reloaded_modules),
-                map(lambda attr: getattr(module, attr), dir(module)),
-            ),
-        ):
-            rreload(reloaded_modules, module)
+    await core.on_message(message)
 
 
 client.run(constants.SECRETS["TOKEN"])
