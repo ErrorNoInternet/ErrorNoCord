@@ -1,11 +1,10 @@
 import functools
 
 import arguments
-import youtubedl
-from state import client, player_current, player_queue
-
 import commands
 import utils
+import youtubedl
+from state import client, player_current, player_queue
 
 
 async def queue_or_play(message):
@@ -113,7 +112,7 @@ async def queue_or_play(message):
             not message.guild.voice_client.is_playing()
             and not message.guild.voice_client.is_paused()
         ):
-            await utils.reply(message, f"**now playing:** `{player.title}`")
+            await utils.reply(message, f"**0.** `{player.title}`")
             play_next(message)
         else:
             await utils.reply(
