@@ -24,4 +24,24 @@ async def uptime(message):
     if args.since:
         await utils.reply(message, f"{round(start_time)}")
     else:
-        await utils.reply(message, f"up {round(time.time() - start_time)} seconds")
+        format_plural = lambda noun, count: noun if count == 1 else noun + "s"
+
+        segments = []
+        duration = time.time() - start_time
+        if duration >= 86400:
+            d = int(duration // 86400)
+            segments.append(f"{d} {format_plural('day', d)}")
+            duration %= 86400
+        if duration >= 3600:
+            h = int(duration // 3600)
+            segments.append(f"{h} {format_plural('hour', h)}")
+            duration %= 3600
+        if duration >= 60:
+            m = int(duration // 60)
+            segments.append(f"{m} {format_plural('minute', m)}")
+            duration %= 60
+        if duration > 0:
+            s = int(duration)
+            segments.append(f"{s} {format_plural('second', s)}")
+
+        await utils.reply(message, f"up {', '.join(segments)}")
