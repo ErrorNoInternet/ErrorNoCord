@@ -173,6 +173,13 @@ async def volume(message):
     if not (args := await parser.parse_args(message, tokens)):
         return
 
+    if not message.guild.voice_client.source:
+        await utils.reply(
+            message,
+            f"there is no player currently active!",
+        )
+        return
+
     if args.volume:
         message.guild.voice_client.source.volume = float(args.volume) / 100.0
         await utils.reply(
@@ -180,16 +187,10 @@ async def volume(message):
             f"volume set to **{args.volume}%**",
         )
     else:
-        if message.guild.voice_client.source:
-            await utils.reply(
-                message,
-                f"current volume is **{int(message.guild.voice_client.source.volume * 100)}%**",
-            )
-        else:
-            await utils.reply(
-                message,
-                f"there is no player currently active!",
-            )
+        await utils.reply(
+            message,
+            f"current volume is **{int(message.guild.voice_client.source.volume * 100)}%**",
+        )
 
 
 async def play_next(message):
