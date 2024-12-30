@@ -17,8 +17,11 @@ class ArgumentParser:
             self.parser.print_help()
         return help_buffer.getvalue().replace(" and exit", "")
 
+    def add_mutually_exclusive_group(self, *args, **kwargs):
+        return self.parser.add_mutually_exclusive_group(*args, **kwargs)
+
     def add_argument(self, *args, **kwargs):
-        self.parser.add_argument(*args, **kwargs)
+        return self.parser.add_argument(*args, **kwargs)
 
     async def parse_args(self, message, tokens) -> argparse.Namespace | None:
         try:

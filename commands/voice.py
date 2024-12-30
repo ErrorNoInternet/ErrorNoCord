@@ -1,10 +1,11 @@
 import functools
 
 import arguments
-import commands
-import utils
 import youtubedl
 from state import client, player_current, player_queue
+
+import commands
+import utils
 
 
 async def queue_or_play(message):
@@ -20,19 +21,43 @@ async def queue_or_play(message):
         tokens[0], "queue a song, list the queue, or resume playback"
     )
     parser.add_argument("query", nargs="?", help="yt-dlp URL or query to get song")
-    parser.add_argument(
-        "-c",
-        "--clear",
-        action="store_true",
-        help="clear all queued songs",
-    )
-    parser.add_argument(
+    group = parser.add_mutually_exclusive_group()
+    group.add_argument(
         "-v",
         "--volume",
         default=50,
         type=functools.partial(arguments.range_type, min=0, max=150),
         metavar="[0-150]",
         help="the volume level (0 - 150)",
+    )
+    group.add_argument(
+        "-i",
+        "--remove-index",
+        type=int,
+        help="remove a queued song by index",
+    )
+    group.add_argument(
+        "-m",
+        "--remove-multiple",
+        action="store_true",
+        help="continue removing queued songs after finding a match",
+    )
+    group.add_argument(
+        "-c",
+        "--clear",
+        action="store_true",
+        help="remove all queued songs",
+    )
+    parser.add_argument(
+        "-t",
+        "--remove-title",
+        help="remove queued songs by title",
+    )
+    parser.add_argument(
+        "-q",
+        "--remove-queuer",
+        type=int,
+        help="remove queued songs by queuer",
     )
     if not (args := await parser.parse_args(message, tokens)):
         return
@@ -41,6 +66,31 @@ async def queue_or_play(message):
         player_queue[message.guild.id] = []
         await utils.add_check_reaction(message)
         return
+    elif i := args.remove_index:
+        try:
+            queued = player_queue[message.guild.id][i - 1]
+            del player_queue[message.guild.id][i - 1]
+            await utils.reply(message, f"**x** `{queued['player'].title}`")
+        except:
+            await utils.reply(message, "invalid index!")
+    elif args.remove_title or args.remove_queuer:
+        targets = []
+        for queued in player_queue[message.guild.id]:
+            if t := args.remove_title:
+                if t in queued["player"].title:
+                    targets.append(queued)
+            if q := args.remove_queuer:
+                if q == queued["queuer"]:
+                    targets.append(queued)
+        if not args.remove_multiple:
+            targets = targets[:1]
+        for target in targets:
+            if target in player_queue[message.guild.id]:
+                player_queue[message.guild.id].remove(target)
+        await utils.reply(
+            message,
+            f"removed **{len(targets)}** queued {'song' if len(targets) == 1 else 'songs'}",
+        )
     elif query := args.query:
         try:
             async with message.channel.typing():
@@ -80,7 +130,7 @@ async def queue_or_play(message):
                 )
             else:
                 generate_currently_playing = (
-                    lambda: f"**0.** {'**paused:** ' if message.guild.voice_client.is_paused() else ''}`{message.guild.voice_client.source.title}` (<@{player_current[message.guild.id]['queuer']}>)"
+                    lambda: f"**0.** {'(paused) ' if message.guild.voice_client.is_paused() else ''}`{message.guild.voice_client.source.title}` (<@{player_current[message.guild.id]['queuer']}>)"
                 )
                 if (
                     not player_queue[message.guild.id]
@@ -201,7 +251,8 @@ async def volume(message):
 def play_next(message, once=False):
     message.guild.voice_client.stop()
     if player_queue[message.guild.id]:
-        queued = player_queue[message.guild.id].pop()
+        queued = player_queue[message.guild.id][0]
+        del player_queue[message.guild.id][0]
         player_current[message.guild.id] = queued
         message.guild.voice_client.play(
             queued["player"], after=lambda _: play_next(message) if not once else None
