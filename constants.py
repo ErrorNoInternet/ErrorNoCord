@@ -15,7 +15,7 @@ YTDL_OPTIONS = {
     "outtmpl": "%(extractor)s-%(id)s-%(title)s.%(ext)s",
     "quiet": True,
     "restrictfilenames": True,
-    "socket_timeout": 10,
+    "socket_timeout": 15,
     "source_address": "0.0.0.0",
 }
 

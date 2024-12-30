@@ -37,7 +37,8 @@ class YTDLSource(disnake.PCMVolumeTransformer):
 
         return cls(
             disnake.FFmpegPCMAudio(
-                data["url"] if stream else ytdl.prepare_filename(data), options="-vn"
+                data["url"] if stream else ytdl.prepare_filename(data),
+                options="-vn -reconnect 1",
             ),
             data=data,
         )
