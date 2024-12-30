@@ -57,9 +57,9 @@ async def clear(message):
         )
     )
     try:
-        await message.reply(
+        await utils.reply(
+            message,
             f"purged **{message_count} {'message' if message_count == 1 else 'messages'}**",
-            mention_author=False,
         )
     except:
         pass

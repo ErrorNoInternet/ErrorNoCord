@@ -2,6 +2,8 @@ import argparse
 import contextlib
 import io
 
+import utils
+
 
 class ArgumentParser:
     def __init__(self, command, description):
@@ -24,6 +26,6 @@ class ArgumentParser:
                 args = self.parser.parse_args(tokens[1:])
             return args
         except SystemExit:
-            await message.reply(f"```\n{self.print_help()}```", mention_author=False)
+            await utils.reply(message, f"```\n{self.print_help()}```")
         except Exception as e:
-            await message.reply(f"`{e}`", mention_author=False)
+            await utils.reply(message, f"`{e}`")

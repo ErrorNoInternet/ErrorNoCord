@@ -22,9 +22,9 @@ async def on_message(message):
         return
 
     if len(matched) > 1:
-        await message.reply(
+        await utils.reply(
+            message,
             f"ambiguous command, could be {' or '.join([f'`{match.value}`' for match in matched])}",
-            mention_author=False,
         )
         return
 
@@ -95,9 +95,9 @@ async def on_message(message):
             case C.UPTIME:
                 await commands.bot.uptime(message)
     except Exception as e:
-        await message.reply(
+        await utils.reply(
+            message,
             f"exception occurred while processing command: ```\n{''.join(traceback.format_exception(e)).replace('`', '\\`')}```",
-            mention_author=False,
         )
 
 
