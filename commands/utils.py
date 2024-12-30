@@ -39,30 +39,30 @@ def match(command: str) -> None | list[Command]:
 
 def tokenize(string: str) -> list[str]:
     tokens = []
-    current_token = []
+    token = ""
     in_quotes = False
-    escape_next = False
+    quote_char = None
+    escape = False
 
     for char in string[len(constants.PREFIX) :]:
-        if escape_next:
-            current_token.append(char)
-            escape_next = False
+        if escape:
+            token += char
+            escape = False
         elif char == "\\":
-            escape_next = True
-        elif char in ['"', "'"]:
-            if in_quotes:
-                if current_token and current_token[0] == char:
-                    in_quotes = False
-            else:
-                in_quotes = True
+            escape = True
+        elif char in ('"', "'") and not in_quotes:
+            in_quotes = True
+            quote_char = char
+        elif char == quote_char and in_quotes:
+            in_quotes = False
+            quote_char = None
         elif char.isspace() and not in_quotes:
-            if current_token:
-                tokens.append("".join(current_token))
-                current_token = []
+            if token:
+                tokens.append(token)
+                token = ""
         else:
-            current_token.append(char)
+            token += char
 
-    if current_token:
-        tokens.append("".join(current_token))
-
+    if token:
+        tokens.append(token)
     return tokens
