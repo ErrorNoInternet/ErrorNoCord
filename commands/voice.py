@@ -1,8 +1,9 @@
 import arguments
+import youtubedl
+from state import client, player_queue
+
 import commands
 import utils
-import ytdlp
-from state import client, player_queue
 
 
 async def queue_or_play(message):
@@ -34,7 +35,7 @@ async def queue_or_play(message):
     elif query := args.query:
         try:
             async with message.channel.typing():
-                player = await ytdlp.YTDLSource.from_url(
+                player = await youtubedl.YTDLSource.from_url(
                     query, loop=client.loop, stream=True
                 )
         except Exception as e:
