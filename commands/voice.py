@@ -29,7 +29,7 @@ async def queue_or_play(message):
 
     if args.clear:
         player_queue[message.guild.id] = []
-        await message.add_reaction("✅")
+        await utils.add_check_reaction(message)
         return
     elif query := args.query:
         try:

@@ -70,7 +70,7 @@ async def on_message(message):
                         disnake_paginator.wrappers.MessageInteractionWrapper(message)
                     )
                 elif len(output.strip()) == 0:
-                    await message.add_reaction("✅")
+                    await utils.add_check_reaction(message)
                 else:
                     await message.channel.send(output)
             case C.CLEAR | C.PURGE:

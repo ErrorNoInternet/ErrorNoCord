@@ -3,6 +3,10 @@ import disnake
 import constants
 
 
+async def add_check_reaction(message):
+    await message.add_reaction("✅")
+
+
 async def reply(message, *args):
     await message.reply(*args, allowed_mentions=disnake.AllowedMentions.none())
 

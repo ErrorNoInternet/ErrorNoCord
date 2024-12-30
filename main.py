@@ -7,6 +7,7 @@ import commands
 import constants
 import core
 import events
+import utils
 from state import client, start_time
 
 
@@ -42,7 +43,7 @@ async def on_message(message):
         ):
             rreload(reloaded_modules, module)
 
-        await message.add_reaction("✅")
+        await utils.add_check_reaction(message)
         return
 
     await events.on_message(message)
