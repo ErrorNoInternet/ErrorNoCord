@@ -29,3 +29,11 @@ class ArgumentParser:
             await utils.reply(message, f"```\n{self.print_help()}```")
         except Exception as e:
             await utils.reply(message, f"`{e}`")
+
+
+def range_type(string, min=0, max=100):
+    value = int(string)
+    if min <= value <= max:
+        return value
+    else:
+        raise argparse.ArgumentTypeError("value not in range %s-%s" % (min, max))

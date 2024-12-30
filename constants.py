@@ -6,12 +6,16 @@ PREFIX = "%"
 RELOADABLE_MODULES = [
     "arguments",
     "commands",
+    "commands.bot",
+    "commands.tools",
+    "commands.utils",
+    "commands.voice",
     "constants",
     "core",
     "events",
     "utils",
     "voice",
-    "ytdlp",
+    "youtubedl",
 ]
 
 YTDL_OPTIONS = {

@@ -86,7 +86,7 @@ async def on_message(message):
                     await utils.add_check_reaction(message)
                 else:
                     await message.channel.send(output)
-            case C.CLEAR | C.PURGE:
+            case C.CLEAR | C.PURGE if message.author.id in constants.OWNERS:
                 await commands.tools.clear(message)
             case C.JOIN:
                 await commands.voice.join(message)
@@ -122,8 +122,10 @@ def rreload(reloaded_modules, module):
     with contextlib.suppress(AttributeError):
         for submodule in filter(
             lambda v: inspect.ismodule(v)
-            and (v.__name__.split(".")[-1] in constants.RELOADABLE_MODULES)
+            and v.__name__ in constants.RELOADABLE_MODULES
             and v.__name__ not in reloaded_modules,
             map(lambda attr: getattr(module, attr), dir(module)),
         ):
             rreload(reloaded_modules, submodule)
+
+    importlib.reload(module)

@@ -1,9 +1,10 @@
-import arguments
-import youtubedl
-from state import client, player_queue
+import functools
 
+import arguments
 import commands
 import utils
+import youtubedl
+from state import client, player_current, player_queue
 
 
 async def queue_or_play(message):
@@ -25,6 +26,14 @@ async def queue_or_play(message):
         action="store_true",
         help="clear all queued songs",
     )
+    parser.add_argument(
+        "-v",
+        "--volume",
+        default=50,
+        type=functools.partial(arguments.range_type, min=0, max=150),
+        metavar="[0-150]",
+        help="the volume level (0 - 150)",
+    )
     if not (args := await parser.parse_args(message, tokens)):
         return
 
@@ -38,6 +47,7 @@ async def queue_or_play(message):
                 player = await youtubedl.YTDLSource.from_url(
                     query, loop=client.loop, stream=True
                 )
+                player.volume = float(args.volume) / 100.0
         except Exception as e:
             await utils.reply(
                 message,
@@ -45,15 +55,16 @@ async def queue_or_play(message):
             )
             return
 
-        player_queue[message.guild.id].append(
-            {"player": player, "queuer": message.author.id}
+        player_queue[message.guild.id].insert(
+            0, {"player": player, "queuer": message.author.id}
         )
 
         if (
             not message.guild.voice_client.is_playing()
             and not message.guild.voice_client.is_paused()
         ):
-            await play_next(message)
+            await message.channel.send(f"**now playing:** `{player.title}`")
+            play_next(message)
         else:
             await utils.reply(
                 message,
@@ -69,7 +80,7 @@ async def queue_or_play(message):
                 )
             else:
                 generate_currently_playing = (
-                    lambda: f"**0.** {'**paused:** ' if message.guild.voice_client.is_paused() else ''}`{message.guild.voice_client.source.title}`"
+                    lambda: f"**0.** {'**paused:** ' if message.guild.voice_client.is_paused() else ''}`{message.guild.voice_client.source.title}` (<@{player_current[message.guild.id]['queuer']}>)"
                 )
                 if (
                     not player_queue[message.guild.id]
@@ -111,7 +122,8 @@ async def skip(message):
             "the queue is empty now!",
         )
     else:
-        await play_next(message)
+        message.guild.voice_client.stop()
+        await utils.add_check_reaction(message)
 
 
 async def join(message):
@@ -162,8 +174,7 @@ async def volume(message):
     parser.add_argument(
         "volume",
         nargs="?",
-        type=int,
-        choices=range(0, 151),
+        type=functools.partial(arguments.range_type, min=0, max=150),
         metavar="[0-150]",
         help="the volume level (0 - 150)",
     )
@@ -177,25 +188,24 @@ async def volume(message):
         )
         return
 
-    if args.volume:
-        message.guild.voice_client.source.volume = float(args.volume) / 100.0
-        await utils.add_check_reaction(message)
-    else:
+    if args.volume is None:
         await utils.reply(
             message,
             f"{int(message.guild.voice_client.source.volume * 100)}",
         )
+    else:
+        message.guild.voice_client.source.volume = float(args.volume) / 100.0
+        await utils.add_check_reaction(message)
 
 
-async def play_next(message):
-    while player_queue[message.guild.id]:
+def play_next(message, once=False):
+    message.guild.voice_client.stop()
+    if player_queue[message.guild.id]:
         queued = player_queue[message.guild.id].pop()
-        await ensure_joined(message)
-        message.guild.voice_client.stop()
+        player_current[message.guild.id] = queued
         message.guild.voice_client.play(
-            queued["player"], after=lambda e: print(f"player error: {e}") if e else None
+            queued["player"], after=lambda _: play_next(message) if not once else None
         )
-        await message.channel.send(f"**now playing:** {queued['player'].title}")
 
 
 async def ensure_joined(message):

@@ -37,20 +37,24 @@ async def uptime(message):
 
         segments = []
         duration = time.time() - start_time
-        if duration >= 86400:
-            d = int(duration // 86400)
-            segments.append(f"{d} {format_plural('day', d)}")
-            duration %= 86400
-        if duration >= 3600:
-            h = int(duration // 3600)
-            segments.append(f"{h} {format_plural('hour', h)}")
-            duration %= 3600
-        if duration >= 60:
-            m = int(duration // 60)
-            segments.append(f"{m} {format_plural('minute', m)}")
-            duration %= 60
-        if duration > 0:
-            s = int(duration)
-            segments.append(f"{s} {format_plural('second', s)}")
+
+        days, duration = divmod(duration, 86400)
+        if days >= 1:
+            days = int(days)
+            segments.append(f"{days} {format_plural('day', days)}")
+
+        hours, duration = divmod(duration, 3600)
+        if hours >= 1:
+            hours = int(hours)
+            segments.append(f"{hours} {format_plural('hour', hours)}")
+
+        minutes, duration = divmod(duration, 60)
+        if minutes >= 1:
+            minutes = int(minutes)
+            segments.append(f"{minutes} {format_plural('minute', minutes)}")
+
+        seconds = int(duration)
+        if seconds > 0:
+            segments.append(f"{seconds} {format_plural('second', seconds)}")
 
         await utils.reply(message, f"up {', '.join(segments)}")
