@@ -184,12 +184,12 @@ async def volume(message):
         message.guild.voice_client.source.volume = float(args.volume) / 100.0
         await utils.reply(
             message,
-            f"volume set to **{args.volume}%**",
+            f"{args.volume}",
         )
     else:
         await utils.reply(
             message,
-            f"current volume is **{int(message.guild.voice_client.source.volume * 100)}%**",
+            f"{int(message.guild.voice_client.source.volume * 100)}",
         )
 
 
