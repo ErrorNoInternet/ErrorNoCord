@@ -126,9 +126,6 @@ def rreload(reloaded_modules, module):
     reloaded_modules.add(module.__name__)
     importlib.reload(module)
 
-    if "__reload_module__" in dir(module):
-        module.__reload_module__()
-
     for submodule in filter(
         lambda v: inspect.ismodule(v)
         and v.__name__ in constants.RELOADABLE_MODULES
@@ -138,3 +135,6 @@ def rreload(reloaded_modules, module):
         rreload(reloaded_modules, submodule)
 
     importlib.reload(module)
+
+    if "__reload_module__" in dir(module):
+        module.__reload_module__()
