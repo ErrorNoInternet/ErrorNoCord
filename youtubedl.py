@@ -66,7 +66,7 @@ class QueuedSong:
 
     def format(self, with_queuer=False, hide_preview=False) -> str:
         return (
-            f"[`{self.player.title}`]({'<' if hide_preview else ''}{self.player.original_url}{'>' if hide_preview else ''}) [{self.format_duration(self.player.duration)}]"
+            f"[`{self.player.title}`]({'<' if hide_preview else ''}{self.player.original_url}{'>' if hide_preview else ''}) [{self.format_duration(self.player.duration) if self.player.duration else 'live'}]"
             + (f" (<@{self.queuer}>)" if with_queuer else "")
         )
 
