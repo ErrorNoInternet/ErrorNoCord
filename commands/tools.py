@@ -55,8 +55,20 @@ async def clear(message):
         action="store_true",
         help="delete messages with reactions",
     )
+    parser.add_argument(
+        "-d",
+        "--delete-command",
+        action="store_true",
+        help="delete the command message as well",
+    )
     if not (args := await parser.parse_args(message, tokens)):
         return
+
+    if args.delete_command:
+        try:
+            await message.delete()
+        except:
+            pass
 
     regex = None
     if r := args.regex:
@@ -83,10 +95,11 @@ async def clear(message):
         )
     )
 
-    try:
-        await utils.reply(
-            message,
-            f"purged **{messages}/{args.count} {'message' if args.count == 1 else 'messages'}**",
-        )
-    except:
-        pass
+    if not args.delete_command:
+        try:
+            await utils.reply(
+                message,
+                f"purged **{messages}/{args.count} {'message' if args.count == 1 else 'messages'}**",
+            )
+        except:
+            pass
