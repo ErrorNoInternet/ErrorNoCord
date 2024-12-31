@@ -1,10 +1,10 @@
 import asyncio
 from typing import Any, Optional
 
+import constants
 import disnake
 import yt_dlp
 
-import constants
 import utils
 
 ytdl = yt_dlp.YoutubeDL(constants.YTDL_OPTIONS)
@@ -71,16 +71,12 @@ class QueuedSong:
         )
 
     def format_duration(self, duration: int) -> str:
-        segments = []
         hours, duration = divmod(duration, 3600)
-        if hours > 0:
-            segments.append(hours)
         minutes, duration = divmod(duration, 60)
-        if minutes > 0:
-            segments.append(minutes)
-        if duration > 0:
-            segments.append(duration)
-        return f"{':'.join(str(s) for s in segments)}"
+        segments = [hours, minutes, duration]
+        if len(segments) == 3 and segments[0] == 0:
+            del segments[0]
+        return f"{':'.join(f'{s:0>2}' for s in segments)}"
 
 
 def __reload_module__():
