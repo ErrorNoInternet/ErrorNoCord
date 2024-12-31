@@ -45,6 +45,12 @@ async def queue_or_play(message):
         help="remove all queued songs",
     )
     parser.add_argument(
+        "-n",
+        "--now",
+        action="store_true",
+        help="play the specified song immediately",
+    )
+    parser.add_argument(
         "-t",
         "--remove-title",
         help="remove queued songs by title",
@@ -103,7 +109,11 @@ async def queue_or_play(message):
             return
 
         queued = youtubedl.QueuedSong(player, message.author.id)
-        players[message.guild.id].queue_add(queued)
+
+        if args.now:
+            players[message.guild.id].queue_add_front(queued)
+        else:
+            players[message.guild.id].queue_add(queued)
 
         if (
             not message.guild.voice_client.is_playing()
@@ -111,6 +121,9 @@ async def queue_or_play(message):
         ):
             await utils.reply(message, f"**0.** {queued.format()}")
             play_next(message)
+        elif args.now:
+            message.guild.voice_client.stop()
+            await utils.reply(message, f"**0.** {queued.format()}")
         else:
             await utils.reply(
                 message,

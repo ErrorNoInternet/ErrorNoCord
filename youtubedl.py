@@ -1,10 +1,10 @@
 import asyncio
 from typing import Any, Optional
 
-import constants
 import disnake
 import yt_dlp
 
+import constants
 import utils
 
 ytdl = yt_dlp.YoutubeDL(constants.YTDL_OPTIONS)
@@ -57,6 +57,9 @@ class QueuedPlayer:
 
     def queue_add(self, item):
         self.queue.append(item)
+
+    def queue_add_front(self, item):
+        self.queue.insert(0, item)
 
 
 class QueuedSong:
