@@ -5,6 +5,7 @@ import disnake
 import yt_dlp
 
 import constants
+import utils
 
 ytdl = yt_dlp.YoutubeDL(constants.YTDL_OPTIONS)
 
@@ -14,9 +15,9 @@ class YTDLSource(disnake.PCMVolumeTransformer):
         self, source: disnake.AudioSource, *, data: dict[str, Any], volume: float = 0.5
     ):
         super().__init__(source, volume)
-        print(data)
         self.title = data.get("title")
         self.original_url = data.get("original_url")
+        self.duration = data.get("duration")
 
     @classmethod
     async def from_url(
@@ -63,11 +64,23 @@ class QueuedSong:
         self.player = player
         self.queuer = queuer
 
-    def format(self, with_queuer=False, hide_preview=False):
+    def format(self, with_queuer=False, hide_preview=False) -> str:
         return (
-            f"[`{self.player.title}`]({'<' if hide_preview else ''}{self.player.original_url}{'>' if hide_preview else ''})"
+            f"[`{self.player.title}`]({'<' if hide_preview else ''}{self.player.original_url}{'>' if hide_preview else ''}) [{self.format_duration(self.player.duration)}]"
             + (f" (<@{self.queuer}>)" if with_queuer else "")
         )
+
+    def format_duration(self, duration: int) -> str:
+        segments = []
+        hours, duration = divmod(duration, 3600)
+        if hours > 0:
+            segments.append(hours)
+        minutes, duration = divmod(duration, 60)
+        if minutes > 0:
+            segments.append(minutes)
+        if duration > 0:
+            segments.append(duration)
+        return f"{':'.join(str(s) for s in segments)}"
 
 
 def __reload_module__():
