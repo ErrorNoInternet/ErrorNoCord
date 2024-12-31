@@ -38,6 +38,12 @@ async def clear(message):
         action="store_true",
         help="delete oldest messages first",
     )
+    parser.add_argument(
+        "-R",
+        "--reactions",
+        action="store_true",
+        help="delete messages with reactions",
+    )
     if not (args := await parser.parse_args(message, tokens)):
         return
 
@@ -47,17 +53,20 @@ async def clear(message):
             c.append(re.match(r, m.content))
         if i := args.author_id:
             c.append(m.author.id in i)
+        if args.reactions:
+            c.append(len(m.reactions) > 0)
         return all(c)
 
-    message_count = len(
+    messages = len(
         await message.channel.purge(
             limit=args.count, check=check, oldest_first=args.oldest_first
         )
     )
+
     try:
         await utils.reply(
             message,
-            f"purged **{message_count} {'message' if message_count == 1 else 'messages'}**",
+            f"purged **{messages}/{args.count} {'message' if args.count == 1 else 'messages'}**",
         )
     except:
         pass
