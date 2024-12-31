@@ -8,7 +8,12 @@ dynamic_handlers = {}
 async def trigger_dynamic_handlers(event_type: str, *data):
     if event_type in dynamic_handlers:
         for dynamic_handler in dynamic_handlers[event_type]:
-            await dynamic_handler(*data)
+            try:
+                await dynamic_handler(*data)
+            except Exception as e:
+                print(
+                    f"error in dynamic event handler {dynamic_handler} for {event_type}: {e}"
+                )
 
 
 @client.event
