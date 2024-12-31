@@ -1,6 +1,7 @@
 import re
 
 import arguments
+
 import commands
 import utils
 
@@ -31,6 +32,12 @@ async def clear(message):
     )
     parser.add_argument(
         "-i",
+        "--case-insensitive",
+        action="store_true",
+        help="ignore case sensitivity when deleting messages",
+    )
+    parser.add_argument(
+        "-a",
         "--author-id",
         type=int,
         action="append",
@@ -51,12 +58,19 @@ async def clear(message):
     if not (args := await parser.parse_args(message, tokens)):
         return
 
+    regex = None
+    if r := args.regex:
+        regex = re.compile(r, re.IGNORECASE if args.case_insensitive else 0)
+
     def check(m):
         c = []
-        if r := args.regex:
-            c.append(re.match(r, m.content))
+        if regex:
+            c.append(regex.search(m.content))
         if s := args.contains:
-            c.append(s in m.content)
+            if args.case_insensitive:
+                c.append(s.lower() in m.content.lower())
+            else:
+                c.append(s in m.content)
         if i := args.author_id:
             c.append(m.author.id in i)
         if args.reactions:
