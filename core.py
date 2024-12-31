@@ -16,6 +16,9 @@ from state import command_locks
 
 
 async def on_message(message):
+    if not message.content.startswith(constants.PREFIX):
+        return
+
     tokens = commands.tokenize(message.content)
     if not tokens:
         return
@@ -122,16 +125,16 @@ async def on_message(message):
 def rreload(reloaded_modules, module):
     reloaded_modules.add(module.__name__)
     importlib.reload(module)
+
     if "__reload_module__" in dir(module):
         module.__reload_module__()
 
-    with contextlib.suppress(AttributeError):
-        for submodule in filter(
-            lambda v: inspect.ismodule(v)
-            and v.__name__ in constants.RELOADABLE_MODULES
-            and v.__name__ not in reloaded_modules,
-            map(lambda attr: getattr(module, attr), dir(module)),
-        ):
-            rreload(reloaded_modules, submodule)
+    for submodule in filter(
+        lambda v: inspect.ismodule(v)
+        and v.__name__ in constants.RELOADABLE_MODULES
+        and v.__name__ not in reloaded_modules,
+        vars(module).values(),
+    ):
+        rreload(reloaded_modules, submodule)
 
     importlib.reload(module)
