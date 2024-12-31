@@ -16,7 +16,7 @@ from state import command_locks
 
 
 async def on_message(message):
-    if not message.content.startswith(constants.PREFIX):
+    if not message.content.startswith(constants.PREFIX) or message.author.bot:
         return
 
     tokens = commands.tokenize(message.content)
