@@ -16,11 +16,18 @@ async def clear(message):
         type=lambda c: arguments.range_type(c, min=1, max=1000),
         help="amount of messages to delete",
     )
-    parser.add_argument(
+    group = parser.add_mutually_exclusive_group()
+    group.add_argument(
         "-r",
         "--regex",
         required=False,
         help="delete messages with content matching this regex",
+    )
+    group.add_argument(
+        "-c",
+        "--contains",
+        required=False,
+        help="delete messages with content containing this substring",
     )
     parser.add_argument(
         "-i",
@@ -48,6 +55,8 @@ async def clear(message):
         c = []
         if r := args.regex:
             c.append(re.match(r, m.content))
+        if s := args.contains:
+            c.append(s in m.content)
         if i := args.author_id:
             c.append(m.author.id in i)
         if args.reactions:
