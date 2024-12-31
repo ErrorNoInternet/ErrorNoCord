@@ -35,8 +35,12 @@ class ArgumentParser:
 
 
 def range_type(string, min=0, max=100):
-    value = int(string)
+    try:
+        value = int(string)
+    except ValueError:
+        raise argparse.ArgumentTypeError(f"value not a valid integer")
+
     if min <= value <= max:
         return value
     else:
-        raise argparse.ArgumentTypeError("value not in range %s-%s" % (min, max))
+        raise argparse.ArgumentTypeError(f"value not in range {min}-{max}")

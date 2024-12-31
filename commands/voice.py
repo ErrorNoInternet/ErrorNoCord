@@ -26,7 +26,6 @@ async def queue_or_play(message):
         "--volume",
         default=50,
         type=functools.partial(arguments.range_type, min=0, max=150),
-        metavar="[0-150]",
         help="the volume level (0 - 150)",
     )
     group.add_argument(
@@ -228,7 +227,6 @@ async def volume(message):
         "volume",
         nargs="?",
         type=functools.partial(arguments.range_type, min=0, max=150),
-        metavar="[0-150]",
         help="the volume level (0 - 150)",
     )
     if not (args := await parser.parse_args(message, tokens)):
