@@ -1,4 +1,3 @@
-import functools
 import re
 
 import arguments
@@ -14,7 +13,7 @@ async def clear(message):
     )
     parser.add_argument(
         "count",
-        type=functools.partial(arguments.range_type, min=1, max=1000),
+        type=lambda c: arguments.range_type(c, min=1, max=1000),
         help="amount of messages to delete",
     )
     parser.add_argument(
