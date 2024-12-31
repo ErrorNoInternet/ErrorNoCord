@@ -13,6 +13,7 @@ RELOADABLE_MODULES = [
     "constants",
     "core",
     "events",
+    "player",
     "utils",
     "voice",
     "youtubedl",

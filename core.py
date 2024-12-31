@@ -30,6 +30,9 @@ async def on_message(message):
         )
         return
 
+    if message.guild.id not in command_locks:
+        command_locks[message.guild.id] = asyncio.Lock()
+
     C = commands.Command
     try:
         match matched[0]:
@@ -95,8 +98,6 @@ async def on_message(message):
             case C.LEAVE:
                 await commands.voice.leave(message)
             case C.QUEUE | C.PLAY:
-                if message.guild.id not in command_locks:
-                    command_locks[message.guild.id] = asyncio.Lock()
                 async with command_locks[message.guild.id]:
                     await commands.voice.queue_or_play(message)
             case C.SKIP:

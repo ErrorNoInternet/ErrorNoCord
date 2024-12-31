@@ -2,8 +2,7 @@ import time
 
 import disnake
 
-player_queue = {}
-player_current = {}
+players = {}
 command_locks = {}
 
 intents = disnake.Intents.default()

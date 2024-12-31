@@ -32,7 +32,7 @@ def match_token(token: str) -> list[Command]:
     )
 
 
-def match(command: str) -> None | list[Command]:
+def match(command: str) -> list[Command] | None:
     if tokens := tokenize(command):
         return match_token(tokens[0])
 
