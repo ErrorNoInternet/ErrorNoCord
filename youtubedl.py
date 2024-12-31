@@ -5,7 +5,6 @@ import disnake
 import yt_dlp
 
 import constants
-import utils
 
 ytdl = yt_dlp.YoutubeDL(constants.YTDL_OPTIONS)
 
@@ -43,6 +42,12 @@ class YTDLSource(disnake.PCMVolumeTransformer):
             data=data,
         )
 
+    def __repr__(self):
+        return f"<YTDLSource title={self.title} original_url=<{self.original_url}> duration={self.duration}>"
+
+    def __str__(self):
+        return self.__repr__()
+
 
 class QueuedPlayer:
     def __init__(self):
@@ -60,6 +65,12 @@ class QueuedPlayer:
 
     def queue_add_front(self, item):
         self.queue.insert(0, item)
+
+    def __repr__(self):
+        return f"<QueuedPlayer current={self.current} queue={self.queue}>"
+
+    def __str__(self):
+        return self.__repr__()
 
 
 class QueuedSong:
@@ -80,6 +91,12 @@ class QueuedSong:
         if len(segments) == 3 and segments[0] == 0:
             del segments[0]
         return f"{':'.join(f'{s:0>2}' for s in segments)}"
+
+    def __repr__(self):
+        return f"<QueuedSong player={self.player} queuer={self.queuer}>"
+
+    def __str__(self):
+        return self.__repr__()
 
 
 def __reload_module__():
