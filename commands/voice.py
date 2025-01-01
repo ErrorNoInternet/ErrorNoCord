@@ -285,6 +285,6 @@ async def ensure_joined(message):
 
 
 def command_allowed(message):
-    if not message.guild.voice_client:
+    if not message.author.voice or not message.guild.voice_client:
         return False
     return message.author.voice.channel.id == message.guild.voice_client.channel.id
