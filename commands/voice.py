@@ -1,11 +1,10 @@
 import math
 
 import arguments
-import youtubedl
-from state import client, players
-
 import commands
 import utils
+import youtubedl
+from state import client, players
 
 
 async def queue_or_play(message):
@@ -213,6 +212,11 @@ async def skip(message):
     else:
         message.guild.voice_client.stop()
         await utils.add_check_reaction(message)
+        if (
+            not message.guild.voice_client.is_playing()
+            and not message.guild.voice_client.is_paused()
+        ):
+            play_next(message)
 
 
 async def join(message):
@@ -303,9 +307,15 @@ def play_next(message, once=False):
     message.guild.voice_client.stop()
     if players[message.guild.id].queue:
         queued = players[message.guild.id].queue_pop()
-        message.guild.voice_client.play(
-            queued.player, after=lambda e: play_after_callback(e, message, once)
-        )
+        try:
+            message.guild.voice_client.play(
+                queued.player, after=lambda e: play_after_callback(e, message, once)
+            )
+        except Exception as e:
+            client.loop.create_task(
+                message.channel.send(f"error while trying to play: `{e}`")
+            )
+            return
         client.loop.create_task(message.channel.send(f"**0.** {queued.format()}"))
 
 
