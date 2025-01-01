@@ -1,8 +1,9 @@
 import arguments
-import commands
-import utils
 import youtubedl
 from state import client, players
+
+import commands
+import utils
 
 
 async def queue_or_play(message):
@@ -18,27 +19,26 @@ async def queue_or_play(message):
         tokens[0], "queue a song, list the queue, or resume playback"
     )
     parser.add_argument("query", nargs="?", help="yt-dlp URL or query to get song")
-    group = parser.add_mutually_exclusive_group()
-    group.add_argument(
+    parser.add_argument(
         "-v",
         "--volume",
         default=50,
         type=lambda v: arguments.range_type(v, min=0, max=150),
         help="the volume level (0 - 150)",
     )
-    group.add_argument(
+    parser.add_argument(
         "-i",
         "--remove-index",
         type=int,
         help="remove a queued song by index",
     )
-    group.add_argument(
+    parser.add_argument(
         "-m",
         "--remove-multiple",
         action="store_true",
         help="continue removing queued songs after finding a match",
     )
-    group.add_argument(
+    parser.add_argument(
         "-c",
         "--clear",
         action="store_true",
