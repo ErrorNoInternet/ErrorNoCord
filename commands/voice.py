@@ -47,7 +47,6 @@ async def queue_or_play(message):
         help="remove all queued songs",
     )
     parser.add_argument(
-        "-n",
         "--now",
         action="store_true",
         help="play the specified song immediately",
