@@ -124,7 +124,6 @@ async def on_message(message):
 
 def rreload(reloaded_modules, module):
     reloaded_modules.add(module.__name__)
-    importlib.reload(module)
 
     for submodule in filter(
         lambda v: inspect.ismodule(v)
