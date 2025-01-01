@@ -1,3 +1,5 @@
+import math
+
 import arguments
 import commands
 import utils
@@ -65,6 +67,13 @@ async def queue_or_play(message):
         "--duration",
         action="store_true",
         help="print duration of queued songs",
+    )
+    parser.add_argument(
+        "-p",
+        "--page",
+        type=int,
+        default=1,
+        help="print the specified page of the queue",
     )
     if not (args := await parser.parse_args(message, tokens)):
         return
@@ -154,14 +163,19 @@ async def queue_or_play(message):
                 "resumed!",
             )
         else:
-            currently_playing = (
-                lambda: f"**0.** {'(paused) ' if message.guild.voice_client.is_paused() else ''} {players[message.guild.id].current.format(with_queuer=True)}"
+            args.page = max(
+                min(args.page, math.ceil(len(players[message.guild.id].queue) / 10)), 1
             )
             queue_list = lambda: "\n".join(
                 [
                     f"**{i + 1}.** {queued.format(with_queuer=True, hide_preview=True)}"
-                    for i, queued in enumerate(players[message.guild.id].queue)
+                    for i, queued in list(enumerate(players[message.guild.id].queue))[
+                        (args.page - 1) * 10 : args.page * 10
+                    ]
                 ]
+            )
+            currently_playing = (
+                lambda: f"**0.** {'(paused) ' if message.guild.voice_client.is_paused() else ''} {players[message.guild.id].current.format(with_queuer=True)}"
             )
             if (
                 not players[message.guild.id].queue
