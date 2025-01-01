@@ -1,10 +1,11 @@
 import math
 
 import arguments
-import commands
-import utils
 import youtubedl
 from state import client, players
+
+import commands
+import utils
 
 
 async def queue_or_play(message):
@@ -97,12 +98,13 @@ async def queue_or_play(message):
         await utils.add_check_reaction(message)
         return
     elif i := args.remove_index:
-        try:
-            queued = players[message.guild.id].queue[i - 1]
-            del players[message.guild.id].queue[i - 1]
-            await utils.reply(message, f"**x** {queued.format()}")
-        except:
+        if i <= 0 or i > len(players[message.guild.id].queue):
             await utils.reply(message, "invalid index!")
+            return
+
+        queued = players[message.guild.id].queue[i - 1]
+        del players[message.guild.id].queue[i - 1]
+        await utils.reply(message, f"**x** {queued.format()}")
     elif args.remove_title or args.remove_queuer:
         targets = []
         for queued in players[message.guild.id].queue:
