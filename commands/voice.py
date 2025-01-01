@@ -1,9 +1,8 @@
 import arguments
-import youtubedl
-from state import client, players
-
 import commands
 import utils
+import youtubedl
+from state import client, players
 
 
 async def queue_or_play(message):
@@ -61,10 +60,30 @@ async def queue_or_play(message):
         type=int,
         help="remove queued songs by queuer",
     )
+    parser.add_argument(
+        "-d",
+        "--duration",
+        action="store_true",
+        help="print duration of queued songs",
+    )
     if not (args := await parser.parse_args(message, tokens)):
         return
 
-    if args.clear:
+    if args.duration:
+        queued_songs = players[message.guild.id].queue
+        formatted_duration = utils.format_duration(
+            sum(
+                [
+                    queued.player.duration if queued.player.duration else 0
+                    for queued in queued_songs
+                ]
+            )
+        )
+        await utils.reply(
+            message,
+            f"queue is **{formatted_duration or '0 seconds'}** long (**{len(queued_songs)}** songs queued)",
+        )
+    elif args.clear:
         players[message.guild.id].queue.clear()
         await utils.add_check_reaction(message)
         return

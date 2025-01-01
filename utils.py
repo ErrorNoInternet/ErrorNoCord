@@ -3,6 +3,28 @@ import disnake
 import constants
 
 
+def format_duration(duration: int):
+    format_plural = lambda noun, count: noun if count == 1 else noun + "s"
+    segments = []
+
+    days, duration = divmod(duration, 86400)
+    if days >= 1:
+        segments.append(f"{days} {format_plural('day', days)}")
+
+    hours, duration = divmod(duration, 3600)
+    if hours >= 1:
+        segments.append(f"{hours} {format_plural('hour', hours)}")
+
+    minutes, duration = divmod(duration, 60)
+    if minutes >= 1:
+        segments.append(f"{minutes} {format_plural('minute', minutes)}")
+
+    if duration > 0:
+        segments.append(f"{duration} {format_plural('second', duration)}")
+
+    return ", ".join(segments)
+
+
 async def add_check_reaction(message):
     await message.add_reaction("✅")
 
