@@ -26,7 +26,7 @@ async def queue_or_play(message):
         "--volume",
         default=50,
         type=lambda v: arguments.range_type(v, min=0, max=150),
-        help="the volume level (0 - 150)",
+        help="the volume level (0 - 150) for the specified song",
     )
     parser.add_argument(
         "-i",
@@ -38,7 +38,7 @@ async def queue_or_play(message):
         "-m",
         "--remove-multiple",
         action="store_true",
-        help="continue removing queued songs after finding a match",
+        help="continue removing queued after finding a match",
     )
     parser.add_argument(
         "-c",
@@ -90,7 +90,7 @@ async def queue_or_play(message):
         )
         await utils.reply(
             message,
-            f"queue is **{formatted_duration or '0 seconds'}** long (**{len(queued_songs)}** songs queued)",
+            f"queue is **{formatted_duration or '0 seconds'}** long (**{len(queued_songs)}** queued)",
         )
     elif args.clear:
         players[message.guild.id].queue.clear()
@@ -103,7 +103,7 @@ async def queue_or_play(message):
 
         queued = players[message.guild.id].queue[i - 1]
         del players[message.guild.id].queue[i - 1]
-        await utils.reply(message, f"**x** {queued.format()}")
+        await utils.reply(message, f"**X** {queued.format()}")
     elif args.remove_title or args.remove_queuer:
         targets = []
         for queued in players[message.guild.id].queue:
