@@ -127,7 +127,7 @@ async def queue_or_play(message):
         else:
             await utils.reply(
                 message,
-                f"**+** {queued.format()}",
+                f"**{len(players[message.guild.id].queue)}.** {queued.format()}",
             )
     else:
         if tokens[0].lower() == "play":
