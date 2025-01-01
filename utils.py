@@ -7,16 +7,20 @@ def format_duration(duration: int):
     format_plural = lambda noun, count: noun if count == 1 else noun + "s"
     segments = []
 
+    weeks, duration = divmod(duration, 604800)
+    if weeks > 0:
+        segments.append(f"{weeks} {format_plural('week', weeks)}")
+
     days, duration = divmod(duration, 86400)
-    if days >= 1:
+    if days > 0:
         segments.append(f"{days} {format_plural('day', days)}")
 
     hours, duration = divmod(duration, 3600)
-    if hours >= 1:
+    if hours > 0:
         segments.append(f"{hours} {format_plural('hour', hours)}")
 
     minutes, duration = divmod(duration, 60)
-    if minutes >= 1:
+    if minutes > 0:
         segments.append(f"{minutes} {format_plural('minute', minutes)}")
 
     if duration > 0:
