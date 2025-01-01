@@ -104,7 +104,7 @@ async def queue_or_play(message):
             if q := args.remove_queuer:
                 if q == queued.queuer:
                     targets.append(queued)
-        if args.remove_multiple:
+        if not args.remove_multiple:
             targets = targets[:1]
 
         for target in targets:
