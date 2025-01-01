@@ -138,11 +138,9 @@ async def queue_or_play(message):
             not message.guild.voice_client.is_playing()
             and not message.guild.voice_client.is_paused()
         ):
-            await utils.reply(message, f"**0.** {queued.format()}")
             play_next(message)
         elif args.now:
             message.guild.voice_client.stop()
-            await utils.reply(message, f"**0.** {queued.format()}")
         else:
             await utils.reply(
                 message,
@@ -293,6 +291,7 @@ def play_next(message, once=False):
         message.guild.voice_client.play(
             queued.player, after=lambda e: play_after_callback(e, message, once)
         )
+        client.loop.create_task(message.channel.send(f"**0.** {queued.format()}"))
 
 
 async def ensure_joined(message):
