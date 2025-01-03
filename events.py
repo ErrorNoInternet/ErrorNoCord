@@ -28,3 +28,12 @@ async def on_message(message):
     await events.trigger_dynamic_handlers("on_message", message)
 
     await core.on_message(message)
+
+
+@client.event
+async def on_voice_state_update(member, before, after):
+    await events.trigger_dynamic_handlers(
+        "on_voice_state_update", member, before, after
+    )
+
+    await core.on_voice_state_update(member, before, after)

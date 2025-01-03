@@ -12,7 +12,7 @@ import commands
 import constants
 import core
 import utils
-from state import command_locks
+from state import client, command_locks
 
 
 async def on_message(message):
@@ -121,6 +121,19 @@ async def on_message(message):
             message,
             f"exception occurred while processing command: ```\n{''.join(traceback.format_exception(e)).replace('`', '\\`')}```",
         )
+
+
+async def on_voice_state_update(_, before, after):
+    is_empty = lambda channel: [m.id for m in (channel.members if channel else [])] == [
+        client.user.id
+    ]
+    c = None
+    if is_empty(before.channel):
+        c = before.channel
+    elif is_empty(after.channel):
+        c = after.channel
+    if c:
+        await c.guild.voice_client.disconnect()
 
 
 def rreload(reloaded_modules, module):
