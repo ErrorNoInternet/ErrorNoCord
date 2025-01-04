@@ -1,4 +1,5 @@
 import asyncio
+import collections
 from typing import Any, Optional
 
 import disnake
@@ -51,12 +52,11 @@ class YTDLSource(disnake.PCMVolumeTransformer):
 
 class QueuedPlayer:
     def __init__(self):
-        self.queue = []
+        self.queue = collections.deque()
         self.current = None
 
     def queue_pop(self):
-        popped = self.queue[0]
-        del self.queue[0]
+        popped = self.queue.popleft()
         self.current = popped
         return popped
 
@@ -64,7 +64,7 @@ class QueuedPlayer:
         self.queue.append(item)
 
     def queue_add_front(self, item):
-        self.queue.insert(0, item)
+        self.queue.appendleft(item)
 
     def __repr__(self):
         return f"<QueuedPlayer current={self.current} queue={self.queue}>"
