@@ -357,11 +357,11 @@ def play_next(message, once=False):
             )
         except Exception as e:
             client.loop.create_task(
-                message.channel.send(f"error while trying to play: `{e}`")
+                utils.channel_send(message, f"error while trying to play: `{e}`")
             )
             return
         client.loop.create_task(
-            message.channel.send(f"**0.** {queued.format(show_queuer=True)}")
+            utils.channel_send(message, f"**0.** {queued.format(show_queuer=True)}")
         )
 
 
