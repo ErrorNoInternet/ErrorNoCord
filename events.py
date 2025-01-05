@@ -1,3 +1,4 @@
+import commands
 import core
 import events
 from state import client
@@ -31,6 +32,18 @@ async def on_message_edit(before, after):
     await core.on_message(after, edited=True)
 
 
+async def on_message_delete(message):
+    await events.trigger_dynamic_handlers("on_bulk_delete", message)
+
+    commands.voice.delete_queued([message])
+
+
+async def on_bulk_message_delete(messages):
+    await events.trigger_dynamic_handlers("on_bulk_message_delete", messages)
+
+    commands.voice.delete_queued(messages)
+
+
 async def on_voice_state_update(member, before, after):
     await events.trigger_dynamic_handlers(
         "on_voice_state_update", member, before, after
@@ -42,6 +55,8 @@ async def on_voice_state_update(member, before, after):
 for k, v in client.get_listeners().items():
     for f in v:
         client.remove_listener(f, k)
+client.add_listener(on_bulk_message_delete, "on_bulk_message_delete")
 client.add_listener(on_message, "on_message")
+client.add_listener(on_message_delete, "on_message_delete")
 client.add_listener(on_message_edit, "on_message_edit")
 client.add_listener(on_voice_state_update, "on_voice_state_update")
