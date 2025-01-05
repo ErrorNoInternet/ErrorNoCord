@@ -11,7 +11,7 @@ import youtubedl
 from state import client, players
 
 
-async def queue_or_play(message):
+async def queue_or_play(message, edited=False):
     await ensure_joined(message)
     if not command_allowed(message):
         return
@@ -72,6 +72,15 @@ async def queue_or_play(message):
     )
     if not (args := await parser.parse_args(message, tokens)):
         return
+
+    if edited:
+        found = None
+        for queued in players[message.guild.id].queue:
+            if queued.trigger_message.id == message.id:
+                found = queued
+                break
+        if found:
+            players[message.guild.id].queue.remove(found)
 
     if args.clear:
         players[message.guild.id].queue.clear()

@@ -15,7 +15,7 @@ import utils
 from state import client, command_locks, executed_messages
 
 
-async def on_message(message):
+async def on_message(message, edited=False):
     if not message.content.startswith(constants.PREFIX) or message.author.bot:
         return
 
@@ -105,7 +105,7 @@ async def on_message(message):
                 await commands.voice.leave(message)
             case C.QUEUE | C.PLAY:
                 async with command_locks[message.guild.id]:
-                    await commands.voice.queue_or_play(message)
+                    await commands.voice.queue_or_play(message, edited=True)
             case C.SKIP:
                 async with command_locks[message.guild.id]:
                     await commands.voice.skip(message)

@@ -28,7 +28,7 @@ async def on_message_edit(before, after):
     if before.content == after.content:
         return
 
-    await core.on_message(after)
+    await core.on_message(after, edited=True)
 
 
 async def on_voice_state_update(member, before, after):
