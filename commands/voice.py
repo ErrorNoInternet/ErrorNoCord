@@ -255,6 +255,7 @@ async def join(message):
         return await message.guild.voice_client.move_to(message.channel)
 
     await message.channel.connect()
+    await utils.add_check_reaction(message)
 
 
 async def leave(message):
@@ -262,6 +263,7 @@ async def leave(message):
         return
 
     await message.guild.voice_client.disconnect()
+    await utils.add_check_reaction(message)
 
 
 async def resume(message):
