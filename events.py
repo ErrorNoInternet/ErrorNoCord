@@ -16,24 +16,32 @@ async def trigger_dynamic_handlers(event_type: str, *data):
                 )
 
 
-@client.event
-async def on_message_edit(before, after):
-    await events.trigger_dynamic_handlers("on_message_edit", before, after)
-
-    await core.on_message(after)
-
-
-@client.event
 async def on_message(message):
     await events.trigger_dynamic_handlers("on_message", message)
 
     await core.on_message(message)
 
 
-@client.event
+async def on_message_edit(before, after):
+    await events.trigger_dynamic_handlers("on_message_edit", before, after)
+
+    if before.content == after.content:
+        return
+
+    await core.on_message(after)
+
+
 async def on_voice_state_update(member, before, after):
     await events.trigger_dynamic_handlers(
         "on_voice_state_update", member, before, after
     )
 
     await core.on_voice_state_update(member, before, after)
+
+
+for k, v in client.get_listeners().items():
+    for f in v:
+        client.remove_listener(f, k)
+client.add_listener(on_message, "on_message")
+client.add_listener(on_message_edit, "on_message_edit")
+client.add_listener(on_voice_state_update, "on_voice_state_update")
