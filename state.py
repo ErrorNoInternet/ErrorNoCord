@@ -2,8 +2,9 @@ import time
 
 import disnake
 
-players = {}
 command_locks = {}
+executed_messages = {}
+players = {}
 
 intents = disnake.Intents.default()
 intents.message_content = True

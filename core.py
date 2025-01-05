@@ -12,7 +12,7 @@ import commands
 import constants
 import core
 import utils
-from state import client, command_locks
+from state import client, command_locks, executed_messages
 
 
 async def on_message(message):
@@ -80,20 +80,23 @@ async def on_message(message):
 
                 if len(output) > 2000:
                     output = output.replace("`", "\\`")
-                    pager = disnake_paginator.ButtonPaginator(
+                    await disnake_paginator.ButtonPaginator(
                         prefix=f"```\n",
                         suffix="```",
+                        invalid_user_function=utils.invalid_user_handler,
                         color=constants.EMBED_COLOR,
                         segments=disnake_paginator.split(output),
-                        invalid_user_function=utils.invalid_user_handler,
-                    )
-                    await pager.start(
+                    ).start(
                         disnake_paginator.wrappers.MessageInteractionWrapper(message)
                     )
                 elif len(output.strip()) == 0:
                     await utils.add_check_reaction(message)
                 else:
-                    await message.channel.send(output)
+                    if message.id in executed_messages:
+                        await executed_messages[message.id].edit(output)
+                    else:
+                        response = await message.channel.send(output)
+                        executed_messages[message.id] = response
             case C.CLEAR | C.PURGE if message.author.id in constants.OWNERS:
                 await commands.tools.clear(message)
             case C.JOIN:
