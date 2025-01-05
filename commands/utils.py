@@ -25,6 +25,14 @@ def match_token(token: str) -> list[Command]:
     if token.lower() == "r":
         return [Command.RELOAD]
 
+    if exact_match := list(
+        filter(
+            lambda command: command.value == token.lower(),
+            Command.__members__.values(),
+        )
+    ):
+        return exact_match
+
     return list(
         filter(
             lambda command: command.value.startswith(token.lower()),
