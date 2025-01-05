@@ -105,7 +105,7 @@ async def on_message(message, edited=False):
                 await commands.voice.leave(message)
             case C.QUEUE | C.PLAY:
                 async with command_locks[message.guild.id]:
-                    await commands.voice.queue_or_play(message, edited=True)
+                    await commands.voice.queue_or_play(message, edited)
             case C.SKIP:
                 async with command_locks[message.guild.id]:
                     await commands.voice.skip(message)
