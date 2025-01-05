@@ -1,5 +1,6 @@
 import asyncio
 import collections
+from dataclasses import dataclass
 from typing import Any, Optional
 
 import disnake
@@ -50,10 +51,43 @@ class YTDLSource(disnake.PCMVolumeTransformer):
         return self.__repr__()
 
 
+@dataclass
+class QueuedSong:
+    player: YTDLSource
+    trigger_message: disnake.Message
+
+    def format(self, show_queuer=False, hide_preview=False, multiline=False) -> str:
+        if multiline:
+            return (
+                f"[`{self.player.title}`]({'<' if hide_preview else ''}{self.player.original_url}{'>' if hide_preview else ''})\n**duration:** {self.format_duration(self.player.duration) if self.player.duration else '[live]'}"
+                + (
+                    f", **queuer:** <@{self.trigger_message.author.id}>"
+                    if show_queuer
+                    else ""
+                )
+            )
+        else:
+            return (
+                f"[`{self.player.title}`]({'<' if hide_preview else ''}{self.player.original_url}{'>' if hide_preview else ''}) [{self.format_duration(self.player.duration) if self.player.duration else 'live'}]"
+                + (f" (<@{self.trigger_message.author.id}>)" if show_queuer else "")
+            )
+
+    def format_duration(self, duration: int) -> str:
+        hours, duration = divmod(duration, 3600)
+        minutes, duration = divmod(duration, 60)
+        segments = [hours, minutes, duration]
+        if len(segments) == 3 and segments[0] == 0:
+            del segments[0]
+        return f"{':'.join(f'{s:0>2}' for s in segments)}"
+
+    def __str__(self):
+        return self.__repr__()
+
+
+@dataclass
 class QueuedPlayer:
-    def __init__(self):
-        self.queue = collections.deque()
-        self.current = None
+    queue = collections.deque()
+    current: Optional[QueuedSong] = None
 
     def queue_pop(self):
         popped = self.queue.popleft()
@@ -65,35 +99,6 @@ class QueuedPlayer:
 
     def queue_add_front(self, item):
         self.queue.appendleft(item)
-
-    def __repr__(self):
-        return f"<QueuedPlayer current={self.current} queue={self.queue}>"
-
-    def __str__(self):
-        return self.__repr__()
-
-
-class QueuedSong:
-    def __init__(self, player, queuer):
-        self.player = player
-        self.queuer = queuer
-
-    def format(self, with_queuer=False, hide_preview=False) -> str:
-        return (
-            f"[`{self.player.title}`]({'<' if hide_preview else ''}{self.player.original_url}{'>' if hide_preview else ''}) [{self.format_duration(self.player.duration) if self.player.duration else 'live'}]"
-            + (f" (<@{self.queuer}>)" if with_queuer else "")
-        )
-
-    def format_duration(self, duration: int) -> str:
-        hours, duration = divmod(duration, 3600)
-        minutes, duration = divmod(duration, 60)
-        segments = [hours, minutes, duration]
-        if len(segments) == 3 and segments[0] == 0:
-            del segments[0]
-        return f"{':'.join(f'{s:0>2}' for s in segments)}"
-
-    def __repr__(self):
-        return f"<QueuedSong player={self.player} queuer={self.queuer}>"
 
     def __str__(self):
         return self.__repr__()
