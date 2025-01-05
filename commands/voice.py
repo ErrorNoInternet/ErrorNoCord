@@ -129,7 +129,7 @@ async def queue_or_play(message, edited=False):
         ):
             await utils.reply(
                 message,
-                "you can only queue **5 songs** without the manage channels permission!",
+                "you can only queue **5 items** without the manage channels permission!",
             )
             return
 
@@ -180,7 +180,6 @@ async def queue_or_play(message, edited=False):
 
                 def embed(description):
                     e = disnake.Embed(
-                        title="Queued",
                         description=description,
                         color=constants.EMBED_COLOR,
                     )
