@@ -33,8 +33,10 @@ async def add_check_reaction(message):
     await message.add_reaction("✅")
 
 
-async def reply(message, *args):
-    await message.reply(*args, allowed_mentions=disnake.AllowedMentions.none())
+async def reply(message, *args, **kwargs):
+    await message.reply(
+        *args, **kwargs, allowed_mentions=disnake.AllowedMentions.none()
+    )
 
 
 async def invalid_user_handler(interaction):

@@ -1,7 +1,11 @@
-import math
+import itertools
+
+import disnake
+import disnake_paginator
 
 import arguments
 import commands
+import constants
 import utils
 import youtubedl
 from state import client, players
@@ -66,37 +70,10 @@ async def queue_or_play(message):
         type=int,
         help="remove queued songs by queuer",
     )
-    parser.add_argument(
-        "-d",
-        "--duration",
-        action="store_true",
-        help="print duration of queued songs",
-    )
-    parser.add_argument(
-        "-p",
-        "--page",
-        type=int,
-        default=1,
-        help="print the specified page of the queue",
-    )
     if not (args := await parser.parse_args(message, tokens)):
         return
 
-    if args.duration:
-        queued_songs = players[message.guild.id].queue
-        formatted_duration = utils.format_duration(
-            sum(
-                [
-                    queued.player.duration if queued.player.duration else 0
-                    for queued in queued_songs
-                ]
-            )
-        )
-        await utils.reply(
-            message,
-            f"queue is **{formatted_duration or '0 seconds'}** long (**{len(queued_songs)}** queued)",
-        )
-    elif args.clear:
+    if args.clear:
         players[message.guild.id].queue.clear()
         await utils.add_check_reaction(message)
         return
@@ -116,7 +93,7 @@ async def queue_or_play(message):
                     targets.append(queued)
                     continue
             if q := args.remove_queuer:
-                if q == queued.queuer:
+                if q == queued.trigger_message.author.id:
                     targets.append(queued)
         if not args.remove_multiple:
             targets = targets[:1]
@@ -141,7 +118,7 @@ async def queue_or_play(message):
             )
             return
 
-        queued = youtubedl.QueuedSong(player, message.author.id)
+        queued = youtubedl.QueuedSong(player, message)
 
         if args.now or args.next:
             players[message.guild.id].queue_add_front(queued)
@@ -162,45 +139,52 @@ async def queue_or_play(message):
             )
     else:
         if tokens[0].lower() == "play":
-            message.guild.voice_client.resume()
-            await utils.reply(
-                message,
-                "resumed!",
-            )
+            await resume(message)
         else:
-            args.page = max(
-                min(args.page, math.ceil(len(players[message.guild.id].queue) / 10)), 1
-            )
-            queue_list = lambda: "\n".join(
-                [
-                    f"**{i + 1}.** {queued.format(with_queuer=True, hide_preview=True)}"
-                    for i, queued in list(enumerate(players[message.guild.id].queue))[
-                        (args.page - 1) * 10 : args.page * 10
-                    ]
-                ]
-            )
-            currently_playing = (
-                lambda: f"**0.** {'(paused) ' if message.guild.voice_client.is_paused() else ''} {players[message.guild.id].current.format(with_queuer=True)}"
-            )
-            if (
-                not players[message.guild.id].queue
-                and not message.guild.voice_client.source
-            ):
-                await utils.reply(
-                    message,
-                    "nothing is playing or queued!",
+            if players[message.guild.id].queue:
+                formatted_duration = utils.format_duration(
+                    sum(
+                        [
+                            queued.player.duration if queued.player.duration else 0
+                            for queued in players[message.guild.id].queue
+                        ]
+                    )
                 )
-            elif not players[message.guild.id].queue:
-                await utils.reply(message, currently_playing())
-            elif not message.guild.voice_client.source:
-                await utils.reply(
-                    message,
-                    queue_list(),
-                )
+
+                def embed(description):
+                    e = disnake.Embed(
+                        title="Queued",
+                        description=description,
+                        color=constants.EMBED_COLOR,
+                    )
+                    if formatted_duration:
+                        e.set_footer(text=f"{formatted_duration} long")
+                    return e
+
+                await disnake_paginator.ButtonPaginator(
+                    invalid_user_function=utils.invalid_user_handler,
+                    color=constants.EMBED_COLOR,
+                    segments=list(
+                        map(
+                            embed,
+                            [
+                                "\n\n".join(
+                                    [
+                                        f"**{i + 1}.** {queued.format(show_queuer=True, hide_preview=True, multiline=True)}"
+                                        for i, queued in batch
+                                    ]
+                                )
+                                for batch in itertools.batched(
+                                    enumerate(players[message.guild.id].queue), 10
+                                )
+                            ],
+                        )
+                    ),
+                ).start(disnake_paginator.wrappers.MessageInteractionWrapper(message))
             else:
                 await utils.reply(
                     message,
-                    currently_playing() + "\n" + queue_list(),
+                    "nothing is queued!",
                 )
 
 
@@ -337,7 +321,9 @@ def play_next(message, once=False):
                 message.channel.send(f"error while trying to play: `{e}`")
             )
             return
-        client.loop.create_task(message.channel.send(f"**0.** {queued.format()}"))
+        client.loop.create_task(
+            message.channel.send(f"**0.** {queued.format(show_queuer=True)}")
+        )
 
 
 async def ensure_joined(message):
