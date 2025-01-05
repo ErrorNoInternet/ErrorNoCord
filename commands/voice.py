@@ -199,6 +199,22 @@ async def queue_or_play(message):
                 )
 
 
+async def playing(message):
+    if not command_allowed(message):
+        return
+
+    if message.guild.voice_client.source:
+        await utils.reply(
+            message,
+            f"{'(paused) ' if message.guild.voice_client.is_paused() else ''} {players[message.guild.id].current.format(show_queuer=True)}",
+        )
+    else:
+        await utils.reply(
+            message,
+            "nothing is playing!",
+        )
+
+
 async def skip(message):
     if not command_allowed(message):
         return

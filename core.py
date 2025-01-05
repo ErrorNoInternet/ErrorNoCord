@@ -116,6 +116,8 @@ async def on_message(message):
                 await commands.bot.help(message)
             case C.UPTIME:
                 await commands.bot.uptime(message)
+            case C.PLAYING:
+                await commands.voice.playing(message)
     except Exception as e:
         await utils.reply(
             message,

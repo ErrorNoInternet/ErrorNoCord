@@ -11,6 +11,7 @@ class Command(enum.Enum):
     LEAVE = "leave"
     PAUSE = "pause"
     PLAY = "play"
+    PLAYING = "playing"
     PURGE = "purge"
     QUEUE = "queue"
     RELOAD = "reload"
