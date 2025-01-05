@@ -19,6 +19,7 @@ RELOADABLE_MODULES = [
 ]
 
 YTDL_OPTIONS = {
+    "color": "never",
     "default_search": "auto",
     "format": "bestaudio/best",
     "ignoreerrors": False,

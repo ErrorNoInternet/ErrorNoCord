@@ -132,8 +132,7 @@ async def queue_or_play(message):
                 player.volume = float(args.volume) / 100.0
         except Exception as e:
             await utils.reply(
-                message,
-                f"**unable to queue {query}:** {e}",
+                message, f"**failed to queue:** `{e}`", suppress_embeds=True
             )
             return
 
