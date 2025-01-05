@@ -105,6 +105,25 @@ async def queue_or_play(message):
             f"removed **{len(targets)}** queued {'song' if len(targets) == 1 else 'songs'}",
         )
     elif query := args.query:
+        if (
+            not message.channel.permissions_for(message.author).manage_channels
+            and len(
+                list(
+                    filter(
+                        lambda queued: queued.trigger_message.author.id
+                        == message.author.id,
+                        players[message.guild.id].queue,
+                    )
+                )
+            )
+            >= 5
+        ):
+            await utils.reply(
+                message,
+                "you can only queue **5 songs** without the manage channels permission!",
+            )
+            return
+
         try:
             async with message.channel.typing():
                 player = await youtubedl.YTDLSource.from_url(
