@@ -126,6 +126,7 @@ async def queue_or_play(message, edited=False):
                 )
             )
             >= 5
+            and not len(message.guild.voice_client.channel.members) == 2
         ):
             await utils.reply(
                 message,
