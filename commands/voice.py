@@ -51,6 +51,11 @@ async def queue_or_play(message):
         help="play the specified song immediately",
     )
     parser.add_argument(
+        "--next",
+        action="store_true",
+        help="play the specified song next",
+    )
+    parser.add_argument(
         "-t",
         "--remove-title",
         help="remove queued songs by title",
@@ -138,7 +143,7 @@ async def queue_or_play(message):
 
         queued = youtubedl.QueuedSong(player, message.author.id)
 
-        if args.now:
+        if args.now or args.next:
             players[message.guild.id].queue_add_front(queued)
         else:
             players[message.guild.id].queue_add(queued)
