@@ -4,6 +4,7 @@ import importlib
 import inspect
 import io
 import textwrap
+import time
 import traceback
 
 import disnake_paginator
@@ -12,7 +13,7 @@ import commands
 import constants
 import core
 import utils
-from state import client, command_locks, executed_messages
+from state import client, command_locks, last_used
 
 
 async def on_message(message, edited=False):
@@ -25,6 +26,9 @@ async def on_message(message, edited=False):
     matched = commands.match_token(tokens[0])
     if not matched:
         return
+
+    global last_used
+    last_used = time.time()
 
     if len(matched) > 1:
         await utils.reply(

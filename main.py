@@ -9,5 +9,7 @@ from state import client, start_time
 async def on_ready():
     print(f"logged in as {client.user} in {round(time.time() - start_time, 1)}s")
 
+    await events.on_ready()
+
 
 client.run(constants.SECRETS["TOKEN"])

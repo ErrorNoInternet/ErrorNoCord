@@ -1,6 +1,11 @@
 import commands
 import core
+import tasks
 from state import client
+
+
+async def on_ready():
+    await tasks.check_idle()
 
 
 async def on_message(message):
