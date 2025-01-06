@@ -444,7 +444,7 @@ def play_next(message, once=False, first=False):
             )
         except Exception as e:
             client.loop.create_task(
-                utils.channel_send(message, f"error while trying to play: `{e}`")
+                utils.channel_send(message, f"**failed to play:** `{e}`")
             )
             return
         client.loop.create_task(
