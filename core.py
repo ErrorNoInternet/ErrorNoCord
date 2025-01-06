@@ -98,7 +98,7 @@ async def on_message(message, edited=False):
                 elif len(output.strip()) == 0:
                     await utils.add_check_reaction(message)
                 else:
-                    await utils.channel_send(message, output)
+                    await utils.reply(message, output)
             case C.CLEAR | C.PURGE if message.author.id in constants.OWNERS:
                 await commands.tools.clear(message)
             case C.JOIN:

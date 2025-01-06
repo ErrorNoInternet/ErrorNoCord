@@ -49,15 +49,9 @@ async def reply(message, *args, **kwargs):
 
 
 async def channel_send(message, *args, **kwargs):
-    if message.id in message_responses:
-        await message_responses[message.id].edit(
-            *args, **kwargs, allowed_mentions=disnake.AllowedMentions.none()
-        )
-    else:
-        response = await message.channel.send(
-            *args, **kwargs, allowed_mentions=disnake.AllowedMentions.none()
-        )
-        message_responses[message.id] = response
+    await message.channel.send(
+        *args, **kwargs, allowed_mentions=disnake.AllowedMentions.none()
+    )
 
 
 async def invalid_user_handler(interaction):
