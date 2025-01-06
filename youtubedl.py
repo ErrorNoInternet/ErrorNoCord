@@ -24,7 +24,7 @@ class CustomAudioSource(disnake.AudioSource):
 
     def fast_forward(self, seconds: int):
         for _ in range(int(seconds / 0.02)):
-            self._source.read()
+            self.read()
 
     @property
     def progress(self) -> float:

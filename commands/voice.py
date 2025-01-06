@@ -295,6 +295,31 @@ async def playing(message):
         )
 
 
+async def fast_forward(message):
+    if not command_allowed(message):
+        return
+
+    tokens = commands.tokenize(message.content)
+    parser = arguments.ArgumentParser(tokens[0], "fast forward audio playback")
+    parser.add_argument(
+        "seconds",
+        type=lambda v: arguments.range_type(v, min=0, max=300),
+        help="the amount of seconds to fast forward",
+    )
+    if not (args := await parser.parse_args(message, tokens)):
+        return
+
+    if not message.guild.voice_client.source:
+        await utils.reply(message, "nothing is playing!")
+        return
+
+    message.guild.voice_client.pause()
+    message.guild.voice_client.source.original.fast_forward(args.seconds)
+    message.guild.voice_client.resume()
+
+    await utils.add_check_reaction(message)
+
+
 async def skip(message):
     if not command_allowed(message):
         return

@@ -47,6 +47,7 @@ async def on_message(message, edited=False):
         match matched[0]:
             case C.RELOAD if message.author.id in constants.OWNERS:
                 reloaded_modules = set()
+                rreload(reloaded_modules, __import__("core"))
                 for module in filter(
                     lambda v: inspect.ismodule(v)
                     and v.__name__ in constants.RELOADABLE_MODULES,
@@ -123,6 +124,8 @@ async def on_message(message, edited=False):
                 await commands.bot.uptime(message)
             case C.PLAYING:
                 await commands.voice.playing(message)
+            case C.FAST_FORWARD:
+                await commands.voice.fast_forward(message)
     except Exception as e:
         await utils.reply(
             message,
