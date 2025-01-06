@@ -39,6 +39,7 @@ class YTDLSource(disnake.PCMVolumeTransformer):
 
         self.description = data.get("description")
         self.duration = data.get("duration")
+        self.id = data.get("id")
         self.original_url = data.get("original_url")
         self.thumbnail_url = data.get("thumbnail")
         self.title = data.get("title")
