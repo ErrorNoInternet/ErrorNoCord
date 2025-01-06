@@ -438,9 +438,15 @@ def play_next(message, once=False, first=False):
     message.guild.voice_client.stop()
     if message.guild.id in players and players[message.guild.id].queue:
         queued = players[message.guild.id].queue_pop()
-        message.guild.voice_client.play(
-            queued.player, after=lambda e: play_after_callback(e, message, once)
-        )
+        try:
+            message.guild.voice_client.play(
+                queued.player, after=lambda e: play_after_callback(e, message, once)
+            )
+        except disnake.opus.OpusNotLoaded:
+            utils.load_opus()
+            message.guild.voice_client.play(
+                queued.player, after=lambda e: play_after_callback(e, message, once)
+            )
         client.loop.create_task(
             utils.channel_send(message, queued.format(show_queuer=not first))
         )
