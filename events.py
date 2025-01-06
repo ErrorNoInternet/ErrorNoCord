@@ -1,13 +1,14 @@
 import asyncio
 import threading
+import time
 
 import commands
 import core
 import tasks
-from state import client
+from state import client, start_time
 
 
-async def on_ready():
+def prepare():
     threading.Thread(
         name="cleanup",
         target=asyncio.run_coroutine_threadsafe,
@@ -18,8 +19,16 @@ async def on_ready():
     ).start()
 
 
+async def on_bulk_message_delete(messages):
+    commands.voice.delete_queued(messages)
+
+
 async def on_message(message):
     await core.on_message(message)
+
+
+async def on_message_delete(message):
+    commands.voice.delete_queued([message])
 
 
 async def on_message_edit(before, after):
@@ -29,24 +38,21 @@ async def on_message_edit(before, after):
     await core.on_message(after, edited=True)
 
 
-async def on_message_delete(message):
-    commands.voice.delete_queued([message])
-
-
-async def on_bulk_message_delete(messages):
-    commands.voice.delete_queued(messages)
+async def on_ready():
+    print(f"logged in as {client.user} in {round(time.time() - start_time, 1)}s")
 
 
 async def on_voice_state_update(member, before, after):
     await core.on_voice_state_update(member, before, after)
 
 
-for k, v in client.get_listeners().items():
-    for f in v:
-        client.remove_listener(f, k)
+for event_type, handlers in client.get_listeners().items():
+    for handler in handlers:
+        client.remove_listener(handler, event_type)
 
 client.add_listener(on_bulk_message_delete, "on_bulk_message_delete")
 client.add_listener(on_message, "on_message")
 client.add_listener(on_message_delete, "on_message_delete")
 client.add_listener(on_message_edit, "on_message_edit")
+client.add_listener(on_ready, "on_ready")
 client.add_listener(on_voice_state_update, "on_voice_state_update")
