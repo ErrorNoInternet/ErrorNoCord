@@ -4,7 +4,7 @@ import constants
 from state import message_responses
 
 
-def format_duration(duration: int):
+def format_duration(duration: int, natural: bool = False):
     def format_plural(noun, count):
         return noun if count == 1 else noun + "s"
 
@@ -29,7 +29,10 @@ def format_duration(duration: int):
     if duration > 0:
         segments.append(f"{duration} {format_plural('second', duration)}")
 
-    return ", ".join(segments)
+    if not natural or len(segments) <= 1:
+        return ", ".join(segments)
+
+    return ", ".join(segments[:-1]) + f" and {segments[-1]}"
 
 
 async def add_check_reaction(message):

@@ -175,7 +175,8 @@ async def queue_or_play(message, edited=False):
                         queued.player.duration if queued.player.duration else 0
                         for queued in players[message.guild.id].queue
                     ]
-                )
+                ),
+                natural=True,
             )
 
             def embed(description):
