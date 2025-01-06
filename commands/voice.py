@@ -153,10 +153,7 @@ async def queue_or_play(message, edited=False):
         else:
             players[message.guild.id].queue_add(queued)
 
-        if (
-            not message.guild.voice_client.is_playing()
-            and not message.guild.voice_client.is_paused()
-        ):
+        if not message.guild.voice_client.source:
             play_next(message)
         elif args.now:
             message.guild.voice_client.stop()
@@ -219,10 +216,29 @@ async def playing(message):
     if not command_allowed(message):
         return
 
-    if message.guild.voice_client.source:
+    if source := message.guild.voice_client.source:
+        bar_length = 35
+        progress = source.original.progress / source.duration
+
+        embed = disnake.Embed(
+            color=constants.EMBED_COLOR,
+            title=source.title,
+            description=f"{'⏸️ ' if message.guild.voice_client.is_paused() else ''}"
+            f"`[{'#'*int(progress * bar_length)}{'-'*int((1 - progress) * bar_length)}]`"
+            f"{youtubedl.format_duration(int(source.original.progress))} / {youtubedl.format_duration(source.duration)}",
+            url=source.original_url,
+        )
+        embed.add_field(name="Volume", value=f"{int(source.volume*100)}%")
+        embed.add_field(name="Views", value=f"{source.view_count:,}")
+        embed.add_field(
+            name="Queuer",
+            value=players[message.guild.id].current.trigger_message.author.mention,
+        )
+        embed.set_image(source.thumbnail_url)
+
         await utils.reply(
             message,
-            f"{'(paused) ' if message.guild.voice_client.is_paused() else ''} {players[message.guild.id].current.format(show_queuer=True)}",
+            embed=embed,
         )
     else:
         await utils.reply(
@@ -244,10 +260,7 @@ async def skip(message):
     else:
         message.guild.voice_client.stop()
         await utils.add_check_reaction(message)
-        if (
-            not message.guild.voice_client.is_playing()
-            and not message.guild.voice_client.is_paused()
-        ):
+        if not message.guild.voice_client.source:
             play_next(message)
 
 

@@ -11,14 +11,33 @@ import constants
 ytdl = yt_dlp.YoutubeDL(constants.YTDL_OPTIONS)
 
 
+class TrackedAudioSource(disnake.AudioSource):
+    def __init__(self, source):
+        self._source = source
+        self.count = 0
+
+    def read(self) -> bytes:
+        data = self._source.read()
+        if data:
+            self.count += 1
+        return data
+
+    @property
+    def progress(self) -> float:
+        return self.count * 0.02
+
+
 class YTDLSource(disnake.PCMVolumeTransformer):
     def __init__(
-        self, source: disnake.AudioSource, *, data: dict[str, Any], volume: float = 0.5
+        self, source: TrackedAudioSource, *, data: dict[str, Any], volume: float = 0.5
     ):
         super().__init__(source, volume)
-        self.title = data.get("title")
-        self.original_url = data.get("original_url")
+
         self.duration = data.get("duration")
+        self.original_url = data.get("original_url")
+        self.thumbnail_url = data.get("thumbnail")
+        self.title = data.get("title")
+        self.view_count = data.get("view_count")
 
     @classmethod
     async def from_url(
@@ -37,9 +56,11 @@ class YTDLSource(disnake.PCMVolumeTransformer):
             data = data["entries"][0]
 
         return cls(
-            disnake.FFmpegPCMAudio(
-                data["url"] if stream else ytdl.prepare_filename(data),
-                before_options="-vn -reconnect 1",
+            TrackedAudioSource(
+                disnake.FFmpegPCMAudio(
+                    data["url"] if stream else ytdl.prepare_filename(data),
+                    before_options="-vn -reconnect 1",
+                )
             ),
             data=data,
         )
@@ -59,7 +80,7 @@ class QueuedSong:
     def format(self, show_queuer=False, hide_preview=False, multiline=False) -> str:
         if multiline:
             return (
-                f"[`{self.player.title}`]({'<' if hide_preview else ''}{self.player.original_url}{'>' if hide_preview else ''})\n**duration:** {self.format_duration(self.player.duration) if self.player.duration else '[live]'}"
+                f"[`{self.player.title}`]({'<' if hide_preview else ''}{self.player.original_url}{'>' if hide_preview else ''})\n**duration:** {format_duration(self.player.duration) if self.player.duration else '[live]'}"
                 + (
                     f", **queuer:** <@{self.trigger_message.author.id}>"
                     if show_queuer
@@ -68,17 +89,9 @@ class QueuedSong:
             )
         else:
             return (
-                f"[`{self.player.title}`]({'<' if hide_preview else ''}{self.player.original_url}{'>' if hide_preview else ''}) **[{self.format_duration(self.player.duration) if self.player.duration else 'live'}]**"
+                f"[`{self.player.title}`]({'<' if hide_preview else ''}{self.player.original_url}{'>' if hide_preview else ''}) **[{format_duration(self.player.duration) if self.player.duration else 'live'}]**"
                 + (f" (<@{self.trigger_message.author.id}>)" if show_queuer else "")
             )
-
-    def format_duration(self, duration: int) -> str:
-        hours, duration = divmod(duration, 3600)
-        minutes, duration = divmod(duration, 60)
-        segments = [hours, minutes, duration]
-        if len(segments) == 3 and segments[0] == 0:
-            del segments[0]
-        return f"{':'.join(f'{s:0>2}' for s in segments)}"
 
     def __str__(self):
         return self.__repr__()
@@ -102,6 +115,15 @@ class QueuedPlayer:
 
     def __str__(self):
         return self.__repr__()
+
+
+def format_duration(duration: int) -> str:
+    hours, duration = divmod(duration, 3600)
+    minutes, duration = divmod(duration, 60)
+    segments = [hours, minutes, duration]
+    if len(segments) == 3 and segments[0] == 0:
+        del segments[0]
+    return f"{':'.join(f'{s:0>2}' for s in segments)}"
 
 
 def __reload_module__():
