@@ -48,6 +48,7 @@ async def on_message(message, edited=False):
             case C.RELOAD if message.author.id in constants.OWNERS:
                 reloaded_modules = set()
                 rreload(reloaded_modules, __import__("core"))
+                rreload(reloaded_modules, __import__("extra"))
                 for module in filter(
                     lambda v: inspect.ismodule(v)
                     and v.__name__ in constants.RELOADABLE_MODULES,

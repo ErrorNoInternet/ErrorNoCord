@@ -28,6 +28,7 @@ RELOADABLE_MODULES = [
     "constants",
     "core",
     "events",
+    "extra",
     "tasks",
     "utils",
     "voice",
