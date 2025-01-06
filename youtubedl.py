@@ -82,7 +82,7 @@ class QueuedSong:
             return (
                 f"[`{self.player.title}`]({'<' if hide_preview else ''}{self.player.original_url}{'>' if hide_preview else ''})\n**duration:** {format_duration(self.player.duration) if self.player.duration else '[live]'}"
                 + (
-                    f", **queuer:** <@{self.trigger_message.author.id}>"
+                    f", **queued by:** <@{self.trigger_message.author.id}>"
                     if show_queuer
                     else ""
                 )

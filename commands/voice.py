@@ -182,7 +182,7 @@ async def queue_or_play(message, edited=False):
                         color=constants.EMBED_COLOR,
                     )
                     if formatted_duration:
-                        e.set_footer(text=f"{formatted_duration} long")
+                        e.set_footer(text=f"{formatted_duration} in total")
                     return e
 
                 await disnake_paginator.ButtonPaginator(
@@ -224,8 +224,8 @@ async def playing(message):
             color=constants.EMBED_COLOR,
             title=source.title,
             description=f"{'⏸️ ' if message.guild.voice_client.is_paused() else ''}"
-            f"`[{'#'*int(progress * bar_length)}{'-'*int((1 - progress) * bar_length)}]`"
-            f"{youtubedl.format_duration(int(source.original.progress))} / {youtubedl.format_duration(source.duration)} ({round(progress * 100)}%)",
+            f"`[{'#'*int(progress * bar_length)}{'-'*int((1 - progress) * bar_length)}]` "
+            f"**{youtubedl.format_duration(int(source.original.progress))}** / **{youtubedl.format_duration(source.duration)}** (**{round(progress * 100)}%**)",
             url=source.original_url,
         )
         embed.add_field(name="Volume", value=f"{int(source.volume*100)}%")
