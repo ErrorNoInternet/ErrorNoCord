@@ -120,7 +120,7 @@ async def on_message(message, edited=False):
                 await commands.bot.help(message)
             case C.UPTIME:
                 await commands.bot.uptime(message)
-            case C.PLAYING:
+            case C.PLAYING | C.CURRENT:
                 await commands.voice.playing(message)
             case C.FAST_FORWARD:
                 await commands.voice.fast_forward(message)

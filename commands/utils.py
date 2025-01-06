@@ -5,6 +5,7 @@ import constants
 
 class Command(enum.Enum):
     CLEAR = "clear"
+    CURRENT = "current"
     EXECUTE = "execute"
     FAST_FORWARD = "ff"
     HELP = "help"
