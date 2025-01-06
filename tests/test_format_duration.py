@@ -1,10 +1,21 @@
 import unittest
 
 import utils
+import youtubedl
 
 
 class TestFormatDuration(unittest.TestCase):
-    def test_default(self):
+    def test_youtubedl(self):
+        self.assertEqual(youtubedl.format_duration(0), "00:00")
+        self.assertEqual(youtubedl.format_duration(0.5), "00:00")
+        self.assertEqual(youtubedl.format_duration(60.5), "01:00")
+        self.assertEqual(youtubedl.format_duration(1), "00:01")
+        self.assertEqual(youtubedl.format_duration(60), "01:00")
+        self.assertEqual(youtubedl.format_duration(60 + 30), "01:30")
+        self.assertEqual(youtubedl.format_duration(60 * 60), "01:00:00")
+        self.assertEqual(youtubedl.format_duration(60 * 60 + 30), "01:00:30")
+
+    def test_utils(self):
         self.assertEqual(utils.format_duration(0), "")
         self.assertEqual(utils.format_duration(60 * 60 * 24 * 7), "1 week")
         self.assertEqual(utils.format_duration(60 * 60 * 24 * 21), "3 weeks")
@@ -27,7 +38,7 @@ class TestFormatDuration(unittest.TestCase):
             utils.format_duration(60 * 60 * 24 * 7 + 30), "1 week, 30 seconds"
         )
 
-    def test_natural(self):
+    def test_utils_natural(self):
         def format(seconds: int):
             return utils.format_duration(seconds, natural=True)
 
