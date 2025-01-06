@@ -154,7 +154,7 @@ async def queue_or_play(message, edited=False):
             players[message.guild.id].queue_add(queued)
 
         if not message.guild.voice_client.source:
-            play_next(message)
+            play_next(message, first=True)
         elif args.now:
             message.guild.voice_client.stop()
         else:
@@ -360,7 +360,7 @@ def play_after_callback(e, message, once):
         play_next(message)
 
 
-def play_next(message, once=False):
+def play_next(message, once=False, first=False):
     message.guild.voice_client.stop()
     if players[message.guild.id].queue:
         queued = players[message.guild.id].queue_pop()
@@ -374,7 +374,7 @@ def play_next(message, once=False):
             )
             return
         client.loop.create_task(
-            utils.channel_send(message, f"**0.** {queued.format(show_queuer=True)}")
+            utils.channel_send(message, queued.format(show_queuer=not first))
         )
 
 
