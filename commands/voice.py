@@ -216,17 +216,50 @@ async def playing(message):
     if not command_allowed(message):
         return
 
+    tokens = commands.tokenize(message.content)
+    parser = arguments.ArgumentParser(
+        tokens[0], "get information about the currently playing song"
+    )
+    parser.add_argument(
+        "-d",
+        "--description",
+        action="store_true",
+        help="get the description",
+    )
+    if not (args := await parser.parse_args(message, tokens)):
+        return
+
     if source := message.guild.voice_client.source:
+        if args.description:
+            if description := source.description:
+                paginator = disnake_paginator.ButtonPaginator(
+                    invalid_user_function=utils.invalid_user_handler,
+                    color=constants.EMBED_COLOR,
+                    title=source.title,
+                    segments=disnake_paginator.split(description),
+                )
+                for embed in paginator.embeds:
+                    embed.url = source.original_url
+                await paginator.start(
+                    disnake_paginator.wrappers.MessageInteractionWrapper(message)
+                )
+            else:
+                await utils.reply(
+                    message,
+                    source.description or "no description found!",
+                )
+            return
+
         bar_length = 35
         progress = source.original.progress / source.duration
 
         embed = disnake.Embed(
             color=constants.EMBED_COLOR,
             title=source.title,
+            url=source.original_url,
             description=f"{'⏸️ ' if message.guild.voice_client.is_paused() else ''}"
             f"`[{'#'*int(progress * bar_length)}{'-'*int((1 - progress) * bar_length)}]` "
             f"**{youtubedl.format_duration(int(source.original.progress))}** / **{youtubedl.format_duration(source.duration)}** (**{round(progress * 100)}%**)",
-            url=source.original_url,
         )
         embed.add_field(name="Volume", value=f"{int(source.volume*100)}%")
         embed.add_field(name="Views", value=f"{source.view_count:,}")

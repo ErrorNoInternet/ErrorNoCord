@@ -3,10 +3,9 @@ import collections
 from dataclasses import dataclass
 from typing import Any, Optional
 
+import constants
 import disnake
 import yt_dlp
-
-import constants
 
 ytdl = yt_dlp.YoutubeDL(constants.YTDL_OPTIONS)
 
@@ -33,6 +32,7 @@ class YTDLSource(disnake.PCMVolumeTransformer):
     ):
         super().__init__(source, volume)
 
+        self.description = data.get("description")
         self.duration = data.get("duration")
         self.original_url = data.get("original_url")
         self.thumbnail_url = data.get("thumbnail")
