@@ -11,9 +11,9 @@ async def cleanup():
         await asyncio.sleep(3600)
 
         targets = []
-        for id, player in players:
+        for guild_id, player in players.items():
             if len(player.queue) == 0:
-                targets.append(id)
+                targets.append(guild_id)
         for target in targets:
             del players[target]
 
