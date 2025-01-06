@@ -1,4 +1,4 @@
-FROM python:3.13.1-alpine
+FROM python:3.13-alpine
 
 RUN apk --no-cache add ffmpeg opus
 
@@ -8,4 +8,3 @@ COPY . .
 RUN pip install -r requirements.txt
 
 CMD ["python", "-OO", "main.py"]
-
