@@ -325,14 +325,19 @@ async def volume(message):
 
 
 def delete_queued(messages):
+    if messages[0].guild.id not in players:
+        return
+
+    if len(players[messages[0].guild.id].queue) == 0:
+        return
+
     found = []
     for message in messages:
         for queued in players[message.guild.id].queue:
             if queued.trigger_message.id == message.id:
                 found.append(queued)
     for queued in found:
-        if queued in players[messages[0].guild.id].queue:
-            players[messages[0].guild.id].queue.remove(queued)
+        players[messages[0].guild.id].queue.remove(queued)
 
 
 def play_after_callback(e, message, once):
