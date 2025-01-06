@@ -12,10 +12,6 @@ from state import client, players
 
 
 async def queue_or_play(message, edited=False):
-    await ensure_joined(message)
-    if not command_allowed(message):
-        return
-
     if message.guild.id not in players:
         players[message.guild.id] = youtubedl.QueuedPlayer()
 
@@ -71,6 +67,13 @@ async def queue_or_play(message, edited=False):
         help="remove queued songs by queuer",
     )
     if not (args := await parser.parse_args(message, tokens)):
+        return
+
+    await ensure_joined(message)
+    if len(tokens) == 1 and tokens[0].lower() != "play":
+        if not command_allowed(message, immutable=True):
+            return
+    elif not command_allowed(message):
         return
 
     if edited:
@@ -162,54 +165,53 @@ async def queue_or_play(message, edited=False):
                 message,
                 f"**{len(players[message.guild.id].queue)}.** {queued.format()}",
             )
+    elif tokens[0].lower() == "play":
+        await resume(message)
     else:
-        if tokens[0].lower() == "play":
-            await resume(message)
-        else:
-            if players[message.guild.id].queue:
-                formatted_duration = utils.format_duration(
-                    sum(
-                        [
-                            queued.player.duration if queued.player.duration else 0
-                            for queued in players[message.guild.id].queue
-                        ]
-                    )
+        if players[message.guild.id].queue:
+            formatted_duration = utils.format_duration(
+                sum(
+                    [
+                        queued.player.duration if queued.player.duration else 0
+                        for queued in players[message.guild.id].queue
+                    ]
                 )
+            )
 
-                def embed(description):
-                    e = disnake.Embed(
-                        description=description,
-                        color=constants.EMBED_COLOR,
-                    )
-                    if formatted_duration:
-                        e.set_footer(text=f"{formatted_duration} in total")
-                    return e
-
-                await disnake_paginator.ButtonPaginator(
-                    invalid_user_function=utils.invalid_user_handler,
+            def embed(description):
+                e = disnake.Embed(
+                    description=description,
                     color=constants.EMBED_COLOR,
-                    segments=list(
-                        map(
-                            embed,
-                            [
-                                "\n\n".join(
-                                    [
-                                        f"**{i + 1}.** {queued.format(show_queuer=True, hide_preview=True, multiline=True)}"
-                                        for i, queued in batch
-                                    ]
-                                )
-                                for batch in itertools.batched(
-                                    enumerate(players[message.guild.id].queue), 10
-                                )
-                            ],
-                        )
-                    ),
-                ).start(disnake_paginator.wrappers.MessageInteractionWrapper(message))
-            else:
-                await utils.reply(
-                    message,
-                    "nothing is queued!",
                 )
+                if formatted_duration:
+                    e.set_footer(text=f"{formatted_duration} in total")
+                return e
+
+            await disnake_paginator.ButtonPaginator(
+                invalid_user_function=utils.invalid_user_handler,
+                color=constants.EMBED_COLOR,
+                segments=list(
+                    map(
+                        embed,
+                        [
+                            "\n\n".join(
+                                [
+                                    f"**{i + 1}.** {queued.format(show_queuer=True, hide_preview=True, multiline=True)}"
+                                    for i, queued in batch
+                                ]
+                            )
+                            for batch in itertools.batched(
+                                enumerate(players[message.guild.id].queue), 10
+                            )
+                        ],
+                    )
+                ),
+            ).start(disnake_paginator.wrappers.MessageInteractionWrapper(message))
+        else:
+            await utils.reply(
+                message,
+                "nothing is queued!",
+            )
 
 
 async def playing(message):
@@ -419,7 +421,7 @@ async def ensure_joined(message):
         if message.author.voice:
             await message.author.voice.channel.connect()
         else:
-            await utils.reply(message, "You are not connected to a voice channel.")
+            await utils.reply(message, "you are not connected to a voice channel!")
 
 
 def command_allowed(message, immutable=False):
