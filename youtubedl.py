@@ -122,8 +122,8 @@ class QueuedPlayer:
         return self.__repr__()
 
 
-def format_duration(duration: int) -> str:
-    hours, duration = divmod(duration, 3600)
+def format_duration(duration: int | float) -> str:
+    hours, duration = divmod(int(duration), 3600)
     minutes, duration = divmod(duration, 60)
     segments = [hours, minutes, duration]
     if len(segments) == 3 and segments[0] == 0:
