@@ -225,7 +225,7 @@ async def playing(message):
             title=source.title,
             description=f"{'⏸️ ' if message.guild.voice_client.is_paused() else ''}"
             f"`[{'#'*int(progress * bar_length)}{'-'*int((1 - progress) * bar_length)}]`"
-            f"{youtubedl.format_duration(int(source.original.progress))} / {youtubedl.format_duration(source.duration)}",
+            f"{youtubedl.format_duration(int(source.original.progress))} / {youtubedl.format_duration(source.duration)} ({round(progress * 100)}%)",
             url=source.original_url,
         )
         embed.add_field(name="Volume", value=f"{int(source.volume*100)}%")
