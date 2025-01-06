@@ -447,9 +447,12 @@ def play_next(message, once=False, first=False):
             message.guild.voice_client.play(
                 queued.player, after=lambda e: play_after_callback(e, message, once)
             )
-        client.loop.create_task(
-            utils.channel_send(message, queued.format(show_queuer=not first))
-        )
+
+        formatted = queued.format(show_queuer=not first)
+        if first:
+            client.loop.create_task(utils.reply(message, formatted))
+        else:
+            client.loop.create_task(utils.channel_send(message, formatted))
 
 
 async def ensure_joined(message):
