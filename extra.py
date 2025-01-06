@@ -44,13 +44,14 @@ async def transcript(message, languages=["en"], max_messages=6, min_messages=3):
             break
 
 
-def messages_per_second():
+def messages_per_second(limit=500):
     oldest = 2**64
     newest = 0
     guilds = set()
     members = set()
+    cached_messages = list(client.cached_messages)[-limit:]
 
-    for message in client.cached_messages:
+    for message in cached_messages:
         if message.guild:
             guilds.add(message.guild.id)
         members.add(message.author.id)
@@ -61,7 +62,7 @@ def messages_per_second():
         elif t > newest:
             newest = t
 
-    average = round(len(client.cached_messages) / (newest - oldest), 1)
+    average = round(len(cached_messages) / (newest - oldest), 1)
     if average == 1.0:
         average = 1
     print(
