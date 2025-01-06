@@ -3,32 +3,37 @@ import collections
 from dataclasses import dataclass
 from typing import Any, Optional
 
-import constants
 import disnake
 import yt_dlp
+
+import constants
 
 ytdl = yt_dlp.YoutubeDL(constants.YTDL_OPTIONS)
 
 
-class TrackedAudioSource(disnake.AudioSource):
+class CustomAudioSource(disnake.AudioSource):
     def __init__(self, source):
         self._source = source
-        self.count = 0
+        self.read_count = 0
 
     def read(self) -> bytes:
         data = self._source.read()
         if data:
-            self.count += 1
+            self.read_count += 1
         return data
+
+    def fast_forward(self, seconds: int):
+        for _ in range(int(seconds / 0.02)):
+            self._source.read()
 
     @property
     def progress(self) -> float:
-        return self.count * 0.02
+        return self.read_count * 0.02
 
 
 class YTDLSource(disnake.PCMVolumeTransformer):
     def __init__(
-        self, source: TrackedAudioSource, *, data: dict[str, Any], volume: float = 0.5
+        self, source: CustomAudioSource, *, data: dict[str, Any], volume: float = 0.5
     ):
         super().__init__(source, volume)
 
@@ -56,7 +61,7 @@ class YTDLSource(disnake.PCMVolumeTransformer):
             data = data["entries"][0]
 
         return cls(
-            TrackedAudioSource(
+            CustomAudioSource(
                 disnake.FFmpegPCMAudio(
                     data["url"] if stream else ytdl.prepare_filename(data),
                     before_options="-vn -reconnect 1",
