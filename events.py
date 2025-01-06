@@ -1,3 +1,6 @@
+import asyncio
+import threading
+
 import commands
 import core
 import tasks
@@ -5,7 +8,23 @@ from state import client
 
 
 async def on_ready():
-    await tasks.check_idle()
+    threading.Thread(
+        name="cleanup",
+        target=asyncio.run_coroutine_threadsafe,
+        args=(
+            tasks.cleanup(),
+            client.loop,
+        ),
+    ).start()
+
+    threading.Thread(
+        name="check_idle",
+        target=asyncio.run_coroutine_threadsafe,
+        args=(
+            tasks.check_idle(),
+            client.loop,
+        ),
+    ).start()
 
 
 async def on_message(message):
