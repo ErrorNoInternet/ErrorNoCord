@@ -4,6 +4,34 @@ import constants
 from state import message_responses
 
 
+class ChannelResponseWrapper:
+    def __init__(self, message):
+        self.message = message
+        self.sent_message = None
+
+    async def send_message(self, **kwargs):
+        if "ephemeral" in kwargs:
+            del kwargs["ephemeral"]
+        self.sent_message = await reply(self.message, **kwargs)
+
+    async def edit_message(self, content=None, embed=None, view=None):
+        if self.sent_message:
+            content = content or self.sent_message.content
+            if not embed and len(self.sent_message.embeds) > 0:
+                embed = self.sent_message.embeds[0]
+            await self.sent_message.edit(content=content, embed=embed, view=view)
+
+
+class MessageInteractionWrapper:
+    def __init__(self, message):
+        self.message = message
+        self.author = message.author
+        self.response = ChannelResponseWrapper(message)
+
+    async def edit_original_message(self, content=None, embed=None, view=None):
+        await self.response.edit_message(content=content, embed=embed, view=view)
+
+
 def format_duration(duration: int, natural: bool = False):
     def format_plural(noun, count):
         return noun if count == 1 else noun + "s"
@@ -49,6 +77,7 @@ async def reply(message, *args, **kwargs):
             *args, **kwargs, allowed_mentions=disnake.AllowedMentions.none()
         )
         message_responses[message.id] = response
+    return message_responses[message.id]
 
 
 async def channel_send(message, *args, **kwargs):
@@ -59,7 +88,7 @@ async def channel_send(message, *args, **kwargs):
 
 async def invalid_user_handler(interaction):
     await interaction.response.send_message(
-        "You are not the intended receiver of this message!", ephemeral=True
+        "you are not the intended receiver of this message!", ephemeral=True
     )
 
 

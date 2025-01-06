@@ -93,9 +93,7 @@ async def on_message(message, edited=False):
                         invalid_user_function=utils.invalid_user_handler,
                         color=constants.EMBED_COLOR,
                         segments=disnake_paginator.split(output),
-                    ).start(
-                        disnake_paginator.wrappers.MessageInteractionWrapper(message)
-                    )
+                    ).start(utils.MessageInteractionWrapper(message))
                 elif len(output.strip()) == 0:
                     await utils.add_check_reaction(message)
                 else:

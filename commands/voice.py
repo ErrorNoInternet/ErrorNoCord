@@ -219,7 +219,7 @@ async def queue_or_play(message, edited=False):
                         ],
                     )
                 ),
-            ).start(disnake_paginator.wrappers.MessageInteractionWrapper(message))
+            ).start(utils.MessageInteractionWrapper(message))
         else:
             await utils.reply(
                 message,
@@ -255,9 +255,7 @@ async def playing(message):
                 )
                 for embed in paginator.embeds:
                     embed.url = source.original_url
-                await paginator.start(
-                    disnake_paginator.wrappers.MessageInteractionWrapper(message)
-                )
+                await paginator.start(utils.MessageInteractionWrapper(message))
             else:
                 await utils.reply(
                     message,
