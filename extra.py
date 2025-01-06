@@ -7,7 +7,9 @@ import youtube_transcript_api
 from state import client, players
 
 
-async def transcript(message, languages=["en"], max_messages=6, min_messages=3):
+async def transcript(
+    message, languages=["en"], max_messages=6, min_messages=3, upper=True
+):
     initial_id = message.guild.voice_client.source.id
     transcript_list = youtube_transcript_api.YouTubeTranscriptApi.list_transcripts(
         initial_id
@@ -31,7 +33,10 @@ async def transcript(message, languages=["en"], max_messages=6, min_messages=3):
         ):
             await asyncio.sleep(0.2)
 
-        messages.insert(0, await message.channel.send(line["text"].upper()))
+        messages.insert(
+            0,
+            await message.channel.send(line["text"].upper() if upper else line["text"]),
+        )
         if len(messages) > max_messages:
             try:
                 await message.channel.delete_messages(
