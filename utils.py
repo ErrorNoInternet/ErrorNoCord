@@ -1,6 +1,7 @@
 import disnake
 
 import constants
+from state import message_responses
 
 
 def format_duration(duration: int):
@@ -34,15 +35,27 @@ async def add_check_reaction(message):
 
 
 async def reply(message, *args, **kwargs):
-    await message.reply(
-        *args, **kwargs, allowed_mentions=disnake.AllowedMentions.none()
-    )
+    if message.id in message_responses:
+        await message_responses[message.id].edit(
+            *args, **kwargs, allowed_mentions=disnake.AllowedMentions.none()
+        )
+    else:
+        response = await message.reply(
+            *args, **kwargs, allowed_mentions=disnake.AllowedMentions.none()
+        )
+        message_responses[message.id] = response
 
 
 async def channel_send(message, *args, **kwargs):
-    await message.channel.send(
-        *args, **kwargs, allowed_mentions=disnake.AllowedMentions.none()
-    )
+    if message.id in message_responses:
+        await message_responses[message.id].edit(
+            *args, **kwargs, allowed_mentions=disnake.AllowedMentions.none()
+        )
+    else:
+        response = await message.channel.send(
+            *args, **kwargs, allowed_mentions=disnake.AllowedMentions.none()
+        )
+        message_responses[message.id] = response
 
 
 async def invalid_user_handler(interaction):
