@@ -1,6 +1,6 @@
 FROM python:3.13.1-alpine
 
-RUN apk --no-cache add ffmpeg
+RUN apk --no-cache add ffmpeg opus
 
 WORKDIR /bot
 COPY . .
@@ -8,3 +8,4 @@ COPY . .
 RUN pip install -r requirements.txt
 
 CMD ["python", "-OO", "main.py"]
+
