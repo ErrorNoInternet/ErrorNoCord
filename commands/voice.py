@@ -31,11 +31,12 @@ async def queue_or_play(message, edited=False):
         "-i",
         "--remove-index",
         type=int,
-        help="remove a queued song by index",
+        nargs="*",
+        help="remove queued songs by index",
     )
     parser.add_argument(
         "-m",
-        "--remove-multiple",
+        "--match-multiple",
         action="store_true",
         help="continue removing queued after finding a match",
     )
@@ -89,14 +90,25 @@ async def queue_or_play(message, edited=False):
         players[message.guild.id].queue.clear()
         await utils.add_check_reaction(message)
         return
-    elif i := args.remove_index:
-        if i <= 0 or i > len(players[message.guild.id].queue):
-            await utils.reply(message, "invalid index!")
-            return
+    elif indices := args.remove_index:
+        targets = []
+        for i in indices:
+            if i <= 0 or i > len(players[message.guild.id].queue):
+                await utils.reply(message, f"invalid index `{i}`!")
+                return
+            targets.append(players[message.guild.id].queue[i - 1])
 
-        queued = players[message.guild.id].queue[i - 1]
-        del players[message.guild.id].queue[i - 1]
-        await utils.reply(message, f"**X** {queued.format()}")
+        for target in targets:
+            if target in players[message.guild.id].queue:
+                players[message.guild.id].queue.remove(target)
+
+        if len(targets) == 1:
+            await utils.reply(message, f"**X** {targets[0].format()}")
+        else:
+            await utils.reply(
+                message,
+                f"removed **{len(targets)}** queued {'song' if len(targets) == 1 else 'songs'}",
+            )
     elif args.remove_title or args.remove_queuer:
         targets = []
         for queued in players[message.guild.id].queue:
@@ -107,7 +119,7 @@ async def queue_or_play(message, edited=False):
             if q := args.remove_queuer:
                 if q == queued.trigger_message.author.id:
                     targets.append(queued)
-        if not args.remove_multiple:
+        if not args.match_multiple:
             targets = targets[:1]
 
         for target in targets:
