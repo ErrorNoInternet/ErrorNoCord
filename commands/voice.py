@@ -213,7 +213,7 @@ async def queue_or_play(message, edited=False):
 
 
 async def playing(message):
-    if not command_allowed(message):
+    if not command_allowed(message, immutable=True):
         return
 
     tokens = commands.tokenize(message.content)
@@ -342,11 +342,11 @@ async def pause(message):
 
 
 async def volume(message):
-    if not command_allowed(message):
+    if not command_allowed(message, immutable=True):
         return
 
     tokens = commands.tokenize(message.content)
-    parser = arguments.ArgumentParser(tokens[0], "set the current volume level")
+    parser = arguments.ArgumentParser(tokens[0], "get or set the current volume level")
     parser.add_argument(
         "volume",
         nargs="?",
@@ -366,6 +366,9 @@ async def volume(message):
             f"{int(message.guild.voice_client.source.volume * 100)}",
         )
     else:
+        if not command_allowed(message):
+            return
+
         message.guild.voice_client.source.volume = float(args.volume) / 100.0
         await utils.add_check_reaction(message)
 
@@ -419,7 +422,12 @@ async def ensure_joined(message):
             await utils.reply(message, "You are not connected to a voice channel.")
 
 
-def command_allowed(message):
-    if not message.author.voice or not message.guild.voice_client:
-        return False
-    return message.author.voice.channel.id == message.guild.voice_client.channel.id
+def command_allowed(message, immutable=False):
+    if not message.guild.voice_client:
+        return
+    if immutable:
+        return message.channel.id == message.guild.voice_client.channel.id
+    else:
+        if not message.author.voice:
+            return False
+        return message.author.voice.channel.id == message.guild.voice_client.channel.id
