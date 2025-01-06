@@ -1,7 +1,6 @@
 import re
 
 import arguments
-
 import commands
 import utils
 
@@ -67,7 +66,7 @@ async def clear(message):
     if args.delete_command:
         try:
             await message.delete()
-        except:
+        except Exception:
             pass
 
     regex = None
@@ -101,5 +100,5 @@ async def clear(message):
                 message,
                 f"purged **{messages}/{args.count} {'message' if args.count == 1 else 'messages'}**",
             )
-        except:
+        except Exception:
             pass

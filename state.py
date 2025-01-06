@@ -20,14 +20,13 @@ class LimitedSizeDict(collections.OrderedDict):
                 self.popitem(last=False)
 
 
-command_locks = LimitedSizeDict()
-message_responses = LimitedSizeDict()
-players = {}
-
 intents = disnake.Intents.default()
 intents.message_content = True
 intents.members = True
 client = disnake.Client(intents=intents)
 
-last_used = time.time()
+command_locks = LimitedSizeDict()
+idle_tracker = {"is_idle": False, "last_used": time.time()}
+message_responses = LimitedSizeDict()
+players = {}
 start_time = time.time()

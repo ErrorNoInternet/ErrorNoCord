@@ -7,13 +7,13 @@ import textwrap
 import time
 import traceback
 
+import disnake
 import disnake_paginator
 
 import commands
 import constants
-import core
 import utils
-from state import client, command_locks, last_used
+from state import client, command_locks, idle_tracker
 
 
 async def on_message(message, edited=False):
@@ -27,8 +27,10 @@ async def on_message(message, edited=False):
     if not matched:
         return
 
-    global last_used
-    last_used = time.time()
+    idle_tracker["last_used"] = time.time()
+    if idle_tracker["is_idle"]:
+        idle_tracker["is_idle"] = False
+        await client.change_presence(status=disnake.Status.online)
 
     if len(matched) > 1:
         await utils.reply(
@@ -50,7 +52,7 @@ async def on_message(message, edited=False):
                     and v.__name__ in constants.RELOADABLE_MODULES,
                     globals().values(),
                 ):
-                    core.rreload(reloaded_modules, module)
+                    rreload(reloaded_modules, module)
 
                 await utils.add_check_reaction(message)
             case C.EXECUTE if message.author.id in constants.OWNERS:
@@ -85,7 +87,7 @@ async def on_message(message, edited=False):
                 if len(output) > 2000:
                     output = output.replace("`", "\\`")
                     await disnake_paginator.ButtonPaginator(
-                        prefix=f"```\n",
+                        prefix="```\n",
                         suffix="```",
                         invalid_user_function=utils.invalid_user_handler,
                         color=constants.EMBED_COLOR,
@@ -129,9 +131,9 @@ async def on_message(message, edited=False):
 
 
 async def on_voice_state_update(_, before, after):
-    is_empty = lambda channel: [m.id for m in (channel.members if channel else [])] == [
-        client.user.id
-    ]
+    def is_empty(channel):
+        return [m.id for m in (channel.members if channel else [])] == [client.user.id]
+
     c = None
     if is_empty(before.channel):
         c = before.channel

@@ -3,7 +3,7 @@ import time
 
 import disnake
 
-from state import client, last_used, players
+from state import client, idle_tracker, players
 
 
 async def cleanup():
@@ -17,12 +17,9 @@ async def cleanup():
         for target in targets:
             del players[target]
 
-
-async def check_idle():
-    while True:
-        await asyncio.sleep(3600)
-
-        if time.time() - last_used >= 3600:
+        if (
+            not idle_tracker["is_idle"]
+            and time.time() - idle_tracker["last_used"] >= 3600
+        ):
             await client.change_presence(status=disnake.Status.idle)
-        else:
-            await client.change_presence(status=disnake.Status.online)
+            idle_tracker["is_idle"] = True

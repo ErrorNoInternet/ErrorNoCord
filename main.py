@@ -12,4 +12,5 @@ async def on_ready():
     await events.on_ready()
 
 
-client.run(constants.SECRETS["TOKEN"])
+if __name__ == "__main__":
+    client.run(constants.SECRETS["TOKEN"])

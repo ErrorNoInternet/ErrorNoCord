@@ -38,9 +38,9 @@ def range_type(string, min=0, max=100):
     try:
         value = int(string)
     except ValueError:
-        raise argparse.ArgumentTypeError(f"value not a valid integer")
+        raise argparse.ArgumentTypeError("value is not a valid integer")
 
     if min <= value <= max:
         return value
     else:
-        raise argparse.ArgumentTypeError(f"value not in range {min}-{max}")
+        raise argparse.ArgumentTypeError(f"value is not in range {min}-{max}")

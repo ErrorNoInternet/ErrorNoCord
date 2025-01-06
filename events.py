@@ -17,15 +17,6 @@ async def on_ready():
         ),
     ).start()
 
-    threading.Thread(
-        name="check_idle",
-        target=asyncio.run_coroutine_threadsafe,
-        args=(
-            tasks.check_idle(),
-            client.loop,
-        ),
-    ).start()
-
 
 async def on_message(message):
     await core.on_message(message)

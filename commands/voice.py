@@ -299,9 +299,6 @@ async def volume(message):
     if not command_allowed(message):
         return
 
-    if not message.guild.voice_client:
-        return
-
     tokens = commands.tokenize(message.content)
     parser = arguments.ArgumentParser(tokens[0], "set the current volume level")
     parser.add_argument(
@@ -314,10 +311,7 @@ async def volume(message):
         return
 
     if not message.guild.voice_client.source:
-        await utils.reply(
-            message,
-            f"nothing is playing!",
-        )
+        await utils.reply(message, "nothing is playing!")
         return
 
     if args.volume is None:

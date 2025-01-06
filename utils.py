@@ -5,7 +5,9 @@ from state import message_responses
 
 
 def format_duration(duration: int):
-    format_plural = lambda noun, count: noun if count == 1 else noun + "s"
+    def format_plural(noun, count):
+        return noun if count == 1 else noun + "s"
+
     segments = []
 
     weeks, duration = divmod(duration, 604800)
