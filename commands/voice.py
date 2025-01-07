@@ -196,7 +196,7 @@ async def queue_or_play(message, edited=False):
                     description=description,
                     color=constants.EMBED_COLOR,
                 )
-                if formatted_duration:
+                if formatted_duration and len(players[message.guild.id].queue) > 1:
                     e.set_footer(text=f"{formatted_duration} in total")
                 return e
 
