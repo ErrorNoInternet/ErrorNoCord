@@ -447,6 +447,9 @@ def play_after_callback(e, message, once):
 
 
 def play_next(message, once=False, first=False):
+    if not message.guild.voice_client:
+        return
+
     message.guild.voice_client.stop()
     if message.guild.id in players and players[message.guild.id].queue:
         queued = players[message.guild.id].queue_pop()
