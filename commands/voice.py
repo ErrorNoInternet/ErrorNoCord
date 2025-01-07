@@ -103,7 +103,7 @@ async def queue_or_play(message, edited=False):
                 players[message.guild.id].queue.remove(target)
 
         if len(targets) == 1:
-            await utils.reply(message, f"**X** {targets[0].format()}")
+            await utils.reply(message, f"**removed** {targets[0].format()}")
         else:
             await utils.reply(
                 message,
@@ -263,15 +263,13 @@ async def playing(message):
                 )
             return
 
-        bar_length = 35
         progress = source.original.progress / source.duration
-
         embed = disnake.Embed(
             color=constants.EMBED_COLOR,
             title=source.title,
             url=source.original_url,
             description=f"{'⏸️ ' if message.guild.voice_client.is_paused() else ''}"
-            f"`[{'#'*int(progress * bar_length)}{'-'*int((1 - progress) * bar_length)}]` "
+            f"`[{'#'*int(progress * constants.BAR_LENGTH)}{'-'*int((1 - progress) * constants.BAR_LENGTH)}]` "
             f"**{youtubedl.format_duration(int(source.original.progress))}** / **{youtubedl.format_duration(source.duration)}** (**{round(progress * 100)}%**)",
         )
         embed.add_field(name="Volume", value=f"{int(source.volume*100)}%")
@@ -452,6 +450,7 @@ def play_next(message, once=False, first=False):
             color=constants.EMBED_COLOR,
             title=queued.player.title,
             url=queued.player.original_url,
+            description=f"`[{'-'*constants.BAR_LENGTH}]` **{youtubedl.format_duration(0)}** / **{youtubedl.format_duration(queued.player.duration)}**",
         )
         embed.add_field(name="Volume", value=f"{int(queued.player.volume*100)}%")
         embed.add_field(name="Views", value=f"{queued.player.view_count:,}")

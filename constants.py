@@ -15,6 +15,7 @@ YTDL_OPTIONS = {
     "source_address": "0.0.0.0",
 }
 
+BAR_LENGTH = 35
 EMBED_COLOR = 0xFF6600
 OWNERS = [531392146767347712]
 PREFIX = "%"
