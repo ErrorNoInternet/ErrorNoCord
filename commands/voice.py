@@ -228,9 +228,6 @@ async def queue_or_play(message, edited=False):
 
 
 async def playing(message):
-    if not command_allowed(message, immutable=True):
-        return
-
     tokens = commands.tokenize(message.content)
     parser = arguments.ArgumentParser(
         tokens[0], "get information about the currently playing song"
@@ -242,6 +239,9 @@ async def playing(message):
         help="get the description",
     )
     if not (args := await parser.parse_args(message, tokens)):
+        return
+
+    if not command_allowed(message, immutable=True):
         return
 
     if source := message.guild.voice_client.source:
@@ -292,9 +292,6 @@ async def playing(message):
 
 
 async def fast_forward(message):
-    if not command_allowed(message):
-        return
-
     tokens = commands.tokenize(message.content)
     parser = arguments.ArgumentParser(tokens[0], "fast forward audio playback")
     parser.add_argument(
@@ -303,6 +300,9 @@ async def fast_forward(message):
         help="the amount of seconds to fast forward",
     )
     if not (args := await parser.parse_args(message, tokens)):
+        return
+
+    if not command_allowed(message):
         return
 
     if not message.guild.voice_client.source:
@@ -378,9 +378,6 @@ async def pause(message):
 
 
 async def volume(message):
-    if not command_allowed(message, immutable=True):
-        return
-
     tokens = commands.tokenize(message.content)
     parser = arguments.ArgumentParser(tokens[0], "get or set the current volume level")
     parser.add_argument(
@@ -390,6 +387,9 @@ async def volume(message):
         help="the volume level (0 - 150)",
     )
     if not (args := await parser.parse_args(message, tokens)):
+        return
+
+    if not command_allowed(message, immutable=True):
         return
 
     if not message.guild.voice_client.source:
