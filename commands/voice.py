@@ -448,11 +448,23 @@ def play_next(message, once=False, first=False):
                 queued.player, after=lambda e: play_after_callback(e, message, once)
             )
 
-        formatted = queued.format(show_queuer=not first)
+        embed = disnake.Embed(
+            color=constants.EMBED_COLOR,
+            title=queued.player.title,
+            url=queued.player.original_url,
+        )
+        embed.add_field(name="Volume", value=f"{int(queued.player.volume*100)}%")
+        embed.add_field(name="Views", value=f"{queued.player.view_count:,}")
+        embed.add_field(
+            name="Queuer",
+            value=players[message.guild.id].current.trigger_message.author.mention,
+        )
+        embed.set_image(queued.player.thumbnail_url)
+
         if first:
-            client.loop.create_task(utils.reply(message, formatted))
+            client.loop.create_task(utils.reply(message, embed=embed))
         else:
-            client.loop.create_task(utils.channel_send(message, formatted))
+            client.loop.create_task(utils.channel_send(message, embed=embed))
 
 
 async def ensure_joined(message):
