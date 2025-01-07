@@ -317,6 +317,17 @@ async def fast_forward(message):
 
 
 async def skip(message):
+    tokens = commands.tokenize(message.content)
+    parser = arguments.ArgumentParser(tokens[0], "skip the currently playing song")
+    parser.add_argument(
+        "-n",
+        "--next",
+        action="store_true",
+        help="skip the next song",
+    )
+    if not (args := await parser.parse_args(message, tokens)):
+        return
+
     if not command_allowed(message):
         return
 
@@ -326,6 +337,9 @@ async def skip(message):
             message,
             "the queue is empty now!",
         )
+    elif args.next:
+        next = players[message.guild.id].queue.pop()
+        await utils.reply(message, f"**skipped** {next.format()}")
     else:
         message.guild.voice_client.stop()
         await utils.add_check_reaction(message)
