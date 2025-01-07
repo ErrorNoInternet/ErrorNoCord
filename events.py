@@ -20,7 +20,7 @@ def prepare():
 
 
 async def on_bulk_message_delete(messages):
-    commands.voice.delete_queued(messages)
+    commands.voice.remove_queued(messages)
 
 
 async def on_message(message):
@@ -28,7 +28,7 @@ async def on_message(message):
 
 
 async def on_message_delete(message):
-    commands.voice.delete_queued([message])
+    commands.voice.remove_queued([message])
 
 
 async def on_message_edit(before, after):
