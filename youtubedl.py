@@ -37,11 +37,14 @@ class YTDLSource(disnake.PCMVolumeTransformer):
     ):
         super().__init__(source, volume)
 
+        self.channel = data.get("channel")
         self.description = data.get("description")
         self.duration = data.get("duration")
         self.id = data.get("id")
+        self.like_count = data.get("like_count")
         self.original_url = data.get("original_url")
         self.thumbnail_url = data.get("thumbnail")
+        self.timestamp = data.get("timestamp")
         self.title = data.get("title")
         self.view_count = data.get("view_count")
 
@@ -118,13 +121,23 @@ class QueuedSong:
                 )
             ),
         )
-        embed.add_field(name="Volume", value=f"{int(self.player.volume*100)}%")
+
+        embed.add_field(name="Channel", value=self.player.channel)
+        embed.add_field(name="Likes", value=f"{self.player.like_count:,}")
         embed.add_field(name="Views", value=f"{self.player.view_count:,}")
-        embed.add_field(
-            name="Queuer",
-            value=self.trigger_message.author.mention,
-        )
+        embed.add_field(name="Published", value=f"<t:{self.player.timestamp}>")
+        embed.add_field(name="Volume", value=f"{int(self.player.volume*100)}%")
+
         embed.set_image(self.player.thumbnail_url)
+        embed.set_footer(
+            text=f"queued by {self.trigger_message.author.name}",
+            icon_url=(
+                self.trigger_message.author.avatar.url
+                if self.trigger_message.author.avatar
+                else None
+            ),
+        )
+
         return embed
 
     def __str__(self):
