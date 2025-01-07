@@ -37,7 +37,6 @@ class YTDLSource(disnake.PCMVolumeTransformer):
     ):
         super().__init__(source, volume)
 
-        self.channel = data.get("channel")
         self.description = data.get("description")
         self.duration = data.get("duration")
         self.id = data.get("id")
@@ -46,6 +45,8 @@ class YTDLSource(disnake.PCMVolumeTransformer):
         self.thumbnail_url = data.get("thumbnail")
         self.timestamp = data.get("timestamp")
         self.title = data.get("title")
+        self.uploader = data.get("uploader")
+        self.uploader_url = data.get("uploader_url")
         self.view_count = data.get("view_count")
 
     @classmethod
@@ -122,7 +123,10 @@ class QueuedSong:
             ),
         )
 
-        embed.add_field(name="Channel", value=self.player.channel)
+        embed.add_field(
+            name="Uploader",
+            value=f"[{self.player.uploader}]({self.player.uploader_url})",
+        )
         embed.add_field(name="Likes", value=f"{self.player.like_count:,}")
         embed.add_field(name="Views", value=f"{self.player.view_count:,}")
         embed.add_field(name="Published", value=f"<t:{self.player.timestamp}>")
