@@ -461,7 +461,7 @@ def play_next(message, once=False, first=False):
         )
         embed.set_image(queued.player.thumbnail_url)
 
-        if first:
+        if first and len(players[message.guild.id].queue) == 0:
             client.loop.create_task(utils.reply(message, embed=embed))
         else:
             client.loop.create_task(utils.channel_send(message, embed=embed))
