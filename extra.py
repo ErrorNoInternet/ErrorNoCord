@@ -39,9 +39,13 @@ async def transcript(
         )
         if len(messages) > max_messages:
             try:
-                await message.channel.delete_messages(
-                    [messages.pop() for _ in range(max_messages - min_messages)]
-                )
+                count = max_messages - min_messages
+                if count == 1:
+                    await messages.pop().delete()
+                else:
+                    await message.channel.delete_messages(
+                        [messages.pop() for _ in range(count)]
+                    )
             except Exception:
                 pass
 
