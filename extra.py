@@ -4,7 +4,7 @@ import string
 import disnake
 import youtube_transcript_api
 
-from state import client, players
+from state import client, kill, players
 
 
 async def transcript(
@@ -45,7 +45,7 @@ async def transcript(
             except Exception:
                 pass
 
-        if message.guild.voice_client.source.id != initial_id:
+        if (message.guild.voice_client.source.id != initial_id) or kill["transcript"]:
             break
 
 
