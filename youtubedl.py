@@ -99,6 +99,34 @@ class QueuedSong:
                 + (f" (<@{self.trigger_message.author.id}>)" if show_queuer else "")
             )
 
+    def embed(self, is_paused=False):
+        progress = 0
+        if self.player.duration:
+            progress = self.player.original.progress / self.player.duration
+
+        embed = disnake.Embed(
+            color=constants.EMBED_COLOR,
+            title=self.player.title,
+            url=self.player.original_url,
+            description=(
+                f"{'⏸️ ' if is_paused else ''}"
+                f"`[{'#'*int(progress * constants.BAR_LENGTH)}{'-'*int((1 - progress) * constants.BAR_LENGTH)}]` "
+                + (
+                    f"**{format_duration(int(self.player.original.progress))}** / **{format_duration(self.player.duration)}** (**{round(progress * 100)}%**)"
+                    if self.player.duration
+                    else "[**live**]"
+                )
+            ),
+        )
+        embed.add_field(name="Volume", value=f"{int(self.player.volume*100)}%")
+        embed.add_field(name="Views", value=f"{self.player.view_count:,}")
+        embed.add_field(
+            name="Queuer",
+            value=self.trigger_message.author.mention,
+        )
+        embed.set_image(self.player.thumbnail_url)
+        return embed
+
     def __str__(self):
         return self.__repr__()
 

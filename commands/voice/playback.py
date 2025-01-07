@@ -1,8 +1,60 @@
 import arguments
 import commands
+import constants
+import disnake_paginator
 import utils
+from state import players
 
 from .utils import command_allowed
+
+
+async def playing(message):
+    tokens = commands.tokenize(message.content)
+    parser = arguments.ArgumentParser(
+        tokens[0], "get information about the currently playing song"
+    )
+    parser.add_argument(
+        "-d",
+        "--description",
+        action="store_true",
+        help="get the description",
+    )
+    if not (args := await parser.parse_args(message, tokens)):
+        return
+
+    if not command_allowed(message, immutable=True):
+        return
+
+    if source := message.guild.voice_client.source:
+        if args.description:
+            if description := source.description:
+                paginator = disnake_paginator.ButtonPaginator(
+                    invalid_user_function=utils.invalid_user_handler,
+                    color=constants.EMBED_COLOR,
+                    title=source.title,
+                    segments=disnake_paginator.split(description),
+                )
+                for embed in paginator.embeds:
+                    embed.url = source.original_url
+                await paginator.start(utils.MessageInteractionWrapper(message))
+            else:
+                await utils.reply(
+                    message,
+                    source.description or "no description found!",
+                )
+            return
+
+        await utils.reply(
+            message,
+            embed=players[message.guild.id].current.embed(
+                is_paused=message.guild.voice_client.is_paused()
+            ),
+        )
+    else:
+        await utils.reply(
+            message,
+            "nothing is playing!",
+        )
 
 
 async def resume(message):

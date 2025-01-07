@@ -1,9 +1,7 @@
-import constants
 import disnake
-import youtubedl
-from state import client, players
 
 import utils
+from state import client, players
 
 
 def play_after_callback(e, message, once):
@@ -30,20 +28,7 @@ def play_next(message, once=False, first=False):
                 queued.player, after=lambda e: play_after_callback(e, message, once)
             )
 
-        embed = disnake.Embed(
-            color=constants.EMBED_COLOR,
-            title=queued.player.title,
-            url=queued.player.original_url,
-            description=f"`[{'-'*constants.BAR_LENGTH}]` **{youtubedl.format_duration(0)}** / **{youtubedl.format_duration(queued.player.duration)}**",
-        )
-        embed.add_field(name="Volume", value=f"{int(queued.player.volume*100)}%")
-        embed.add_field(name="Views", value=f"{queued.player.view_count:,}")
-        embed.add_field(
-            name="Queuer",
-            value=players[message.guild.id].current.trigger_message.author.mention,
-        )
-        embed.set_image(queued.player.thumbnail_url)
-
+        embed = queued.embed()
         if first and len(players[message.guild.id].queue) == 0:
             client.loop.create_task(utils.reply(message, embed=embed))
         else:

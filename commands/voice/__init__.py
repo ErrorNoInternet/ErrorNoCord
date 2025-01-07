@@ -1,6 +1,5 @@
 from .channel import join, leave
-from .playback import fast_forward, pause, resume, volume
-from .playing import playing
+from .playback import fast_forward, pause, playing, resume, volume
 from .queue import queue_or_play, skip
 from .utils import remove_queued
 
