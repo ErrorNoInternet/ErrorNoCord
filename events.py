@@ -1,6 +1,7 @@
 import asyncio
 import threading
 import time
+from logging import info
 
 import commands
 import core
@@ -39,7 +40,7 @@ async def on_message_edit(before, after):
 
 
 async def on_ready():
-    print(f"logged in as {client.user} in {round(time.time() - start_time, 1)}s")
+    info(f"logged in as {client.user} in {round(time.time() - start_time, 1)}s")
 
 
 async def on_voice_state_update(member, before, after):

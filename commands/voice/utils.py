@@ -1,3 +1,5 @@
+from logging import error
+
 import disnake
 
 import utils
@@ -6,7 +8,7 @@ from state import client, players
 
 def play_after_callback(e, message, once):
     if e:
-        print(f"player error: {e}")
+        error(f"player error: {e}")
     if not once:
         play_next(message)
 

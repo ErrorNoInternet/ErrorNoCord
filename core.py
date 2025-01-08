@@ -6,6 +6,7 @@ import io
 import textwrap
 import time
 import traceback
+from logging import debug
 
 import disnake
 import disnake_paginator
@@ -60,7 +61,7 @@ async def on_message(message, edited=False):
 
                 end = time.time()
                 if __debug__:
-                    print(f"reloaded {len(reloaded_modules)} in {round(end-start, 2)}s")
+                    debug(f"reloaded {len(reloaded_modules)} modules in {round(end-start, 2)}s")
 
                 await utils.add_check_reaction(message)
             case C.EXECUTE if message.author.id in constants.OWNERS:
@@ -132,12 +133,11 @@ async def on_message(message, edited=False):
             case C.FAST_FORWARD:
                 await commands.voice.fast_forward(message)
     except Exception as e:
-        formatted_exception = "".join(traceback.format_exception(e))
-        print(formatted_exception)
         await utils.reply(
             message,
-            f"exception occurred while processing command: ```\n{formatted_exception.replace("`", "\\`")}```",
+            f"exception occurred while processing command: ```\n{"".join(traceback.format_exception(e)).replace("`", "\\`")}```",
         )
+        raise e
 
 
 async def on_voice_state_update(_, before, after):

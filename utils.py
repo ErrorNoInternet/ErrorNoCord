@@ -1,4 +1,5 @@
 import os
+from logging import error, info, warning
 
 import disnake
 
@@ -103,13 +104,13 @@ def filter_secrets(text: str) -> str:
 
 
 def load_opus():
-    print("opus wasn't automatically loaded! trying to load manually...")
+    warning("opus wasn't automatically loaded! trying to load manually...")
     for path in ["/usr/lib64/libopus.so.0", "/usr/lib/libopus.so.0"]:
         if os.path.exists(path):
             try:
                 disnake.opus.load_opus(path)
-                print(f"successfully loaded opus from {path}")
+                info(f"successfully loaded opus from {path}")
                 return
             except Exception as e:
-                print(f"failed to load opus from {path}: {e}")
+                error(f"failed to load opus from {path}: {e}")
     raise Exception("could not locate working opus library")

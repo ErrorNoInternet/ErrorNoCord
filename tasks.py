@@ -1,5 +1,6 @@
 import asyncio
 import time
+from logging import debug, error
 
 import disnake
 
@@ -7,6 +8,8 @@ from state import client, idle_tracker, players
 
 
 async def cleanup():
+    debug("spawned cleanup thread")
+
     while True:
         await asyncio.sleep(3600 * 12)
 
@@ -17,7 +20,7 @@ async def cleanup():
         for target in targets:
             del players[target]
         if __debug__:
-            print(f"cleanup removed {len(targets)} empty players")
+            debug(f"cleanup removed {len(targets)} empty players")
 
         if (
             not idle_tracker["is_idle"]
@@ -27,4 +30,4 @@ async def cleanup():
                 await client.change_presence(status=disnake.Status.idle)
                 idle_tracker["is_idle"] = True
             except Exception as e:
-                print(f"failed to change status to idle: {e}")
+                error(f"failed to change status to idle: {e}")
