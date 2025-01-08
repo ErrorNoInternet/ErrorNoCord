@@ -1,9 +1,159 @@
 import re
 
-import arguments
+import disnake
+import requests
 
+import arguments
 import commands
 import utils
+from constants import APPLICATION_FLAGS, BADGE_EMOJIS, EMBED_COLOR, PUBLIC_FLAGS
+from state import client
+
+
+async def lookup(message):
+    tokens = commands.tokenize(message.content)
+    parser = arguments.ArgumentParser(
+        tokens[0],
+        "look up a user or application on discord by their ID",
+    )
+    parser.add_argument(
+        "-a",
+        "--application",
+        action="store_true",
+        help="search for applications instead of users",
+    )
+    parser.add_argument(
+        "id",
+        type=int,
+        help="the ID to perform a search for",
+    )
+    if not (args := await parser.parse_args(message, tokens)):
+        return
+
+    if args.application:
+        response = requests.get(
+            f"https://discord.com/api/v9/applications/{args.id}/rpc"
+        ).json()
+        if "code" in response.keys():
+            await utils.reply(message, "application not found!")
+            return
+
+        embed = disnake.Embed(description=response["description"], color=EMBED_COLOR)
+        embed.set_thumbnail(
+            url=f"https://cdn.discordapp.com/app-icons/{response['id']}/{response['icon']}.webp"
+        )
+        embed.add_field(name="Application Name", value=response["name"])
+        embed.add_field(name="Application ID", value="`" + response["id"] + "`")
+        embed.add_field(
+            name="Public Bot",
+            value=f"{'`'+str(response['bot_public'])+'`' if 'bot_public' in response.keys() != None else 'No bot'}",
+        )
+        embed.add_field(name="Public Flags", value="`" + str(response["flags"]) + "`")
+        embed.add_field(
+            name="Terms of Service",
+            value=(
+                "None"
+                if "terms_of_service_url" not in response.keys()
+                else f"[Link]({response['terms_of_service_url']})"
+            ),
+        )
+        embed.add_field(
+            name="Privacy Policy",
+            value=(
+                "None"
+                if "privacy_policy_url" not in response.keys()
+                else f"[Link]({response['privacy_policy_url']})"
+            ),
+        )
+        embed.add_field(
+            name="Creation Time",
+            value=f"<t:{utils.parse_snowflake(int(response['id']))}:R>",
+        )
+        embed.add_field(
+            name="Default Invite URL",
+            value=(
+                "None"
+                if "install_params" not in response.keys()
+                else f"[Link](https://discord.com/oauth2/authorize?client_id={response['id']}&permissions={response['install_params']['permissions']}&scope={'%20'.join(response['install_params']['scopes'])})"
+            ),
+        )
+        embed.add_field(
+            name="Custom Invite URL",
+            value=(
+                "None"
+                if "custom_install_url" not in response.keys()
+                else f"[Link]({response['custom_install_url']})"
+            ),
+        )
+
+        bot_intents = []
+        for application_flag, intent_name in APPLICATION_FLAGS.items():
+            if response["flags"] & application_flag == application_flag:
+                if intent_name.replace(" (unverified)", "") not in bot_intents:
+                    bot_intents.append(intent_name)
+        embed.add_field(
+            name="Application Flags",
+            value=", ".join(bot_intents) if bot_intents else "None",
+        )
+
+        bot_tags = ""
+        if "tags" in response.keys():
+            for tag in response["tags"]:
+                bot_tags += tag + ", "
+        embed.add_field(
+            name="Tags", value="None" if bot_tags == "" else bot_tags[:-2], inline=False
+        )
+    else:
+        try:
+            user = await client.fetch_user(args.id)
+        except Exception:
+            await utils.reply(message, "user not found!")
+            return
+
+        badges = ""
+        for flag, flag_name in PUBLIC_FLAGS.items():
+            if user.public_flags.value & flag == flag:
+                if flag_name != "None":
+                    try:
+                        badges += BADGE_EMOJIS[PUBLIC_FLAGS[flag]]
+                    except:
+                        raise Exception(f"unable to find badge: {PUBLIC_FLAGS[flag]}")
+
+        accent_color = 0x000000
+        user_object = await client.fetch_user(user.id)
+        if user_object.accent_color != None:
+            accent_color = user_object.accent_color
+
+        embed = disnake.Embed(color=accent_color)
+        embed.add_field(
+            name="User ID",
+            value=f"`{user.id}`",
+        )
+        embed.add_field(
+            name="Discriminator",
+            value=f"`{user.name}#{user.discriminator}`",
+        )
+        embed.add_field(
+            name="Creation Time",
+            value=f"<t:{utils.parse_snowflake(int(user.id))}:R>",
+        )
+        embed.add_field(
+            name="Public Flags",
+            value=f"`{user.public_flags.value}` {badges}",
+        )
+        embed.add_field(
+            name="Bot User",
+            value=f"`{user.bot}`",
+        )
+        embed.add_field(
+            name="System User",
+            value=f"`{user.system}`",
+        )
+        embed.set_thumbnail(url=user.avatar if user.avatar else user.default_avatar)
+        if user_object.banner:
+            embed.set_image(url=user_object.banner)
+
+    await utils.reply(message, embed=embed)
 
 
 async def clear(message):

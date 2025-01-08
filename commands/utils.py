@@ -12,6 +12,7 @@ class Command(Enum):
     HELP = "help"
     JOIN = "join"
     LEAVE = "leave"
+    LOOKUP = "lookup"
     PAUSE = "pause"
     PING = "ping"
     PLAY = "play"

@@ -83,6 +83,10 @@ def format_duration(duration: int, natural: bool = False, short: bool = False):
     return separator.join(segments[:-1]) + f" and {segments[-1]}"
 
 
+def parse_snowflake(id):
+    return round(((id >> 22) + 1420070400000) / 1000)
+
+
 async def add_check_reaction(message):
     await message.add_reaction("✅")
 

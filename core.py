@@ -147,6 +147,8 @@ async def on_message(message, edited=False):
                 await commands.bot.status(message)
             case C.PING:
                 await commands.bot.ping(message)
+            case C.LOOKUP:
+                await commands.tools.lookup(message)
     except Exception as e:
         await utils.reply(
             message,
