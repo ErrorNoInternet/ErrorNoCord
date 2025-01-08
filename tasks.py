@@ -21,5 +21,8 @@ async def cleanup():
             not idle_tracker["is_idle"]
             and time.time() - idle_tracker["last_used"] >= 3600
         ):
-            await client.change_presence(status=disnake.Status.idle)
-            idle_tracker["is_idle"] = True
+            try:
+                await client.change_presence(status=disnake.Status.idle)
+                idle_tracker["is_idle"] = True
+            except Exception as e:
+                print(f"failed to change status to idle: {e}")
