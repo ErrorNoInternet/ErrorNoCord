@@ -48,10 +48,12 @@ async def on_message(message, edited=False):
 
     try:
         if cooldowns := command_cooldowns.get(message.author.id):
-            if (end_time := cooldowns.get(matched)) and time.time() < end_time:
+            if (end_time := cooldowns.get(matched)) and int(time.time()) < int(
+                end_time
+            ):
                 await utils.reply(
                     message,
-                    f"please wait **{round(end_time - time.time(), 1)}s** before using this command again!",
+                    f"please wait **{utils.format_duration(int(end_time - time.time()), natural=True)}** before using this command again!",
                 )
                 return
 
