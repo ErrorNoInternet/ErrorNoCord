@@ -1,10 +1,12 @@
 import os
+import time
 from logging import error, info, warning
 
 import disnake
 
+import commands
 import constants
-from state import message_responses
+from state import command_cooldowns, message_responses
 
 
 class ChannelResponseWrapper:
@@ -33,6 +35,19 @@ class MessageInteractionWrapper:
 
     async def edit_original_message(self, content=None, embed=None, view=None):
         await self.response.edit_message(content=content, embed=embed, view=view)
+
+
+def cooldown(message, cooldown_time: int):
+    possible_commands = commands.match(message.content)
+    if not possible_commands or len(possible_commands) > 1:
+        return
+    command = possible_commands[0]
+
+    end_time = time.time() + cooldown_time
+    if message.author.id in command_cooldowns:
+        command_cooldowns[message.author.id][command] = end_time
+    else:
+        command_cooldowns[message.author.id] = {command: end_time}
 
 
 def format_duration(duration: int, natural: bool = False, short: bool = False):

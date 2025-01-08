@@ -15,7 +15,7 @@ import commands
 import utils
 from commands import Command as C
 from constants import EMBED_COLOR, OWNERS, PREFIX, RELOADABLE_MODULES
-from state import client, command_locks, idle_tracker
+from state import client, command_cooldowns, command_locks, idle_tracker
 
 
 async def on_message(message, edited=False):
@@ -40,12 +40,22 @@ async def on_message(message, edited=False):
             f"ambiguous command, could be {' or '.join([f'`{match.value}`' for match in matched])}",
         )
         return
+    matched = matched[0]
 
-    if message.guild.id not in command_locks:
-        command_locks[message.guild.id] = asyncio.Lock()
+    if (message.guild.id, message.author.id) not in command_locks:
+        command_locks[(message.guild.id, message.author.id)] = asyncio.Lock()
+    await command_locks[(message.guild.id, message.author.id)].acquire()
 
     try:
-        match matched[0]:
+        if cooldowns := command_cooldowns.get(message.author.id):
+            if (end_time := cooldowns.get(matched)) and time.time() < end_time:
+                await utils.reply(
+                    message,
+                    f"please wait **{round(end_time - time.time(), 1)}s** before using this command again!",
+                )
+                return
+
+        match matched:
             case C.RELOAD if message.author.id in OWNERS:
                 reloaded_modules = set()
                 start = time.time()
@@ -115,11 +125,9 @@ async def on_message(message, edited=False):
             case C.LEAVE:
                 await commands.voice.leave(message)
             case C.QUEUE | C.PLAY:
-                async with command_locks[message.guild.id]:
-                    await commands.voice.queue_or_play(message, edited)
+                await commands.voice.queue_or_play(message, edited)
             case C.SKIP:
-                async with command_locks[message.guild.id]:
-                    await commands.voice.skip(message)
+                await commands.voice.skip(message)
             case C.RESUME:
                 await commands.voice.resume(message)
             case C.PAUSE:
@@ -142,6 +150,8 @@ async def on_message(message, edited=False):
             f"exception occurred while processing command: ```\n{"".join(traceback.format_exception(e)).replace("`", "\\`")}```",
         )
         raise e
+    finally:
+        command_locks[(message.guild.id, message.author.id)].release()
 
 
 async def on_voice_state_update(_, before, after):

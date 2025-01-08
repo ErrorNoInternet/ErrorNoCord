@@ -180,6 +180,8 @@ async def queue_or_play(message, edited=False):
                 message,
                 f"**{len(players[message.guild.id].queue)}.** {queued.format()}",
             )
+
+        utils.cooldown(message, 3)
     elif tokens[0].lower() == "play":
         await resume(message)
     else:
