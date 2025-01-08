@@ -93,6 +93,10 @@ async def add_check_reaction(message):
 
 async def reply(message, *args, **kwargs):
     if message.id in message_responses:
+        if len(args) == 0:
+            kwargs["content"] = None
+        elif len(kwargs) == 0:
+            kwargs["embeds"] = []
         await message_responses[message.id].edit(
             *args, **kwargs, allowed_mentions=disnake.AllowedMentions.none()
         )
