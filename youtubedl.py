@@ -123,10 +123,16 @@ class QueuedSong:
             ),
         )
 
-        embed.add_field(
-            name="Uploader",
-            value=f"[{self.player.uploader}]({self.player.uploader_url})",
-        )
+        if self.player.uploader_url:
+            embed.add_field(
+                name="Uploader",
+                value=f"[{self.player.uploader}]({self.player.uploader_url})",
+            )
+        else:
+            embed.add_field(
+                name="Uploader",
+                value=self.player.uploader,
+            )
         embed.add_field(name="Likes", value=f"{self.player.like_count:,}")
         embed.add_field(name="Views", value=f"{self.player.view_count:,}")
         embed.add_field(name="Published", value=f"<t:{self.player.timestamp}>")
