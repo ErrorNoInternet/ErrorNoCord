@@ -1,13 +1,13 @@
-import collections
 import time
+from collections import OrderedDict
 
 import disnake
 
 
-class LimitedSizeDict(collections.OrderedDict):
-    def __init__(self, *args, **kwds):
-        self.size_limit = kwds.pop("size_limit", 1000)
-        super().__init__(*args, **kwds)
+class LimitedSizeDict(OrderedDict):
+    def __init__(self, *args, **kwargs):
+        self.size_limit = kwargs.pop("size_limit", 1000)
+        super().__init__(*args, **kwargs)
         self._check_size_limit()
 
     def __setitem__(self, key, value):

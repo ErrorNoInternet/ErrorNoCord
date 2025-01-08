@@ -1,9 +1,9 @@
-import enum
+from enum import Enum
 
 import constants
 
 
-class Command(enum.Enum):
+class Command(Enum):
     CLEAR = "clear"
     CURRENT = "current"
     EXECUTE = "execute"

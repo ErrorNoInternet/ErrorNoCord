@@ -13,6 +13,7 @@ import disnake_paginator
 import commands
 import constants
 import utils
+from commands import Command as C
 from state import client, command_locks, idle_tracker
 
 
@@ -42,7 +43,6 @@ async def on_message(message, edited=False):
     if message.guild.id not in command_locks:
         command_locks[message.guild.id] = asyncio.Lock()
 
-    C = commands.Command
     try:
         match matched[0]:
             case C.RELOAD if message.author.id in constants.OWNERS:
@@ -136,13 +136,13 @@ async def on_voice_state_update(_, before, after):
     def is_empty(channel):
         return [m.id for m in (channel.members if channel else [])] == [client.user.id]
 
-    c = None
+    channel = None
     if is_empty(before.channel):
-        c = before.channel
+        channel = before.channel
     elif is_empty(after.channel):
-        c = after.channel
-    if c:
-        await c.guild.voice_client.disconnect()
+        channel = after.channel
+    if channel:
+        await channel.guild.voice_client.disconnect()
 
 
 def rreload(reloaded_modules, module):
