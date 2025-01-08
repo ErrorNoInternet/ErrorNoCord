@@ -14,5 +14,7 @@ if __name__ == "__main__":
         datefmt="%Y-%m-%d %T",
         level=logging.DEBUG if __debug__ else logging.INFO,
     )
+    logging.getLogger("disnake").setLevel(logging.WARNING)
+
     events.prepare()
     client.run(constants.SECRETS["TOKEN"])
