@@ -12,14 +12,14 @@ import disnake
 import disnake_paginator
 
 import commands
-import constants
 import utils
 from commands import Command as C
+from constants import EMBED_COLOR, OWNERS, PREFIX, RELOADABLE_MODULES
 from state import client, command_locks, idle_tracker
 
 
 async def on_message(message, edited=False):
-    if not message.content.startswith(constants.PREFIX) or message.author.bot:
+    if not message.content.startswith(PREFIX) or message.author.bot:
         return
 
     tokens = commands.tokenize(message.content)
@@ -46,7 +46,7 @@ async def on_message(message, edited=False):
 
     try:
         match matched[0]:
-            case C.RELOAD if message.author.id in constants.OWNERS:
+            case C.RELOAD if message.author.id in OWNERS:
                 reloaded_modules = set()
                 start = time.time()
 
@@ -54,17 +54,19 @@ async def on_message(message, edited=False):
                 rreload(reloaded_modules, __import__("extra"))
                 for module in filter(
                     lambda v: inspect.ismodule(v)
-                    and v.__name__ in constants.RELOADABLE_MODULES,
+                    and v.__name__ in RELOADABLE_MODULES,
                     globals().values(),
                 ):
                     rreload(reloaded_modules, module)
 
                 end = time.time()
                 if __debug__:
-                    debug(f"reloaded {len(reloaded_modules)} modules in {round(end-start, 2)}s")
+                    debug(
+                        f"reloaded {len(reloaded_modules)} modules in {round(end-start, 2)}s"
+                    )
 
                 await utils.add_check_reaction(message)
-            case C.EXECUTE if message.author.id in constants.OWNERS:
+            case C.EXECUTE if message.author.id in OWNERS:
                 code = message.content[len(tokens[0]) + 1 :].strip().strip("`")
                 for replacement in ["python", "py"]:
                     if code.startswith(replacement):
@@ -99,14 +101,14 @@ async def on_message(message, edited=False):
                         prefix="```\n",
                         suffix="```",
                         invalid_user_function=utils.invalid_user_handler,
-                        color=constants.EMBED_COLOR,
+                        color=EMBED_COLOR,
                         segments=disnake_paginator.split(output),
                     ).start(utils.MessageInteractionWrapper(message))
                 elif len(output.strip()) == 0:
                     await utils.add_check_reaction(message)
                 else:
                     await utils.reply(message, output)
-            case C.CLEAR | C.PURGE if message.author.id in constants.OWNERS:
+            case C.CLEAR | C.PURGE if message.author.id in OWNERS:
                 await commands.tools.clear(message)
             case C.JOIN:
                 await commands.voice.join(message)
@@ -160,7 +162,7 @@ def rreload(reloaded_modules, module):
 
     for submodule in filter(
         lambda v: inspect.ismodule(v)
-        and v.__name__ in constants.RELOADABLE_MODULES
+        and v.__name__ in RELOADABLE_MODULES
         and v.__name__ not in reloaded_modules,
         vars(module).values(),
     ):

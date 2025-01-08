@@ -5,9 +5,9 @@ import disnake_paginator
 
 import arguments
 import commands
-import constants
 import utils
 import youtubedl
+from constants import EMBED_COLOR
 from state import client, players
 
 from .playback import resume
@@ -197,7 +197,7 @@ async def queue_or_play(message, edited=False):
             def embed(description):
                 e = disnake.Embed(
                     description=description,
-                    color=constants.EMBED_COLOR,
+                    color=EMBED_COLOR,
                 )
                 if formatted_duration and len(players[message.guild.id].queue) > 1:
                     e.set_footer(text=f"{formatted_duration} in total")
@@ -205,7 +205,7 @@ async def queue_or_play(message, edited=False):
 
             await disnake_paginator.ButtonPaginator(
                 invalid_user_function=utils.invalid_user_handler,
-                color=constants.EMBED_COLOR,
+                color=EMBED_COLOR,
                 segments=list(
                     map(
                         embed,

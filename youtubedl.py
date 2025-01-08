@@ -6,9 +6,9 @@ from typing import Any, Optional
 import disnake
 import yt_dlp
 
-import constants
+from constants import BAR_LENGTH, EMBED_COLOR, YTDL_OPTIONS
 
-ytdl = yt_dlp.YoutubeDL(constants.YTDL_OPTIONS)
+ytdl = yt_dlp.YoutubeDL(YTDL_OPTIONS)
 
 
 class CustomAudioSource(disnake.AudioSource):
@@ -109,12 +109,12 @@ class QueuedSong:
             progress = self.player.original.progress / self.player.duration
 
         embed = disnake.Embed(
-            color=constants.EMBED_COLOR,
+            color=EMBED_COLOR,
             title=self.player.title,
             url=self.player.original_url,
             description=(
                 f"{'⏸️ ' if is_paused else ''}"
-                f"`[{'#'*int(progress * constants.BAR_LENGTH)}{'-'*int((1 - progress) * constants.BAR_LENGTH)}]` "
+                f"`[{'#'*int(progress * BAR_LENGTH)}{'-'*int((1 - progress) * BAR_LENGTH)}]` "
                 + (
                     f"**{format_duration(int(self.player.original.progress))}** / **{format_duration(self.player.duration)}** (**{round(progress * 100)}%**)"
                     if self.player.duration
@@ -179,4 +179,4 @@ def format_duration(duration: int | float) -> str:
 
 def __reload_module__():
     global ytdl
-    ytdl = yt_dlp.YoutubeDL(constants.YTDL_OPTIONS)
+    ytdl = yt_dlp.YoutubeDL(YTDL_OPTIONS)

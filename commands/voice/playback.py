@@ -1,8 +1,9 @@
+import disnake_paginator
+
 import arguments
 import commands
-import constants
-import disnake_paginator
 import utils
+from constants import EMBED_COLOR
 from state import players
 
 from .utils import command_allowed
@@ -30,7 +31,7 @@ async def playing(message):
             if description := source.description:
                 paginator = disnake_paginator.ButtonPaginator(
                     invalid_user_function=utils.invalid_user_handler,
-                    color=constants.EMBED_COLOR,
+                    color=EMBED_COLOR,
                     title=source.title,
                     segments=disnake_paginator.split(description),
                 )
