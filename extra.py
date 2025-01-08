@@ -39,7 +39,7 @@ async def transcript(
         )
         if len(messages) > max_messages:
             try:
-                count = max_messages - min_messages
+                count = min(min_messages, len(messages))
                 if count == 1:
                     await messages.pop().delete()
                 else:
