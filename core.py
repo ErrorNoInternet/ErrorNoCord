@@ -47,7 +47,7 @@ async def on_message(message, edited=False):
     await command_locks[(message.guild.id, message.author.id)].acquire()
 
     try:
-        if cooldowns := command_cooldowns.get(message.author.id):
+        if (cooldowns := command_cooldowns.get(message.author.id)) and not edited:
             if (end_time := cooldowns.get(matched)) and int(time.time()) < int(
                 end_time
             ):
