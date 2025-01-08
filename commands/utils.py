@@ -1,4 +1,5 @@
 from enum import Enum
+from functools import lru_cache
 
 import constants
 
@@ -24,6 +25,7 @@ class Command(Enum):
     VOLUME = "volume"
 
 
+@lru_cache
 def match_token(token: str) -> list[Command]:
     if token.lower() == "r":
         return [Command.RELOAD]
@@ -44,11 +46,13 @@ def match_token(token: str) -> list[Command]:
     )
 
 
+@lru_cache
 def match(command: str) -> list[Command] | None:
     if tokens := tokenize(command):
         return match_token(tokens[0])
 
 
+@lru_cache
 def tokenize(string: str) -> list[str]:
     tokens = []
     token = ""
