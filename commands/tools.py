@@ -1,6 +1,7 @@
 import re
 
 import arguments
+
 import commands
 import utils
 
@@ -81,7 +82,7 @@ async def clear(message):
         regex = re.compile(r, re.IGNORECASE if args.case_insensitive else 0)
 
     def check(m):
-        if m.id in args.ignore_ids:
+        if (ids := args.ignore_ids) and m.id in ids:
             return False
         c = []
         if regex:
