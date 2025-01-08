@@ -145,6 +145,8 @@ async def on_message(message, edited=False):
                 await commands.voice.fast_forward(message)
             case C.STATUS:
                 await commands.bot.status(message)
+            case C.PING:
+                await commands.bot.ping(message)
     except Exception as e:
         await utils.reply(
             message,

@@ -84,6 +84,17 @@ async def uptime(message):
         )
 
 
+async def ping(message):
+    await utils.reply(
+        message,
+        embed=disnake.Embed(
+            title="Pong :ping_pong:",
+            description=f"Latency: **{round(client.latency * 1000, 1)} ms**",
+            color=EMBED_COLOR,
+        ),
+    )
+
+
 async def help(message):
     await utils.reply(
         message,

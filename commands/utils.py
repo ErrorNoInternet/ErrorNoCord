@@ -13,6 +13,7 @@ class Command(Enum):
     JOIN = "join"
     LEAVE = "leave"
     PAUSE = "pause"
+    PING = "ping"
     PLAY = "play"
     PLAYING = "playing"
     PURGE = "purge"
