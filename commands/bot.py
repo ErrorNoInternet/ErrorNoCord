@@ -1,18 +1,64 @@
+import os
+import threading
 import time
+
+import disnake
+import psutil
 
 import arguments
 import commands
 import utils
-from state import start_time
+from constants import EMBED_COLOR
+from state import client, start_time
 
 
-async def help(message):
-    await utils.reply(
-        message,
-        ", ".join(
-            [f"`{command.value}`" for command in commands.Command.__members__.values()]
-        ),
+async def status(message):
+    member_count = 0
+    channel_count = 0
+    for guild in client.guilds:
+        member_count += len(guild.members)
+        channel_count += len(guild.channels)
+    process = psutil.Process(os.getpid())
+    memory_usage = process.memory_info().rss / 1048576
+
+    embed = disnake.Embed(color=EMBED_COLOR)
+    embed.add_field(
+        name="Latency",
+        value=f"```{round(client.latency * 1000, 1)} ms```",
     )
+    embed.add_field(
+        name="RSS",
+        value=f"```{round(memory_usage, 1)} MiB```",
+    )
+    embed.add_field(
+        name="Threads",
+        value=f"```{threading.active_count()}```",
+    )
+    embed.add_field(
+        name="Guilds",
+        value=f"```{len(client.guilds)}```",
+    )
+    embed.add_field(
+        name="Members",
+        value=f"```{member_count}```",
+    )
+    embed.add_field(
+        name="Channels",
+        value=f"```{channel_count}```",
+    )
+    embed.add_field(
+        name="Commands",
+        value=f"```{len(commands.Command.__members__)}```",
+    )
+    embed.add_field(
+        name="Disnake",
+        value=f"```{disnake.__version__}```",
+    )
+    embed.add_field(
+        name="Uptime",
+        value=f"```{utils.format_duration(int(time.time() - start_time), short=True)}```",
+    )
+    await utils.reply(message, embed=embed)
 
 
 async def uptime(message):
@@ -36,3 +82,12 @@ async def uptime(message):
         await utils.reply(
             message, f"up {utils.format_duration(int(time.time() - start_time))}"
         )
+
+
+async def help(message):
+    await utils.reply(
+        message,
+        ", ".join(
+            [f"`{command.value}`" for command in commands.Command.__members__.values()]
+        ),
+    )

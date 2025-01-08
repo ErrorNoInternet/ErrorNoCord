@@ -19,6 +19,7 @@ class Command(Enum):
     RELOAD = "reload"
     RESUME = "resume"
     SKIP = "skip"
+    STATUS = "status"
     UPTIME = "uptime"
     VOLUME = "volume"
 
