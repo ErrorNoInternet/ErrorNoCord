@@ -35,35 +35,37 @@ class MessageInteractionWrapper:
         await self.response.edit_message(content=content, embed=embed, view=view)
 
 
-def format_duration(duration: int, natural: bool = False):
+def format_duration(duration: int, natural: bool = False, short: bool = False):
     def format_plural(noun, count):
-        return noun if count == 1 else noun + "s"
+        if short:
+            return noun[0]
+        return " " + (noun if count == 1 else noun + "s")
 
     segments = []
 
     weeks, duration = divmod(duration, 604800)
     if weeks > 0:
-        segments.append(f"{weeks} {format_plural('week', weeks)}")
+        segments.append(f"{weeks}{format_plural('week', weeks)}")
 
     days, duration = divmod(duration, 86400)
     if days > 0:
-        segments.append(f"{days} {format_plural('day', days)}")
+        segments.append(f"{days}{format_plural('day', days)}")
 
     hours, duration = divmod(duration, 3600)
     if hours > 0:
-        segments.append(f"{hours} {format_plural('hour', hours)}")
+        segments.append(f"{hours}{format_plural('hour', hours)}")
 
     minutes, duration = divmod(duration, 60)
     if minutes > 0:
-        segments.append(f"{minutes} {format_plural('minute', minutes)}")
+        segments.append(f"{minutes}{format_plural('minute', minutes)}")
 
     if duration > 0:
-        segments.append(f"{duration} {format_plural('second', duration)}")
+        segments.append(f"{duration}{format_plural('second', duration)}")
 
+    separator = " " if short else ", "
     if not natural or len(segments) <= 1:
-        return ", ".join(segments)
-
-    return ", ".join(segments[:-1]) + f" and {segments[-1]}"
+        return separator.join(segments)
+    return separator.join(segments[:-1]) + f" and {segments[-1]}"
 
 
 async def add_check_reaction(message):
