@@ -56,6 +56,12 @@ async def clear(message):
         help="delete messages with reactions",
     )
     parser.add_argument(
+        "-A",
+        "--attachments",
+        action="store_true",
+        help="delete messages with attachments",
+    )
+    parser.add_argument(
         "-d",
         "--delete-command",
         action="store_true",
@@ -96,6 +102,8 @@ async def clear(message):
             c.append(m.author.id in i)
         if args.reactions:
             c.append(len(m.reactions) > 0)
+        if args.attachments:
+            c.append(len(m.attachments) > 0)
         return all(c)
 
     messages = len(
