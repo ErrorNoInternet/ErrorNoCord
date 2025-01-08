@@ -60,6 +60,13 @@ async def clear(message):
         action="store_true",
         help="delete the command message as well",
     )
+    parser.add_argument(
+        "-I",
+        "--ignore-ids",
+        type=int,
+        action="append",
+        help="ignore messages with this id",
+    )
     if not (args := await parser.parse_args(message, tokens)):
         return
 
@@ -74,6 +81,8 @@ async def clear(message):
         regex = re.compile(r, re.IGNORECASE if args.case_insensitive else 0)
 
     def check(m):
+        if m.id in args.ignore_ids:
+            return False
         c = []
         if regex:
             c.append(regex.search(m.content))
