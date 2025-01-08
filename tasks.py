@@ -8,7 +8,7 @@ from state import client, idle_tracker, players
 
 async def cleanup():
     while True:
-        await asyncio.sleep(3600)
+        await asyncio.sleep(3600 * 12)
 
         targets = []
         for guild_id, player in players.items():
@@ -16,6 +16,8 @@ async def cleanup():
                 targets.append(guild_id)
         for target in targets:
             del players[target]
+        if __debug__:
+            print(f"cleanup removed {len(targets)} empty players")
 
         if (
             not idle_tracker["is_idle"]

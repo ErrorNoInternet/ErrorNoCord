@@ -47,6 +47,8 @@ async def on_message(message, edited=False):
         match matched[0]:
             case C.RELOAD if message.author.id in constants.OWNERS:
                 reloaded_modules = set()
+                start = time.time()
+
                 rreload(reloaded_modules, __import__("core"))
                 rreload(reloaded_modules, __import__("extra"))
                 for module in filter(
@@ -55,6 +57,10 @@ async def on_message(message, edited=False):
                     globals().values(),
                 ):
                     rreload(reloaded_modules, module)
+
+                end = time.time()
+                if __debug__:
+                    print(f"reloaded {len(reloaded_modules)} in {round(end-start, 2)}s")
 
                 await utils.add_check_reaction(message)
             case C.EXECUTE if message.author.id in constants.OWNERS:
@@ -126,9 +132,11 @@ async def on_message(message, edited=False):
             case C.FAST_FORWARD:
                 await commands.voice.fast_forward(message)
     except Exception as e:
+        formatted_exception = "".join(traceback.format_exception(e))
+        print(formatted_exception)
         await utils.reply(
             message,
-            f"exception occurred while processing command: ```\n{''.join(traceback.format_exception(e)).replace('`', '\\`')}```",
+            f"exception occurred while processing command: ```\n{formatted_exception.replace("`", "\\`")}```",
         )
 
 
