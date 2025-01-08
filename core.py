@@ -63,8 +63,7 @@ async def on_message(message, edited=False):
                 rreload(reloaded_modules, __import__("core"))
                 rreload(reloaded_modules, __import__("extra"))
                 for module in filter(
-                    lambda v: inspect.ismodule(v)
-                    and v.__name__ in RELOADABLE_MODULES,
+                    lambda v: inspect.ismodule(v) and v.__name__ in RELOADABLE_MODULES,
                     globals().values(),
                 ):
                     rreload(reloaded_modules, module)
