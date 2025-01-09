@@ -77,33 +77,29 @@ async def on_message(message, edited=False):
                     )
 
                 await utils.add_check_reaction(message)
+
             case C.EXECUTE if message.author.id in OWNERS:
                 code = message.content[len(tokens[0]) + 1 :].strip().strip("`")
                 for replacement in ["python", "py"]:
                     if code.startswith(replacement):
                         code = code[len(replacement) :]
 
-                stdout = io.StringIO()
                 try:
+                    stdout = io.StringIO()
                     with contextlib.redirect_stdout(stdout):
-                        if "#globals" in code:
-                            exec(
-                                f"async def run_code():\n{textwrap.indent(code, '   ')}",
-                                globals(),
-                            )
+                        wrapped_code = (
+                            f"async def run_code():\n{textwrap.indent(code, '   ')}"
+                        )
+                        if "# globals" in code:
+                            exec(wrapped_code, globals())
                             await globals()["run_code"]()
                         else:
                             dictionary = dict(locals(), **globals())
-                            exec(
-                                f"async def run_code():\n{textwrap.indent(code, '   ')}",
-                                dictionary,
-                                dictionary,
-                            )
+                            exec(wrapped_code, dictionary, dictionary)
                             await dictionary["run_code"]()
                         output = stdout.getvalue()
                 except Exception as e:
                     output = "`" + str(e) + "`"
-
                 output = utils.filter_secrets(output)
 
                 if len(output) > 2000:
@@ -119,6 +115,7 @@ async def on_message(message, edited=False):
                     await utils.add_check_reaction(message)
                 else:
                     await utils.reply(message, output)
+
             case C.CLEAR | C.PURGE if message.author.id in OWNERS:
                 await commands.tools.clear(message)
             case C.JOIN:
