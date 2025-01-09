@@ -46,7 +46,7 @@ async def lookup(message):
         embed.add_field(name="Application ID", value="`" + response["id"] + "`")
         embed.add_field(
             name="Public Bot",
-            value=f"{'`'+str(response['bot_public'])+'`' if 'bot_public' in response.keys() != None else 'No bot'}",
+            value=f"{'`'+str(response['bot_public'])+'`' if 'bot_public' in response else 'No bot'}",
         )
         embed.add_field(name="Public Flags", value="`" + str(response["flags"]) + "`")
         embed.add_field(
@@ -116,12 +116,12 @@ async def lookup(message):
                 if flag_name != "None":
                     try:
                         badges += BADGE_EMOJIS[PUBLIC_FLAGS[flag]]
-                    except:
+                    except Exception:
                         raise Exception(f"unable to find badge: {PUBLIC_FLAGS[flag]}")
 
         accent_color = 0x000000
         user_object = await client.fetch_user(user.id)
-        if user_object.accent_color != None:
+        if user_object.accent_color is None:
             accent_color = user_object.accent_color
 
         embed = disnake.Embed(color=accent_color)
