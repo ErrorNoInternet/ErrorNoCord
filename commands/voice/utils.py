@@ -16,19 +16,16 @@ def play_after_callback(e, message, once):
 def play_next(message, once=False, first=False):
     if not message.guild.voice_client:
         return
-
     message.guild.voice_client.stop()
+
+    if not disnake.opus.is_loaded():
+        utils.load_opus()
+
     if message.guild.id in players and players[message.guild.id].queue:
         queued = players[message.guild.id].queue_pop()
-        try:
-            message.guild.voice_client.play(
-                queued.player, after=lambda e: play_after_callback(e, message, once)
-            )
-        except disnake.opus.OpusNotLoaded:
-            utils.load_opus()
-            message.guild.voice_client.play(
-                queued.player, after=lambda e: play_after_callback(e, message, once)
-            )
+        message.guild.voice_client.play(
+            queued.player, after=lambda e: play_after_callback(e, message, once)
+        )
 
         embed = queued.embed()
         if first and len(players[message.guild.id].queue) == 0:
