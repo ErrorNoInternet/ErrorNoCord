@@ -3,6 +3,8 @@ import threading
 import time
 from logging import info
 
+import fun
+
 import commands
 import core
 import tasks
@@ -26,6 +28,7 @@ async def on_bulk_message_delete(messages):
 
 async def on_message(message):
     await core.on_message(message)
+    await fun.on_message(message)
 
 
 async def on_message_delete(message):

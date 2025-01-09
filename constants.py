@@ -35,6 +35,7 @@ RELOADABLE_MODULES = [
     "core",
     "events",
     "extra",
+    "fun",
     "tasks",
     "utils",
     "voice",
