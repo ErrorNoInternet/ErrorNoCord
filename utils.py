@@ -1,6 +1,6 @@
 import os
 import time
-from logging import error, info, warning
+from logging import error, info
 
 import disnake
 
@@ -129,13 +129,14 @@ def filter_secrets(text: str, secrets=constants.SECRETS) -> str:
 
 
 def load_opus():
-    warning("opus wasn't automatically loaded! trying to load manually...")
-    for path in ["/usr/lib64/libopus.so.0", "/usr/lib/libopus.so.0"]:
-        if os.path.exists(path):
-            try:
-                disnake.opus.load_opus(path)
-                info(f"successfully loaded opus from {path}")
-                return
-            except Exception as e:
-                error(f"failed to load opus from {path}: {e}")
+    for path in filter(
+        lambda p: os.path.exists(p),
+        ["/usr/lib64/libopus.so.0", "/usr/lib/libopus.so.0"],
+    ):
+        try:
+            disnake.opus.load_opus(path)
+            info(f"successfully loaded opus from {path}")
+            return
+        except Exception as e:
+            error(f"failed to load opus from {path}: {e}")
     raise Exception("could not locate working opus library")
