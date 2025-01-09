@@ -73,7 +73,7 @@ async def on_message(message, edited=False):
                 end = time.time()
                 if __debug__:
                     debug(
-                        f"reloaded {len(reloaded_modules)} modules in {round(end-start, 2)}s"
+                        f"reloaded {len(reloaded_modules)} modules in {round(end - start, 2)}s"
                     )
 
                 await utils.add_check_reaction(message)
@@ -152,7 +152,7 @@ async def on_message(message, edited=False):
     except Exception as e:
         await utils.reply(
             message,
-            f"exception occurred while processing command: ```\n{"".join(traceback.format_exception(e)).replace("`", "\\`")}```",
+            f"exception occurred while processing command: ```\n{''.join(traceback.format_exception(e)).replace('`', '\\`')}```",
         )
         raise e
     finally:

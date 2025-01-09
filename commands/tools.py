@@ -46,7 +46,7 @@ async def lookup(message):
         embed.add_field(name="Application ID", value="`" + response["id"] + "`")
         embed.add_field(
             name="Public Bot",
-            value=f"{'`'+str(response['bot_public'])+'`' if 'bot_public' in response else 'No bot'}",
+            value=f"{'`' + str(response['bot_public']) + '`' if 'bot_public' in response else 'No bot'}",
         )
         embed.add_field(name="Public Flags", value="`" + str(response["flags"]) + "`")
         embed.add_field(

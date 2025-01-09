@@ -114,7 +114,7 @@ class QueuedSong:
             url=self.player.original_url,
             description=(
                 f"{'⏸️ ' if is_paused else ''}"
-                f"`[{'#'*int(progress * BAR_LENGTH)}{'-'*int((1 - progress) * BAR_LENGTH)}]` "
+                f"`[{'#' * int(progress * BAR_LENGTH)}{'-' * int((1 - progress) * BAR_LENGTH)}]` "
                 + (
                     f"**{format_duration(int(self.player.original.progress))}** / **{format_duration(self.player.duration)}** (**{round(progress * 100)}%**)"
                     if self.player.duration
@@ -136,7 +136,7 @@ class QueuedSong:
         embed.add_field(name="Likes", value=f"{self.player.like_count:,}")
         embed.add_field(name="Views", value=f"{self.player.view_count:,}")
         embed.add_field(name="Published", value=f"<t:{self.player.timestamp}>")
-        embed.add_field(name="Volume", value=f"{int(self.player.volume*100)}%")
+        embed.add_field(name="Volume", value=f"{int(self.player.volume * 100)}%")
 
         embed.set_image(self.player.thumbnail_url)
         embed.set_footer(
