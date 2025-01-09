@@ -11,7 +11,3 @@ __all__ = [
     "match_token",
     "tokenize",
 ]
-
-
-def __reload_module__():
-    globals().update({k: v for k, v in vars(utils).items() if not k.startswith("_")})
