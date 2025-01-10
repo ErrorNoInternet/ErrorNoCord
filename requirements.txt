@@ -1,6 +1,7 @@
 audioop-lts
 disnake
 disnake_paginator
+psutil
 PyNaCl
 youtube_transcript_api
 yt-dlp
