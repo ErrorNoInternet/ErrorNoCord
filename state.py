@@ -1,24 +1,8 @@
 import time
-from collections import OrderedDict
 
 import disnake
 
-
-class LimitedSizeDict(OrderedDict):
-    def __init__(self, *args, **kwargs):
-        self.size_limit = kwargs.pop("size_limit", 1000)
-        super().__init__(*args, **kwargs)
-        self._check_size_limit()
-
-    def __setitem__(self, key, value):
-        super().__setitem__(key, value)
-        self._check_size_limit()
-
-    def _check_size_limit(self):
-        if self.size_limit is not None:
-            while len(self) > self.size_limit:
-                self.popitem(last=False)
-
+from utils import LimitedSizeDict
 
 intents = disnake.Intents.default()
 intents.message_content = True
