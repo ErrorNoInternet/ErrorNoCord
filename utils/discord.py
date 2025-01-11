@@ -58,7 +58,7 @@ def load_opus():
     raise Exception("could not locate working opus library")
 
 
-def parse_snowflake(id):
+def snowflake_timestamp(id):
     return round(((id >> 22) + 1420070400000) / 1000)
 
 

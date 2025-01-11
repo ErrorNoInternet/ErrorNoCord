@@ -7,8 +7,8 @@ from .discord import (
     cooldown,
     invalid_user_handler,
     load_opus,
-    parse_snowflake,
     reply,
+    snowflake_timestamp,
 )
 
 __all__ = [
@@ -22,6 +22,6 @@ __all__ = [
     "LimitedSizeDict",
     "load_opus",
     "MessageInteractionWrapper",
-    "parse_snowflake",
     "reply",
+    "snowflake_timestamp",
 ]

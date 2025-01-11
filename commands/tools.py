@@ -67,7 +67,7 @@ async def lookup(message):
         )
         embed.add_field(
             name="Creation Time",
-            value=f"<t:{utils.parse_snowflake(int(response['id']))}:R>",
+            value=f"<t:{utils.snowflake_timestamp(int(response['id']))}:R>",
         )
         embed.add_field(
             name="Default Invite URL",
@@ -135,7 +135,7 @@ async def lookup(message):
         )
         embed.add_field(
             name="Creation Time",
-            value=f"<t:{utils.parse_snowflake(int(user.id))}:R>",
+            value=f"<t:{utils.snowflake_timestamp(int(user.id))}:R>",
         )
         embed.add_field(
             name="Public Flags",
