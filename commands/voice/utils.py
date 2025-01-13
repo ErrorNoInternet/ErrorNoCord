@@ -60,10 +60,12 @@ async def ensure_joined(message):
 
 def command_allowed(message, immutable=False):
     if not message.guild.voice_client:
-        return
+        return False
+
     if immutable:
-        return message.channel.id == message.guild.voice_client.channel.id
-    else:
-        if not message.author.voice:
-            return False
-        return message.author.voice.channel.id == message.guild.voice_client.channel.id
+        return True
+
+    if not message.author.voice:
+        return False
+
+    return message.author.voice.channel.id == message.guild.voice_client.channel.id
