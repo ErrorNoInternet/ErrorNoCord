@@ -4,6 +4,7 @@ import time
 
 import disnake
 import psutil
+from yt_dlp import version
 
 import arguments
 import commands
@@ -27,7 +28,7 @@ async def status(message):
         value=f"```{round(client.latency * 1000, 1)} ms```",
     )
     embed.add_field(
-        name="RSS",
+        name="Memory",
         value=f"```{round(memory_usage, 1)} MiB```",
     )
     embed.add_field(
@@ -47,12 +48,12 @@ async def status(message):
         value=f"```{channel_count}```",
     )
     embed.add_field(
-        name="Commands",
-        value=f"```{len(commands.Command.__members__)}```",
-    )
-    embed.add_field(
         name="Disnake",
         value=f"```{disnake.__version__}```",
+    )
+    embed.add_field(
+        name="yt-dlp",
+        value=f"```{version.__version__}```",
     )
     embed.add_field(
         name="Uptime",
