@@ -22,7 +22,7 @@ async def queue_or_play(message, edited=False):
     parser = arguments.ArgumentParser(
         tokens[0], "queue a song, list the queue, or resume playback"
     )
-    parser.add_argument("query", nargs="?", help="yt-dlp URL or query to get song")
+    parser.add_argument("query", nargs="*", help="yt-dlp URL or query to get song")
     parser.add_argument(
         "-v",
         "--volume",
@@ -155,7 +155,7 @@ async def queue_or_play(message, edited=False):
         try:
             async with message.channel.typing():
                 player = await youtubedl.YTDLSource.from_url(
-                    query, loop=client.loop, stream=True
+                    " ".join(query), loop=client.loop, stream=True
                 )
                 player.volume = float(args.volume) / 100.0
         except Exception as e:
