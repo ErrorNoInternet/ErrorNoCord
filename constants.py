@@ -40,6 +40,8 @@ RELOADABLE_MODULES = [
     "utils",
     "voice",
     "youtubedl",
+    "yt_dlp",
+    "yt_dlp.version",
 ]
 PUBLIC_FLAGS = {
     1: "Discord Employee",
