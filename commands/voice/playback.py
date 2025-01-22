@@ -2,6 +2,7 @@ import disnake_paginator
 
 import arguments
 import commands
+import sponsorblock
 import utils
 from constants import EMBED_COLOR
 from state import players
@@ -89,10 +90,18 @@ async def pause(message):
 async def fast_forward(message):
     tokens = commands.tokenize(message.content)
     parser = arguments.ArgumentParser(tokens[0], "fast forward audio playback")
-    parser.add_argument(
-        "seconds",
+    group = parser.add_mutually_exclusive_group(required=True)
+    group.add_argument(
+        "-s",
+        "--seconds",
         type=lambda v: arguments.range_type(v, min=0, max=300),
         help="the amount of seconds to fast forward",
+    )
+    group.add_argument(
+        "-S",
+        "--sponsorblock",
+        action="store_true",
+        help="go to the end of the current sponsorblock segment",
     )
     if not (args := await parser.parse_args(message, tokens)):
         return
@@ -104,8 +113,26 @@ async def fast_forward(message):
         await utils.reply(message, "nothing is playing!")
         return
 
+    seconds = args.seconds
+    if args.sponsorblock:
+        video = sponsorblock.get_segments(players[message.guild.id].current.player.id)
+        if not video:
+            await utils.reply(
+                message, "no sponsorblock segments were found for this video!"
+            )
+            return
+
+        progress = message.guild.voice_client.source.original.progress
+        for segment in video["segments"]:
+            begin, end = map(float, segment["segment"])
+            if progress >= begin and progress < end:
+                seconds = end - message.guild.voice_client.source.original.progress
+        if not seconds:
+            await utils.reply(message, "no sponsorblock segment is currently playing!")
+            return
+
     message.guild.voice_client.pause()
-    message.guild.voice_client.source.original.fast_forward(args.seconds)
+    message.guild.voice_client.source.original.fast_forward(seconds)
     message.guild.voice_client.resume()
 
     await utils.add_check_reaction(message)

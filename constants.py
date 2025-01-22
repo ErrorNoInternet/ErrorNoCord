@@ -36,6 +36,7 @@ RELOADABLE_MODULES = [
     "events",
     "extra",
     "fun",
+    "sponsorblock",
     "tasks",
     "utils",
     "voice",
