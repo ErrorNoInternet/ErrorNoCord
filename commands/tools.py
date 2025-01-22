@@ -1,7 +1,7 @@
 import re
 
+import aiohttp
 import disnake
-import requests
 
 import arguments
 import commands
@@ -31,8 +31,9 @@ async def lookup(message):
         return
 
     if args.application:
-        response = requests.get(
-            f"https://discord.com/api/v9/applications/{args.id}/rpc"
+        session = aiohttp.ClientSession()
+        response = await (
+            await session.get(f"https://discord.com/api/v9/applications/{args.id}/rpc")
         ).json()
         if "code" in response.keys():
             await utils.reply(message, "application not found!")

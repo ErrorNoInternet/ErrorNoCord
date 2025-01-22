@@ -115,7 +115,9 @@ async def fast_forward(message):
 
     seconds = args.seconds
     if args.sponsorblock:
-        video = sponsorblock.get_segments(players[message.guild.id].current.player.id)
+        video = await sponsorblock.get_segments(
+            players[message.guild.id].current.player.id
+        )
         if not video:
             await utils.reply(
                 message, "no sponsorblock segments were found for this video!"
