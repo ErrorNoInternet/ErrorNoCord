@@ -12,7 +12,8 @@ async def get_segments(videoId: str):
     hashPrefix = hashlib.sha256(videoId.encode()).hexdigest()[:4]
     session = aiohttp.ClientSession()
     response = await session.get(
-        f'https://sponsor.ajay.app/api/skipSegments/{hashPrefix}?categories=["music_offtopic"]'
+        f"https://sponsor.ajay.app/api/skipSegments/{hashPrefix}",
+        params={"categories": '["sponsor", "music_offtopic"]'},
     )
     if response.status == 200 and (
         results := list(
