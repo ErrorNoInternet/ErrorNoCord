@@ -55,14 +55,17 @@ def match(command: str) -> list[Command] | None:
 
 
 @lru_cache
-def tokenize(string: str) -> list[str]:
+def tokenize(string: str, remove_prefix: bool = True) -> list[str]:
     tokens = []
     token = ""
     in_quotes = False
     quote_char = None
     escape = False
 
-    for char in string[len(constants.PREFIX) :]:
+    if remove_prefix:
+        string = string[len(constants.PREFIX) :]
+
+    for char in string:
         if escape:
             token += char
             escape = False
