@@ -27,14 +27,22 @@ async def reply(message, *args, **kwargs):
             kwargs["content"] = None
         elif len(kwargs) == 0:
             kwargs["embeds"] = []
-        await message_responses[message.id].edit(
-            *args, **kwargs, allowed_mentions=disnake.AllowedMentions.none()
-        )
-    else:
+
+        try:
+            await message_responses[message.id].edit(
+                *args, **kwargs, allowed_mentions=disnake.AllowedMentions.none()
+            )
+            return
+        except Exception:
+            pass
+
+    try:
         response = await message.reply(
             *args, **kwargs, allowed_mentions=disnake.AllowedMentions.none()
         )
-        message_responses[message.id] = response
+    except Exception:
+        response = await channel_send(message, *args, **kwargs)
+    message_responses[message.id] = response
     return message_responses[message.id]
 
 
