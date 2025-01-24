@@ -146,6 +146,8 @@ async def on_message(message, edited=False):
                 await commands.bot.ping(message)
             case C.LOOKUP:
                 await commands.tools.lookup(message)
+            case C.SPONSORBLOCK:
+                await commands.voice.sponsorblock_command(message)
     except Exception as e:
         await utils.reply(
             message,

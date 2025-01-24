@@ -30,6 +30,7 @@ RELOADABLE_MODULES = [
     "commands.voice.playback",
     "commands.voice.playing",
     "commands.voice.queue",
+    "commands.voice.sponsorblock",
     "commands.voice.utils",
     "constants",
     "core",

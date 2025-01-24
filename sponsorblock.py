@@ -4,6 +4,11 @@ import aiohttp
 
 from state import sponsorblock_cache
 
+CATEGORY_NAMES = {
+    "music_offtopic": "non-music",
+    "sponsor": "sponsored",
+}
+
 
 async def get_segments(videoId: str):
     if videoId in sponsorblock_cache:
