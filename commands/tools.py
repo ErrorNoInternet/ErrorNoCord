@@ -120,9 +120,9 @@ async def lookup(message):
                     except Exception:
                         raise Exception(f"unable to find badge: {PUBLIC_FLAGS[flag]}")
 
-        accent_color = 0x000000
         user_object = await client.fetch_user(user.id)
-        if user_object.accent_color is None:
+        accent_color = 0x000000
+        if user_object.accent_color is not None:
             accent_color = user_object.accent_color
 
         embed = disnake.Embed(color=accent_color)
