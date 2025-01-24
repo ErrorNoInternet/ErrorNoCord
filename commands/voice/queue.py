@@ -178,7 +178,7 @@ async def queue_or_play(message, edited=False):
         else:
             await utils.reply(
                 message,
-                f"**{len(players[message.guild.id].queue)}.** {queued.format()}",
+                f"**{1 if args.next else len(players[message.guild.id].queue)}.** {queued.format()}",
             )
 
         utils.cooldown(message, 2)
