@@ -1,4 +1,5 @@
 import asyncio
+import audioop
 import collections
 from dataclasses import dataclass
 from typing import Any, Optional
@@ -9,6 +10,30 @@ import yt_dlp
 from constants import BAR_LENGTH, EMBED_COLOR, YTDL_OPTIONS
 
 ytdl = yt_dlp.YoutubeDL(YTDL_OPTIONS)
+
+
+class PCMVolumeTransformer(disnake.AudioSource):
+    def __init__(self, original: disnake.AudioSource, volume: float = 1.0) -> None:
+        if original.is_opus():
+            raise disnake.ClientException("AudioSource must not be Opus encoded.")
+
+        self.original = original
+        self.volume = volume
+
+    @property
+    def volume(self) -> float:
+        return self._volume
+
+    @volume.setter
+    def volume(self, value: float) -> None:
+        self._volume = max(value, 0.0)
+
+    def cleanup(self) -> None:
+        self.original.cleanup()
+
+    def read(self) -> bytes:
+        ret = self.original.read()
+        return audioop.mul(ret, 2, self._volume)
 
 
 class CustomAudioSource(disnake.AudioSource):
@@ -31,7 +56,7 @@ class CustomAudioSource(disnake.AudioSource):
         return self.read_count * 0.02
 
 
-class YTDLSource(disnake.PCMVolumeTransformer):
+class YTDLSource(PCMVolumeTransformer):
     def __init__(
         self, source: CustomAudioSource, *, data: dict[str, Any], volume: float = 0.5
     ):
