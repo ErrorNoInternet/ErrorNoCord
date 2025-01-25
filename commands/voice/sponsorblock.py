@@ -2,6 +2,7 @@ import disnake
 
 import sponsorblock
 import utils
+import youtubedl
 from constants import EMBED_COLOR
 from state import players
 
@@ -31,7 +32,7 @@ async def sponsorblock_command(message):
 
         current = "**" if progress >= begin and progress < end else ""
         text.append(
-            f"{current}`{utils.format_duration(begin, short=True)}` - `{utils.format_duration(end, short=True)}`: {category_name if category_name else 'Unknown'}{current}"
+            f"{current}`{youtubedl.format_duration(begin)}` - `{youtubedl.format_duration(end)}`: {category_name if category_name else 'Unknown'}{current}"
         )
 
     await utils.reply(

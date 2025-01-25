@@ -1,11 +1,11 @@
-import disnake_paginator
-
 import arguments
+import disnake_paginator
+from constants import EMBED_COLOR
+from state import players
+
 import commands
 import sponsorblock
 import utils
-from constants import EMBED_COLOR
-from state import players
 
 from .utils import command_allowed
 
@@ -89,19 +89,15 @@ async def pause(message):
 
 async def fast_forward(message):
     tokens = commands.tokenize(message.content)
-    parser = arguments.ArgumentParser(tokens[0], "fast forward audio playback")
-    group = parser.add_mutually_exclusive_group(required=True)
-    group.add_argument(
+    parser = arguments.ArgumentParser(
+        tokens[0], "skip current sponsorblock segment"
+    )
+    parser.add_argument(
         "-s",
         "--seconds",
+        nargs="?",
         type=lambda v: arguments.range_type(v, min=0, max=300),
-        help="the amount of seconds to fast forward",
-    )
-    group.add_argument(
-        "-S",
-        "--sponsorblock",
-        action="store_true",
-        help="go to the end of the current sponsorblock segment",
+        help="the amount of seconds to fast forward instead",
     )
     if not (args := await parser.parse_args(message, tokens)):
         return
@@ -114,7 +110,7 @@ async def fast_forward(message):
         return
 
     seconds = args.seconds
-    if args.sponsorblock:
+    if not seconds:
         video = await sponsorblock.get_segments(
             players[message.guild.id].current.player.id
         )
