@@ -4,6 +4,7 @@ import commands
 
 
 async def on_message(message):
-    if "gn" in commands.tokenize(message.content, remove_prefix=False):
-        if random.random() < 0.01:
-            await message.add_reaction(random.choice(["💤", "😪", "😴", "🛌"]))
+    if random.random() < 0.01 and "gn" in commands.tokenize(
+        message.content, remove_prefix=False
+    ):
+        await message.add_reaction(random.choice(["💤", "😪", "😴", "🛌"]))
