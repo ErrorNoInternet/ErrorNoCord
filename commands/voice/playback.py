@@ -89,9 +89,7 @@ async def pause(message):
 
 async def fast_forward(message):
     tokens = commands.tokenize(message.content)
-    parser = arguments.ArgumentParser(
-        tokens[0], "skip current sponsorblock segment"
-    )
+    parser = arguments.ArgumentParser(tokens[0], "skip current sponsorblock segment")
     parser.add_argument(
         "-s",
         "--seconds",
