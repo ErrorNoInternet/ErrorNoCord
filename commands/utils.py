@@ -32,6 +32,8 @@ class Command(Enum):
 def match_token(token: str) -> list[Command]:
     if token.lower() == "r":
         return [Command.RELOAD]
+    elif token.lower() == "s":
+        return [Command.SKIP]
 
     if exact_match := list(
         filter(
