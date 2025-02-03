@@ -171,7 +171,10 @@ async def queue_or_play(message, edited=False):
         else:
             players[message.guild.id].queue_add(queued)
 
-        if not message.guild.voice_client.source:
+        if not message.guild.voice_client:
+            await utils.reply(message, "unexpected disconnect from voice channel!")
+            return
+        elif not message.guild.voice_client.source:
             play_next(message, first=True)
         elif args.now:
             message.guild.voice_client.stop()
