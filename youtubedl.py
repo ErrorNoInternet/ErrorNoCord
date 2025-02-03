@@ -88,6 +88,8 @@ class YTDLSource(PCMVolumeTransformer):
         )
 
         if "entries" in data:
+            if not data["entries"]:
+                raise Exception("no entries provided by yt-dlp!")
             data = data["entries"][0]
 
         return cls(
