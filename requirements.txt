@@ -1,3 +1,4 @@
+aiohttp
 audioop-lts
 disnake
 disnake_paginator
