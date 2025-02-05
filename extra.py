@@ -81,7 +81,7 @@ def messages_per_second(limit=500):
     )
 
 
-async def auto_count(channel_id):
+async def auto_count(channel_id: int):
     if (channel := await client.fetch_channel(channel_id)) and isinstance(
         channel, disnake.TextChannel
     ):

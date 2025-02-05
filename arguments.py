@@ -34,7 +34,7 @@ class ArgumentParser:
             await utils.reply(message, f"`{e}`")
 
 
-def range_type(string, min=0, max=100):
+def range_type(string: str, min=0, max=100):
     try:
         value = int(string)
     except ValueError:
