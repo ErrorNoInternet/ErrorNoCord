@@ -40,20 +40,12 @@ class PCMVolumeTransformer(disnake.AudioSource):
         self.original = original
         self.volume = volume
 
-    @property
-    def volume(self) -> float:
-        return self._volume
-
-    @volume.setter
-    def volume(self, value: float) -> None:
-        self._volume = max(value, 0.0)
-
     def cleanup(self) -> None:
         self.original.cleanup()
 
     def read(self) -> bytes:
         ret = self.original.read()
-        return audioop.mul(ret, 2, self._volume)
+        return audioop.mul(ret, 2, self.volume)
 
 
 class YTDLSource(PCMVolumeTransformer):
