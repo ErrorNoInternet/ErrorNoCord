@@ -12,7 +12,7 @@ from constants import BAR_LENGTH, EMBED_COLOR, YTDL_OPTIONS
 ytdl = yt_dlp.YoutubeDL(YTDL_OPTIONS)
 
 
-class CustomAudioSource(disnake.AudioSource):
+class TrackedAudioSource(disnake.AudioSource):
     def __init__(self, source):
         self._source = source
         self.read_count = 0
@@ -33,7 +33,7 @@ class CustomAudioSource(disnake.AudioSource):
 
 
 class PCMVolumeTransformer(disnake.AudioSource):
-    def __init__(self, original: CustomAudioSource, volume: float = 1.0) -> None:
+    def __init__(self, original: TrackedAudioSource, volume: float = 1.0) -> None:
         if original.is_opus():
             raise disnake.ClientException("AudioSource must not be Opus encoded.")
 
@@ -58,7 +58,7 @@ class PCMVolumeTransformer(disnake.AudioSource):
 
 class YTDLSource(PCMVolumeTransformer):
     def __init__(
-        self, source: CustomAudioSource, *, data: dict[str, Any], volume: float = 0.5
+        self, source: TrackedAudioSource, *, data: dict[str, Any], volume: float = 0.5
     ):
         super().__init__(source, volume)
 
@@ -93,7 +93,7 @@ class YTDLSource(PCMVolumeTransformer):
             data = data["entries"][0]
 
         return cls(
-            CustomAudioSource(
+            TrackedAudioSource(
                 disnake.FFmpegPCMAudio(
                     data["url"] if stream else ytdl.prepare_filename(data),
                     before_options="-vn -reconnect 1",
