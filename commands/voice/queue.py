@@ -159,9 +159,7 @@ async def queue_or_play(message, edited=False):
                 )
                 player.volume = float(args.volume) / 100.0
         except Exception as e:
-            await utils.reply(
-                message, f"**failed to queue:** `{e}`", suppress_embeds=True
-            )
+            await utils.reply(message, f"**failed to queue:** `{e}`")
             return
 
         queued = youtubedl.QueuedSong(player, message)
