@@ -5,8 +5,8 @@ from typing import Optional
 import disnake
 
 from constants import BAR_LENGTH, EMBED_COLOR
-from utils import format_duration
 
+from .utils import format_duration
 from .youtubedl import YTDLSource
 
 
