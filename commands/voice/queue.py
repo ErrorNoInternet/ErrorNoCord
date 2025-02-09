@@ -16,7 +16,7 @@ from .utils import command_allowed, ensure_joined, play_next
 
 async def queue_or_play(message, edited=False):
     if message.guild.id not in players:
-        players[message.guild.id] = audio.QueuedPlayer()
+        players[message.guild.id] = audio.queue.Player()
 
     tokens = commands.tokenize(message.content)
     parser = arguments.ArgumentParser(
@@ -154,7 +154,7 @@ async def queue_or_play(message, edited=False):
 
         try:
             async with message.channel.typing():
-                player = await audio.YTDLSource.from_url(
+                player = await audio.youtubedl.YTDLSource.from_url(
                     " ".join(query), loop=client.loop, stream=True
                 )
                 player.volume = float(args.volume) / 100.0
@@ -162,7 +162,7 @@ async def queue_or_play(message, edited=False):
             await utils.reply(message, f"**failed to queue:** `{e}`")
             return
 
-        queued = audio.QueuedSong(player, message)
+        queued = audio.queue.Song(player, message)
 
         if args.now or args.next:
             players[message.guild.id].queue_add_front(queued)

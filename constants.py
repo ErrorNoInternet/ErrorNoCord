@@ -22,6 +22,10 @@ PREFIX = "%"
 RELOADABLE_MODULES = [
     "arguments",
     "audio",
+    "audio.discord",
+    "audio.queue",
+    "audio.utils",
+    "audio.youtubedl",
     "commands",
     "commands.bot",
     "commands.tools",

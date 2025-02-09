@@ -7,7 +7,7 @@ import utils
 class TestFormatDuration(unittest.TestCase):
     def test_audio(self):
         def f(s):
-            return audio.format_duration(s)
+            return audio.utils.format_duration(s)
 
         self.assertEqual(f(0), "00:00")
         self.assertEqual(f(0.5), "00:00")
