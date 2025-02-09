@@ -165,9 +165,9 @@ async def queue_or_play(message, edited=False):
         queued = audio.queue.Song(player, message)
 
         if args.now or args.next:
-            players[message.guild.id].queue_add_front(queued)
+            players[message.guild.id].queue_push_front(queued)
         else:
-            players[message.guild.id].queue_add(queued)
+            players[message.guild.id].queue_push(queued)
 
         if not message.guild.voice_client:
             await utils.reply(message, "unexpected disconnect from voice channel!")

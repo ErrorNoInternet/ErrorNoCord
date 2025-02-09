@@ -97,10 +97,10 @@ class Player:
         self.current = popped
         return popped
 
-    def queue_add(self, item):
+    def queue_push(self, item):
         self.queue.append(item)
 
-    def queue_add_front(self, item):
+    def queue_push_front(self, item):
         self.queue.appendleft(item)
 
     def __str__(self):
