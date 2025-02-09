@@ -21,6 +21,7 @@ OWNERS = [531392146767347712]
 PREFIX = "%"
 RELOADABLE_MODULES = [
     "arguments",
+    "audio",
     "commands",
     "commands.bot",
     "commands.tools",
@@ -41,7 +42,6 @@ RELOADABLE_MODULES = [
     "tasks",
     "utils",
     "voice",
-    "youtubedl",
     "yt_dlp",
     "yt_dlp.version",
 ]

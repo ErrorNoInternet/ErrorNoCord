@@ -1,13 +1,13 @@
 import unittest
 
+import audio
 import utils
-import youtubedl
 
 
 class TestFormatDuration(unittest.TestCase):
-    def test_youtubedl(self):
+    def test_audio(self):
         def f(s):
-            return youtubedl.format_duration(s)
+            return audio.format_duration(s)
 
         self.assertEqual(f(0), "00:00")
         self.assertEqual(f(0.5), "00:00")
