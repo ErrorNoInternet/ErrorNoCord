@@ -18,7 +18,7 @@ class Song:
     def format(self, show_queuer=False, hide_preview=False, multiline=False) -> str:
         if multiline:
             return (
-                f"[`{self.player.title}`]({'<' if hide_preview else ''}{self.player.original_url}{'>' if hide_preview else ''})\n**duration:** {format_duration(self.player.duration) if self.player.duration else '[live]'}"
+                f"[`{self.player.title}`]({'<' if hide_preview else ''}{self.player.original_url}{'>' if hide_preview else ''})\n**duration:** {format_duration(self.player.duration) if self.player.duration else '[stream]'}"
                 + (
                     f", **queued by:** <@{self.trigger_message.author.id}>"
                     if show_queuer
@@ -27,7 +27,7 @@ class Song:
             )
         else:
             return (
-                f"[`{self.player.title}`]({'<' if hide_preview else ''}{self.player.original_url}{'>' if hide_preview else ''}) [**{format_duration(self.player.duration) if self.player.duration else 'live'}**]"
+                f"[`{self.player.title}`]({'<' if hide_preview else ''}{self.player.original_url}{'>' if hide_preview else ''}) [**{format_duration(self.player.duration) if self.player.duration else 'stream'}**]"
                 + (f" (<@{self.trigger_message.author.id}>)" if show_queuer else "")
             )
 
@@ -46,7 +46,7 @@ class Song:
                 + (
                     f"**{format_duration(int(self.player.original.progress))}** / **{format_duration(self.player.duration)}** (**{round(progress * 100)}%**)"
                     if self.player.duration
-                    else "[**live**]"
+                    else "[**stream**]"
                 )
             ),
         )
@@ -56,22 +56,23 @@ class Song:
                 name="Uploader",
                 value=f"[{self.player.uploader}]({self.player.uploader_url})",
             )
-        else:
+        elif self.player.uploader:
             embed.add_field(
                 name="Uploader",
                 value=self.player.uploader,
             )
-        embed.add_field(
-            name="Likes",
-            value=f"{self.player.like_count:,}"
-            if self.player.like_count
-            else "Unknown",
-        )
-        embed.add_field(name="Views", value=f"{self.player.view_count:,}")
-        embed.add_field(name="Published", value=f"<t:{self.player.timestamp}>")
-        embed.add_field(name="Volume", value=f"{int(self.player.volume * 100)}%")
+        if self.player.like_count:
+            embed.add_field(name="Likes", value=f"{self.player.like_count:,}")
+        if self.player.view_count:
+            embed.add_field(name="Views", value=f"{self.player.view_count:,}")
+        if self.player.timestamp:
+            embed.add_field(name="Published", value=f"<t:{int(self.player.timestamp)}>")
+        if self.player.volume:
+            embed.add_field(name="Volume", value=f"{int(self.player.volume * 100)}%")
 
-        embed.set_image(self.player.thumbnail_url)
+        if self.player.thumbnail_url:
+            embed.set_image(self.player.thumbnail_url)
+
         embed.set_footer(
             text=f"queued by {self.trigger_message.author.name}",
             icon_url=(
