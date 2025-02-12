@@ -159,7 +159,7 @@ async def queue_or_play(message, edited=False):
                 )
                 player.volume = float(args.volume) / 100.0
         except Exception as e:
-            await utils.reply(message, f"**failed to queue:** `{e}`")
+            await utils.reply(message, f"failed to queue: `{e}`")
             return
 
         queued = audio.queue.Song(player, message)
