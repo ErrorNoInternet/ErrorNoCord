@@ -30,10 +30,13 @@ class Command(Enum):
 
 @lru_cache
 def match_token(token: str) -> list[Command]:
-    if token.lower() == "r":
-        return [Command.RELOAD]
-    elif token.lower() == "s":
-        return [Command.SKIP]
+    match token.lower():
+        case "r":
+            return [Command.RELOAD]
+        case "s":
+            return [Command.SKIP]
+        case "c":
+            return [Command.CURRENT]
 
     if exact_match := list(
         filter(
