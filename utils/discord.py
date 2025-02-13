@@ -5,10 +5,14 @@ from logging import error, info
 import disnake
 
 import commands
+from constants import OWNERS
 from state import command_cooldowns, message_responses
 
 
 def cooldown(message, cooldown_time: int):
+    if message.author.id in OWNERS:
+        return
+
     possible_commands = commands.match(message.content)
     if not possible_commands or len(possible_commands) > 1:
         return
