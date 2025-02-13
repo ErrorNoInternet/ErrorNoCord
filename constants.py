@@ -45,6 +45,8 @@ RELOADABLE_MODULES = [
     "sponsorblock",
     "tasks",
     "utils",
+    "utils.common",
+    "utils.discord",
     "voice",
     "yt_dlp",
     "yt_dlp.version",
