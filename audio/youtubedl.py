@@ -46,6 +46,8 @@ class YTDLSource(PCMVolumeTransformer):
             if not data["entries"]:
                 raise Exception("no results found!")
             data = data["entries"][0]
+            if "url" not in data:
+                raise Exception("no url returned!")
 
         return cls(
             TrackedAudioSource(
