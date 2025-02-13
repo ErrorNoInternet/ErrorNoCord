@@ -90,8 +90,7 @@ class ChannelResponseWrapper:
         self.sent_message = None
 
     async def send_message(self, **kwargs):
-        if "ephemeral" in kwargs:
-            del kwargs["ephemeral"]
+        kwargs.pop("ephemeral", None)
         self.sent_message = await reply(self.message, **kwargs)
 
     async def edit_message(self, content=None, embed=None, view=None):
