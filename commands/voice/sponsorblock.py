@@ -3,7 +3,7 @@ import disnake
 import audio
 import sponsorblock
 import utils
-from constants import EMBED_COLOR
+from constants import EMBED_COLOR, SPONSORBLOCK_CATEGORY_NAMES
 from state import players
 
 from .utils import command_allowed
@@ -28,7 +28,7 @@ async def sponsorblock_command(message):
     text = []
     for segment in video["segments"]:
         begin, end = map(int, segment["segment"])
-        category_name = sponsorblock.CATEGORY_NAMES.get(segment["category"])
+        category_name = SPONSORBLOCK_CATEGORY_NAMES.get(segment["category"])
 
         current = "**" if progress >= begin and progress < end else ""
         text.append(

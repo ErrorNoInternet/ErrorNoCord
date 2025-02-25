@@ -1,13 +1,21 @@
 import hashlib
+import json
 
 import aiohttp
 
 from state import sponsorblock_cache
 
-CATEGORY_NAMES = {
-    "music_offtopic": "non-music",
-    "sponsor": "sponsored",
-}
+categories = json.dumps(
+    [
+        "interaction",
+        "intro",
+        "music_offtopic",
+        "outro",
+        "preview",
+        "selfpromo",
+        "sponsor",
+    ]
+)
 
 
 async def get_segments(video_id: str):
@@ -18,7 +26,7 @@ async def get_segments(video_id: str):
     session = aiohttp.ClientSession()
     response = await session.get(
         f"https://sponsor.ajay.app/api/skipSegments/{hashPrefix}",
-        params={"categories": '["sponsor", "music_offtopic"]'},
+        params={"categories": categories},
     )
     if response.status == 200 and (
         results := list(

@@ -19,6 +19,10 @@ BAR_LENGTH = 35
 EMBED_COLOR = 0xFF6600
 OWNERS = [531392146767347712]
 PREFIX = "%"
+SPONSORBLOCK_CATEGORY_NAMES = {
+    "music_offtopic": "non-music",
+    "sponsor": "sponsored",
+}
 RELOADABLE_MODULES = [
     "arguments",
     "audio",
