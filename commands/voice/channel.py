@@ -4,10 +4,11 @@ from .utils import command_allowed
 
 
 async def join(message):
-    if message.guild.voice_client:
-        return await message.guild.voice_client.move_to(message.channel)
-    elif message.author.voice:
-        await message.author.voice.channel.connect()
+    if message.author.voice:
+        if message.guild.voice_client:
+            await message.guild.voice_client.move_to(message.channel)
+        else:
+            await message.author.voice.channel.connect()
     else:
         await utils.reply(message, "you are not connected to a voice channel!")
         return
