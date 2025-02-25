@@ -60,7 +60,7 @@ class YTDLSource(PCMVolumeTransformer):
         )
 
     def __repr__(self):
-        return f"<YTDLSource title={self.title} original_url=<{self.original_url}> duration={self.duration}>"
+        return f"<YTDLSource title={self.title} original_url={self.original_url} duration={self.duration}>"
 
     def __str__(self):
         return self.__repr__()
