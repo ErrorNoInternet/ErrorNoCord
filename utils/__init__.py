@@ -1,4 +1,4 @@
-from .common import LimitedSizeDict, filter_secrets, format_duration
+from .common import LimitedSizeDict, filter_secrets, format_duration, surround
 from .discord import (
     ChannelResponseWrapper,
     MessageInteractionWrapper,
@@ -24,4 +24,5 @@ __all__ = [
     "MessageInteractionWrapper",
     "reply",
     "snowflake_timestamp",
+    "surround",
 ]

@@ -8,9 +8,9 @@ from yt_dlp import version
 
 import arguments
 import commands
-import utils
 from constants import EMBED_COLOR
 from state import client, start_time
+from utils import format_duration, reply, surround
 
 
 async def status(message):
@@ -25,41 +25,41 @@ async def status(message):
     embed = disnake.Embed(color=EMBED_COLOR)
     embed.add_field(
         name="Latency",
-        value=f"```{round(client.latency * 1000, 1)} ms```",
+        value=surround(f"{round(client.latency * 1000, 1)} ms"),
     )
     embed.add_field(
         name="Memory",
-        value=f"```{round(memory_usage, 1)} MiB```",
+        value=surround(f"{round(memory_usage, 1)} MiB"),
     )
     embed.add_field(
         name="Threads",
-        value=f"```{threading.active_count()}```",
+        value=surround(threading.active_count()),
     )
     embed.add_field(
         name="Guilds",
-        value=f"```{len(client.guilds)}```",
+        value=surround(len(client.guilds)),
     )
     embed.add_field(
         name="Members",
-        value=f"```{member_count}```",
+        value=surround(member_count),
     )
     embed.add_field(
         name="Channels",
-        value=f"```{channel_count}```",
+        value=surround(channel_count),
     )
     embed.add_field(
         name="Disnake",
-        value=f"```{disnake.__version__}```",
+        value=surround(disnake.__version__),
     )
     embed.add_field(
         name="yt-dlp",
-        value=f"```{version.__version__}```",
+        value=surround(version.__version__),
     )
     embed.add_field(
         name="Uptime",
-        value=f"```{utils.format_duration(int(time.time() - start_time), short=True)}```",
+        value=surround(format_duration(int(time.time() - start_time), short=True)),
     )
-    await utils.reply(message, embed=embed)
+    await reply(message, embed=embed)
 
 
 async def uptime(message):
@@ -78,15 +78,13 @@ async def uptime(message):
         return
 
     if args.since:
-        await utils.reply(message, f"{round(start_time)}")
+        await reply(message, f"{round(start_time)}")
     else:
-        await utils.reply(
-            message, f"up {utils.format_duration(int(time.time() - start_time))}"
-        )
+        await reply(message, f"up {format_duration(int(time.time() - start_time))}")
 
 
 async def ping(message):
-    await utils.reply(
+    await reply(
         message,
         embed=disnake.Embed(
             title="Pong :ping_pong:",
@@ -97,7 +95,7 @@ async def ping(message):
 
 
 async def help(message):
-    await utils.reply(
+    await reply(
         message,
         ", ".join(
             [f"`{command.value}`" for command in commands.Command.__members__.values()]
