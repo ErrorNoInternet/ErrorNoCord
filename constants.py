@@ -21,6 +21,7 @@ OWNERS = [531392146767347712]
 PREFIX = "%"
 SPONSORBLOCK_CATEGORY_NAMES = {
     "music_offtopic": "non-music",
+    "selfpromo": "self promotion",
     "sponsor": "sponsored",
 }
 RELOADABLE_MODULES = [

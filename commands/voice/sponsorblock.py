@@ -28,11 +28,12 @@ async def sponsorblock_command(message):
     text = []
     for segment in video["segments"]:
         begin, end = map(int, segment["segment"])
-        category_name = SPONSORBLOCK_CATEGORY_NAMES.get(segment["category"])
+        if (category := segment["category"]) in SPONSORBLOCK_CATEGORY_NAMES:
+            category = SPONSORBLOCK_CATEGORY_NAMES[category]
 
         current = "**" if progress >= begin and progress < end else ""
         text.append(
-            f"{current}`{audio.utils.format_duration(begin)}` - `{audio.utils.format_duration(end)}`: {category_name if category_name else 'Unknown'}{current}"
+            f"{current}`{audio.utils.format_duration(begin)}` - `{audio.utils.format_duration(end)}`: {category}{current}"
         )
 
     await utils.reply(
