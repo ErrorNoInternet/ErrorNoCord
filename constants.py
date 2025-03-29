@@ -24,6 +24,12 @@ SPONSORBLOCK_CATEGORY_NAMES = {
     "selfpromo": "self promotion",
     "sponsor": "sponsored",
 }
+REACTIONS = {
+    "cat": ["🐈"],
+    "dog": ["🐕"],
+    "gn": ["💤", "😪", "😴", "🛌"],
+    "pizza": ["🍕"],
+}
 RELOADABLE_MODULES = [
     "arguments",
     "audio",
