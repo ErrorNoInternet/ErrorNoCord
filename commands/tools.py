@@ -14,13 +14,13 @@ async def lookup(message):
     tokens = commands.tokenize(message.content)
     parser = arguments.ArgumentParser(
         tokens[0],
-        "look up a user or application on discord by their ID",
+        "look up a discord user or application by ID",
     )
     parser.add_argument(
         "-a",
         "--application",
         action="store_true",
-        help="search for applications instead of users",
+        help="look up applications instead of users",
     )
     parser.add_argument(
         "id",

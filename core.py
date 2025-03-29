@@ -166,6 +166,7 @@ async def on_voice_state_update(_, before, after):
         channel = before.channel
     elif is_empty(after.channel):
         channel = after.channel
+
     if channel:
         await channel.guild.voice_client.disconnect()
 
@@ -174,9 +175,9 @@ def rreload(reloaded_modules, module):
     reloaded_modules.add(module.__name__)
 
     for submodule in filter(
-        lambda v: inspect.ismodule(v)
-        and v.__name__ in RELOADABLE_MODULES
-        and v.__name__ not in reloaded_modules,
+        lambda sm: inspect.ismodule(sm)
+        and sm.__name__ in RELOADABLE_MODULES
+        and sm.__name__ not in reloaded_modules,
         vars(module).values(),
     ):
         rreload(reloaded_modules, submodule)

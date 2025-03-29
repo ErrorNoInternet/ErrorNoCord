@@ -19,7 +19,7 @@ async def cleanup():
                 targets.append(guild_id)
         for target in targets:
             del players[target]
-        debug(f"cleanup removed {len(targets)} empty players")
+        debug(f"cleanup thread removed {len(targets)} empty players")
 
         if (
             not idle_tracker["is_idle"]
