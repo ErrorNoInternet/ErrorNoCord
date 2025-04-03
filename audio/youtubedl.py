@@ -13,7 +13,11 @@ ytdl = yt_dlp.YoutubeDL(YTDL_OPTIONS)
 
 class YTDLSource(PCMVolumeTransformer):
     def __init__(
-        self, source: TrackedAudioSource, *, data: dict[str, Any], volume: float = 0.5
+        self,
+        source: TrackedAudioSource,
+        *,
+        data: dict[str, Any],
+        volume: float = 0.5,
     ):
         super().__init__(source, volume)
 
@@ -39,7 +43,8 @@ class YTDLSource(PCMVolumeTransformer):
     ):
         loop = loop or asyncio.get_event_loop()
         data: Any = await loop.run_in_executor(
-            None, lambda: ytdl.extract_info(url, download=not stream)
+            None,
+            lambda: ytdl.extract_info(url, download=not stream),
         )
 
         if "entries" in data:
@@ -54,7 +59,7 @@ class YTDLSource(PCMVolumeTransformer):
                 disnake.FFmpegPCMAudio(
                     data["url"] if stream else ytdl.prepare_filename(data),
                     before_options="-vn -reconnect 1",
-                )
+                ),
             ),
             data=data,
         )

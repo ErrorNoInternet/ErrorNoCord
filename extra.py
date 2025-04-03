@@ -8,11 +8,15 @@ from state import client, kill, players
 
 
 async def transcript(
-    message, languages=["en"], max_messages=6, min_messages=3, upper=True
+    message,
+    languages=["en"],
+    max_messages=6,
+    min_messages=3,
+    upper=True,
 ):
     initial_id = message.guild.voice_client.source.id
     transcript_list = youtube_transcript_api.YouTubeTranscriptApi.list_transcripts(
-        initial_id
+        initial_id,
     )
     try:
         transcript = transcript_list.find_manually_created_transcript(languages).fetch()
@@ -44,7 +48,7 @@ async def transcript(
                     await messages.pop().delete()
                 else:
                     await message.channel.delete_messages(
-                        [messages.pop() for _ in range(count)]
+                        [messages.pop() for _ in range(count)],
                     )
             except Exception:
                 pass
@@ -77,19 +81,20 @@ def messages_per_second(limit=500):
         average = 1
     print(
         f"I am receiving **{average} {'message' if average == 1 else 'messages'} per second** "
-        f"from **{len(members)} {'member' if len(members) == 1 else 'members'}** across **{len(guilds)} {'guild' if len(guilds) == 1 else 'guilds'}**"
+        f"from **{len(members)} {'member' if len(members) == 1 else 'members'}** across **{len(guilds)} {'guild' if len(guilds) == 1 else 'guilds'}**",
     )
 
 
 async def auto_count(channel_id: int):
     if (channel := await client.fetch_channel(channel_id)) and isinstance(
-        channel, disnake.TextChannel
+        channel,
+        disnake.TextChannel,
     ):
         last_message = (await channel.history(limit=1).flatten())[0]
         try:
             result = str(
                 int("".join(filter(lambda d: d in string.digits, last_message.content)))
-                + 1
+                + 1,
             )
         except Exception:
             result = "where number"

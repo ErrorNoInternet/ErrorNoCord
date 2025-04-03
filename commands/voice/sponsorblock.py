@@ -21,7 +21,8 @@ async def sponsorblock_command(message):
     video = await sponsorblock.get_segments(players[message.guild.id].current.player.id)
     if not video:
         await utils.reply(
-            message, "no sponsorblock segments were found for this video!"
+            message,
+            "no sponsorblock segments were found for this video!",
         )
         return
 
@@ -33,7 +34,7 @@ async def sponsorblock_command(message):
 
         current = "**" if progress >= begin and progress < end else ""
         text.append(
-            f"{current}`{audio.utils.format_duration(begin)}` - `{audio.utils.format_duration(end)}`: {category}{current}"
+            f"{current}`{audio.utils.format_duration(begin)}` - `{audio.utils.format_duration(end)}`: {category}{current}",
         )
 
     await utils.reply(

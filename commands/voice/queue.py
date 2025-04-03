@@ -20,14 +20,15 @@ async def queue_or_play(message, edited=False):
 
     tokens = commands.tokenize(message.content)
     parser = arguments.ArgumentParser(
-        tokens[0], "queue a song, list the queue, or resume playback"
+        tokens[0],
+        "queue a song, list the queue, or resume playback",
     )
     parser.add_argument("query", nargs="*", help="yt-dlp URL or query to get song")
     parser.add_argument(
         "-v",
         "--volume",
         default=50,
-        type=lambda v: arguments.range_type(v, min=0, max=150),
+        type=lambda v: arguments.range_type(v, lower=0, upper=150),
         help="the volume level (0 - 150) for the specified song",
     )
     parser.add_argument(
@@ -140,8 +141,8 @@ async def queue_or_play(message, edited=False):
                         lambda queued: queued.trigger_message.author.id
                         == message.author.id,
                         players[message.guild.id].queue,
-                    )
-                )
+                    ),
+                ),
             )
             >= 5
             and not len(message.guild.voice_client.channel.members) == 2
@@ -155,7 +156,9 @@ async def queue_or_play(message, edited=False):
         try:
             async with message.channel.typing():
                 player = await audio.youtubedl.YTDLSource.from_url(
-                    " ".join(query), loop=client.loop, stream=True
+                    " ".join(query),
+                    loop=client.loop,
+                    stream=True,
                 )
                 player.volume = float(args.volume) / 100.0
         except Exception as e:
@@ -192,7 +195,7 @@ async def queue_or_play(message, edited=False):
                     [
                         queued.player.duration if queued.player.duration else 0
                         for queued in players[message.guild.id].queue
-                    ]
+                    ],
                 ),
                 natural=True,
             )
@@ -217,13 +220,14 @@ async def queue_or_play(message, edited=False):
                                 [
                                     f"**{i + 1}.** {queued.format(show_queuer=True, hide_preview=True, multiline=True)}"
                                     for i, queued in batch
-                                ]
+                                ],
                             )
                             for batch in itertools.batched(
-                                enumerate(players[message.guild.id].queue), 10
+                                enumerate(players[message.guild.id].queue),
+                                10,
                             )
                         ],
-                    )
+                    ),
                 ),
             ).start(utils.MessageInteractionWrapper(message))
         else:

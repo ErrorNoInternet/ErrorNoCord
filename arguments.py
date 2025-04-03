@@ -8,7 +8,9 @@ import utils
 class ArgumentParser:
     def __init__(self, command, description):
         self.parser = argparse.ArgumentParser(
-            command, description=description, exit_on_error=False
+            command,
+            description=description,
+            exit_on_error=False,
         )
 
     def print_help(self):
@@ -26,21 +28,20 @@ class ArgumentParser:
     async def parse_args(self, message, tokens) -> argparse.Namespace | None:
         try:
             with contextlib.redirect_stdout(io.StringIO()):
-                args = self.parser.parse_args(tokens[1:])
-            return args
+                return self.parser.parse_args(tokens[1:])
         except SystemExit:
             await utils.reply(message, f"```\n{self.print_help()}```")
         except Exception as e:
             await utils.reply(message, f"`{e}`")
 
 
-def range_type(string: str, min=0, max=100):
+def range_type(string: str, lower=0, upper=100) -> int:
     try:
         value = int(string)
-    except ValueError:
-        raise argparse.ArgumentTypeError("value is not a valid integer")
+    except ValueError as e:
+        raise argparse.ArgumentTypeError("value is not a valid integer") from e
 
-    if min <= value <= max:
+    if lower <= value <= upper:
         return value
-    else:
-        raise argparse.ArgumentTypeError(f"value is not in range {min}-{max}")
+
+    raise argparse.ArgumentTypeError(f"value is not in range {lower}-{upper}")

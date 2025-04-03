@@ -3,11 +3,11 @@ from collections import OrderedDict
 from constants import SECRETS
 
 
-def surround(inner, outer="```"):
+def surround(inner: str, outer="```") -> str:
     return outer + str(inner) + outer
 
 
-def format_duration(duration: int, natural: bool = False, short: bool = False):
+def format_duration(duration: int, natural: bool = False, short: bool = False) -> str:
     def format_plural(noun, count):
         if short:
             return noun[0]

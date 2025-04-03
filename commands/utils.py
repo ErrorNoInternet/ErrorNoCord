@@ -42,7 +42,7 @@ def match_token(token: str) -> list[Command]:
         filter(
             lambda command: command.value == token.lower(),
             Command.__members__.values(),
-        )
+        ),
     ):
         return exact_match
 
@@ -50,7 +50,7 @@ def match_token(token: str) -> list[Command]:
         filter(
             lambda command: command.value.startswith(token.lower()),
             Command.__members__.values(),
-        )
+        ),
     )
 
 

@@ -1,11 +1,11 @@
-import arguments
 import disnake_paginator
-from constants import EMBED_COLOR
-from state import players
 
+import arguments
 import commands
 import sponsorblock
 import utils
+from constants import EMBED_COLOR
+from state import players
 
 from .utils import command_allowed
 
@@ -13,7 +13,8 @@ from .utils import command_allowed
 async def playing(message):
     tokens = commands.tokenize(message.content)
     parser = arguments.ArgumentParser(
-        tokens[0], "get information about the currently playing song"
+        tokens[0],
+        "get information about the currently playing song",
     )
     parser.add_argument(
         "-d",
@@ -49,7 +50,7 @@ async def playing(message):
         await utils.reply(
             message,
             embed=players[message.guild.id].current.embed(
-                is_paused=message.guild.voice_client.is_paused()
+                is_paused=message.guild.voice_client.is_paused(),
             ),
         )
     else:
@@ -94,7 +95,7 @@ async def fast_forward(message):
         "-s",
         "--seconds",
         nargs="?",
-        type=lambda v: arguments.range_type(v, min=0, max=300),
+        type=lambda v: arguments.range_type(v, lower=0, upper=300),
         help="the amount of seconds to fast forward instead",
     )
     if not (args := await parser.parse_args(message, tokens)):
@@ -110,11 +111,12 @@ async def fast_forward(message):
     seconds = args.seconds
     if not seconds:
         video = await sponsorblock.get_segments(
-            players[message.guild.id].current.player.id
+            players[message.guild.id].current.player.id,
         )
         if not video:
             await utils.reply(
-                message, "no sponsorblock segments were found for this video!"
+                message,
+                "no sponsorblock segments were found for this video!",
             )
             return
 
@@ -140,7 +142,7 @@ async def volume(message):
     parser.add_argument(
         "volume",
         nargs="?",
-        type=lambda v: arguments.range_type(v, min=0, max=150),
+        type=lambda v: arguments.range_type(v, lower=0, upper=150),
         help="the volume level (0 - 150)",
     )
     if not (args := await parser.parse_args(message, tokens)):

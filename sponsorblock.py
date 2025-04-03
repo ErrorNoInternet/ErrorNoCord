@@ -14,7 +14,7 @@ categories = json.dumps(
         "preview",
         "selfpromo",
         "sponsor",
-    ]
+    ],
 )
 
 
@@ -30,7 +30,7 @@ async def get_segments(video_id: str):
     )
     if response.status == 200 and (
         results := list(
-            filter(lambda v: video_id == v["videoID"], await response.json())
+            filter(lambda v: video_id == v["videoID"], await response.json()),
         )
     ):
         sponsorblock_cache[video_id] = results[0]

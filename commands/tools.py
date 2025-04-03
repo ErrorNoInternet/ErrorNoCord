@@ -41,7 +41,7 @@ async def lookup(message):
 
         embed = disnake.Embed(description=response["description"], color=EMBED_COLOR)
         embed.set_thumbnail(
-            url=f"https://cdn.discordapp.com/app-icons/{response['id']}/{response['icon']}.webp"
+            url=f"https://cdn.discordapp.com/app-icons/{response['id']}/{response['icon']}.webp",
         )
         embed.add_field(name="Application Name", value=response["name"])
         embed.add_field(name="Application ID", value="`" + response["id"] + "`")
@@ -102,7 +102,9 @@ async def lookup(message):
             for tag in response["tags"]:
                 bot_tags += tag + ", "
         embed.add_field(
-            name="Tags", value="None" if bot_tags == "" else bot_tags[:-2], inline=False
+            name="Tags",
+            value="None" if bot_tags == "" else bot_tags[:-2],
+            inline=False,
         )
     else:
         try:
@@ -117,8 +119,10 @@ async def lookup(message):
                 if flag_name != "None":
                     try:
                         badges += BADGE_EMOJIS[PUBLIC_FLAGS[flag]]
-                    except Exception:
-                        raise Exception(f"unable to find badge: {PUBLIC_FLAGS[flag]}")
+                    except Exception as e:
+                        raise Exception(
+                            f"unable to find badge: {PUBLIC_FLAGS[flag]}"
+                        ) from e
 
         user_object = await client.fetch_user(user.id)
         accent_color = 0x000000
@@ -165,7 +169,7 @@ async def clear(message):
     )
     parser.add_argument(
         "count",
-        type=lambda c: arguments.range_type(c, min=1, max=1000),
+        type=lambda c: arguments.range_type(c, lower=1, upper=1000),
         help="amount of messages to delete",
     )
     group = parser.add_mutually_exclusive_group()
@@ -259,8 +263,10 @@ async def clear(message):
 
     messages = len(
         await message.channel.purge(
-            limit=args.count, check=check, oldest_first=args.oldest_first
-        )
+            limit=args.count,
+            check=check,
+            oldest_first=args.oldest_first,
+        ),
     )
 
     if not args.delete_command:

@@ -1,3 +1,8 @@
 from . import discord, queue, utils, youtubedl
 
-__all__ = ["utils", "queue", "youtubedl", "discord"]
+__all__ = [
+    "discord",
+    "queue",
+    "utils",
+    "youtubedl",
+]

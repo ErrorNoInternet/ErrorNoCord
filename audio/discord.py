@@ -26,7 +26,7 @@ class TrackedAudioSource(disnake.AudioSource):
 class PCMVolumeTransformer(disnake.AudioSource):
     def __init__(self, original: TrackedAudioSource, volume: float = 1.0) -> None:
         if original.is_opus():
-            raise disnake.ClientException("AudioSource must not be Opus encoded.")
+            raise disnake.ClientException("AudioSource must not be Opus encoded")
 
         self.original = original
         self.volume = volume

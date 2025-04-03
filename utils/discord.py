@@ -1,6 +1,6 @@
-import os
 import time
 from logging import error, info
+from pathlib import Path
 
 import disnake
 
@@ -34,7 +34,9 @@ async def reply(message, *args, **kwargs):
 
         try:
             await message_responses[message.id].edit(
-                *args, **kwargs, allowed_mentions=disnake.AllowedMentions.none()
+                *args,
+                **kwargs,
+                allowed_mentions=disnake.AllowedMentions.none(),
             )
             return
         except Exception:
@@ -42,7 +44,9 @@ async def reply(message, *args, **kwargs):
 
     try:
         response = await message.reply(
-            *args, **kwargs, allowed_mentions=disnake.AllowedMentions.none()
+            *args,
+            **kwargs,
+            allowed_mentions=disnake.AllowedMentions.none(),
         )
     except Exception:
         response = await channel_send(message, *args, **kwargs)
@@ -52,13 +56,15 @@ async def reply(message, *args, **kwargs):
 
 async def channel_send(message, *args, **kwargs):
     await message.channel.send(
-        *args, **kwargs, allowed_mentions=disnake.AllowedMentions.none()
+        *args,
+        **kwargs,
+        allowed_mentions=disnake.AllowedMentions.none(),
     )
 
 
 def load_opus():
     for path in filter(
-        lambda p: os.path.exists(p),
+        lambda p: Path(p).exists(),
         ["/usr/lib64/libopus.so.0", "/usr/lib/libopus.so.0"],
     ):
         try:
@@ -70,8 +76,8 @@ def load_opus():
     raise Exception("could not locate working opus library")
 
 
-def snowflake_timestamp(id):
-    return round(((id >> 22) + 1420070400000) / 1000)
+def snowflake_timestamp(snowflake) -> int:
+    return round(((snowflake >> 22) + 1420070400000) / 1000)
 
 
 async def add_check_reaction(message):
@@ -80,7 +86,8 @@ async def add_check_reaction(message):
 
 async def invalid_user_handler(interaction):
     await interaction.response.send_message(
-        "you are not the intended receiver of this message!", ephemeral=True
+        "you are not the intended receiver of this message!",
+        ephemeral=True,
     )
 
 

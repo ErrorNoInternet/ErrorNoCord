@@ -1,6 +1,6 @@
 import collections
 from dataclasses import dataclass
-from typing import Optional
+from typing import ClassVar, Optional
 
 import disnake
 
@@ -16,20 +16,19 @@ class Song:
     trigger_message: disnake.Message
 
     def format(self, show_queuer=False, hide_preview=False, multiline=False) -> str:
+        title = f"[`{self.player.title}`]({'<' if hide_preview else ''}{self.player.original_url}{'>' if hide_preview else ''})"
+        duration = (
+            format_duration(self.player.duration) if self.player.duration else "stream"
+        )
         if multiline:
-            return (
-                f"[`{self.player.title}`]({'<' if hide_preview else ''}{self.player.original_url}{'>' if hide_preview else ''})\n**duration:** {format_duration(self.player.duration) if self.player.duration else '[stream]'}"
-                + (
-                    f", **queued by:** <@{self.trigger_message.author.id}>"
-                    if show_queuer
-                    else ""
-                )
+            return f"{title}\n**duration:** {duration}" + (
+                f", **queued by:** <@{self.trigger_message.author.id}>"
+                if show_queuer
+                else ""
             )
-        else:
-            return (
-                f"[`{self.player.title}`]({'<' if hide_preview else ''}{self.player.original_url}{'>' if hide_preview else ''}) [**{format_duration(self.player.duration) if self.player.duration else 'stream'}**]"
-                + (f" (<@{self.trigger_message.author.id}>)" if show_queuer else "")
-            )
+        return f"{title} [**{duration}**]" + (
+            f" (<@{self.trigger_message.author.id}>)" if show_queuer else ""
+        )
 
     def embed(self, is_paused=False):
         progress = 0
@@ -90,7 +89,7 @@ class Song:
 
 @dataclass
 class Player:
-    queue = collections.deque()
+    queue: ClassVar = collections.deque()
     current: Optional[Song] = None
 
     def queue_pop(self):

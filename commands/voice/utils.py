@@ -24,7 +24,8 @@ def play_next(message, once=False, first=False):
     if message.guild.id in players and players[message.guild.id].queue:
         queued = players[message.guild.id].queue_pop()
         message.guild.voice_client.play(
-            queued.player, after=lambda e: play_after_callback(e, message, once)
+            queued.player,
+            after=lambda e: play_after_callback(e, message, once),
         )
 
         embed = queued.embed()

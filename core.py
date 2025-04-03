@@ -72,7 +72,7 @@ async def on_message(message, edited=False):
 
                 end = time.time()
                 debug(
-                    f"reloaded {len(reloaded_modules)} modules in {round(end - start, 2)}s"
+                    f"reloaded {len(reloaded_modules)} modules in {round(end - start, 2)}s",
                 )
 
                 await utils.add_check_reaction(message)

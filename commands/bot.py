@@ -98,6 +98,6 @@ async def help(message):
     await reply(
         message,
         ", ".join(
-            [f"`{command.value}`" for command in commands.Command.__members__.values()]
+            [f"`{command.value}`" for command in commands.Command.__members__.values()],
         ),
     )
