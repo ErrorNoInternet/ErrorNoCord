@@ -22,10 +22,10 @@ async def get_segments(video_id: str):
     if video_id in sponsorblock_cache:
         return sponsorblock_cache[video_id]
 
-    hashPrefix = hashlib.sha256(video_id.encode()).hexdigest()[:4]
+    hash_prefix = hashlib.sha256(video_id.encode()).hexdigest()[:4]
     session = aiohttp.ClientSession()
     response = await session.get(
-        f"https://sponsor.ajay.app/api/skipSegments/{hashPrefix}",
+        f"https://sponsor.ajay.app/api/skipSegments/{hash_prefix}",
         params={"categories": categories},
     )
     if response.status == 200 and (
