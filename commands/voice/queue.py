@@ -82,18 +82,19 @@ async def queue_or_play(message, edited=False):
         players[message.guild.id] = audio.queue.Player()
 
     if edited:
-        found = None
-        for queued in players[message.guild.id].queue:
-            if queued.trigger_message.id == message.id:
-                found = queued
-                break
+        found = next(
+            filter(
+                lambda queued: queued.trigger_message.id == message.id,
+                players[message.guild.id].queue,
+            ),
+            None,
+        )
         if found:
             players[message.guild.id].queue.remove(found)
 
     if args.clear:
         players[message.guild.id].queue.clear()
         await utils.add_check_reaction(message)
-        return
     elif indices := args.remove_index:
         targets = []
         for i in indices:
@@ -114,15 +115,15 @@ async def queue_or_play(message, edited=False):
                 f"removed **{len(targets)}** queued {'song' if len(targets) == 1 else 'songs'}",
             )
     elif args.remove_title or args.remove_queuer:
-        targets = []
+        targets = set()
         for queued in players[message.guild.id].queue:
             if t := args.remove_title:
                 if t in queued.player.title:
-                    targets.append(queued)
-                    continue
+                    targets.add(queued)
             if q := args.remove_queuer:
                 if q == queued.trigger_message.author.id:
-                    targets.append(queued)
+                    targets.add(queued)
+        targets = list(targets)
         if not args.match_multiple:
             targets = targets[:1]
 
