@@ -15,9 +15,6 @@ from .utils import command_allowed, ensure_joined, play_next
 
 
 async def queue_or_play(message, edited=False):
-    if message.guild.id not in players:
-        players[message.guild.id] = audio.queue.Player()
-
     tokens = commands.tokenize(message.content)
     parser = arguments.ArgumentParser(
         tokens[0],
@@ -80,6 +77,9 @@ async def queue_or_play(message, edited=False):
             return
     elif not command_allowed(message):
         return
+
+    if message.guild.id not in players:
+        players[message.guild.id] = audio.queue.Player()
 
     if edited:
         found = None
