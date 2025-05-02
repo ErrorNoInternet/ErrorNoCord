@@ -50,7 +50,7 @@ def filter_secrets(text: str, secrets=SECRETS) -> str:
 
 class LimitedSizeDict(OrderedDict):
     def __init__(self, *args, **kwargs):
-        self.size_limit = kwargs.pop("size_limit", 1000)
+        self.size_limit = kwargs.pop("size_limit", 100)
         super().__init__(*args, **kwargs)
         self._check_size_limit()
 
