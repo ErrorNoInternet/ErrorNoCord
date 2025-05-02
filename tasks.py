@@ -11,7 +11,7 @@ async def cleanup():
     debug("spawned cleanup thread")
 
     while True:
-        await asyncio.sleep(3600 * 12)
+        await asyncio.sleep(3600)
 
         targets = []
         for guild_id, player in players.items():
