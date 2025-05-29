@@ -7,7 +7,7 @@ from state import client
 if __name__ == "__main__":
     logging.basicConfig(
         format=(
-            "%(asctime)s %(levelname)s %(name):%(module)s %(message)s"
+            "%(asctime)s %(levelname)s %(name)s:%(module)s %(message)s"
             if __debug__
             else "%(asctime)s %(levelname)s %(message)s"
         ),
