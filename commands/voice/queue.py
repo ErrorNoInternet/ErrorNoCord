@@ -8,7 +8,7 @@ import audio
 import commands
 import utils
 from constants import EMBED_COLOR
-from state import client, players
+from state import client, players, trusted_users
 
 from .playback import resume
 from .utils import command_allowed, ensure_joined, play_next
@@ -147,6 +147,7 @@ async def queue_or_play(message, edited=False):
             )
             >= 5
             and not len(message.guild.voice_client.channel.members) == 2
+            and message.author.id not in trusted_users
         ):
             await utils.reply(
                 message,

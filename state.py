@@ -17,3 +17,4 @@ message_responses = LimitedSizeDict()
 players = {}
 sponsorblock_cache = LimitedSizeDict()
 start_time = time.time()
+trusted_users = []
