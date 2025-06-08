@@ -240,7 +240,7 @@ async def queue_or_play(message, edited=False):
 
 async def skip(message):
     tokens = commands.tokenize(message.content)
-    parser = arguments.ArgumentParser(tokens[0], "skip the currently playing song")
+    parser = arguments.ArgumentParser(tokens[0], "skip the song currently playing")
     parser.add_argument(
         "-n",
         "--next",

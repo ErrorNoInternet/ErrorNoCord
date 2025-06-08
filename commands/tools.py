@@ -165,7 +165,7 @@ async def clear(message):
     tokens = commands.tokenize(message.content)
     parser = arguments.ArgumentParser(
         tokens[0],
-        "bulk delete messages in the current channel matching certain criteria",
+        "bulk delete messages in the current channel matching specified criteria",
     )
     parser.add_argument(
         "count",
