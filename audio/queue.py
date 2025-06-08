@@ -21,8 +21,11 @@ class Song:
             format_duration(self.player.duration) if self.player.duration else "stream"
         )
         if multiline:
+            queue_time = (
+                self.trigger_message.edited_at or self.trigger_message.created_at
+            )
             return f"{title}\n**duration:** {duration}" + (
-                f", **queued by:** <@{self.trigger_message.author.id}>"
+                f", **queued by:** <@{self.trigger_message.author.id}> <t:{round(queue_time.timestamp())}:R>"
                 if show_queuer
                 else ""
             )
@@ -48,6 +51,7 @@ class Song:
                     else "[**stream**]"
                 )
             ),
+            timestamp=self.trigger_message.edited_at or self.trigger_message.created_at,
         )
 
         if self.player.uploader_url:
