@@ -54,22 +54,17 @@ class Song:
             timestamp=self.trigger_message.edited_at or self.trigger_message.created_at,
         )
 
+        uploader_value = None
         if self.player.uploader_url:
             if self.player.uploader:
-                embed.add_field(
-                    name="Uploader",
-                    value=f"[{self.player.uploader}]({self.player.uploader_url})",
-                )
+                uploader_value = f"[{self.player.uploader}]({self.player.uploader_url})"
             else:
-                embed.add_field(
-                    name="Uploader",
-                    value=self.player.uploader_url,
-                )
+                uploader_value = self.player.uploader_url
         elif self.player.uploader:
-            embed.add_field(
-                name="Uploader",
-                value=self.player.uploader,
-            )
+            uploader_value = self.player.uploader
+
+        if uploader_value:
+            embed.add_field(name="Uploader", value=uploader_value)
         if self.player.like_count:
             embed.add_field(name="Likes", value=f"{self.player.like_count:,}")
         if self.player.view_count:
