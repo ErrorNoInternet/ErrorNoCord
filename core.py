@@ -3,6 +3,7 @@ import contextlib
 import importlib
 import inspect
 import io
+import signal
 import textwrap
 import time
 import traceback
@@ -59,17 +60,8 @@ async def on_message(message, edited=False):
 
         match matched:
             case C.RELOAD if message.author.id in OWNERS:
-                reloaded_modules = set()
                 start = time.time()
-
-                rreload(reloaded_modules, __import__("core"))
-                rreload(reloaded_modules, __import__("extra"))
-                for module in filter(
-                    lambda v: inspect.ismodule(v) and v.__name__ in RELOADABLE_MODULES,
-                    globals().values(),
-                ):
-                    rreload(reloaded_modules, module)
-
+                reloaded_modules = reload()
                 end = time.time()
                 debug(
                     f"reloaded {len(reloaded_modules)} modules in {round(end - start, 2)}s",
@@ -186,3 +178,18 @@ def rreload(reloaded_modules, module):
 
     if "__reload_module__" in dir(module):
         module.__reload_module__()
+
+
+def reload(*_):
+    reloaded_modules = set()
+    rreload(reloaded_modules, __import__("core"))
+    rreload(reloaded_modules, __import__("extra"))
+    for module in filter(
+        lambda v: inspect.ismodule(v) and v.__name__ in RELOADABLE_MODULES,
+        globals().values(),
+    ):
+        rreload(reloaded_modules, module)
+    return reloaded_modules
+
+
+signal.signal(signal.SIGUSR1, reload)
