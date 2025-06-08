@@ -55,10 +55,16 @@ class Song:
         )
 
         if self.player.uploader_url:
-            embed.add_field(
-                name="Uploader",
-                value=f"[{self.player.uploader}]({self.player.uploader_url})",
-            )
+            if self.player.uploader:
+                embed.add_field(
+                    name="Uploader",
+                    value=f"[{self.player.uploader}]({self.player.uploader_url})",
+                )
+            else:
+                embed.add_field(
+                    name="Uploader",
+                    value=self.player.uploader_url,
+                )
         elif self.player.uploader:
             embed.add_field(
                 name="Uploader",
