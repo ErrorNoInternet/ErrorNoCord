@@ -78,7 +78,7 @@ class Song:
             embed.set_image(self.player.thumbnail_url)
 
         embed.set_footer(
-            text=f"queued by {self.trigger_message.author.name}",
+            text=f"Queued by {self.trigger_message.author.name}",
             icon_url=(
                 self.trigger_message.author.avatar.url
                 if self.trigger_message.author.avatar
