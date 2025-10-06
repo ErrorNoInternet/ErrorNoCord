@@ -2,7 +2,7 @@ import asyncio
 import string
 
 import disnake
-import youtube_transcript_api
+from youtube_transcript_api._api import YouTubeTranscriptApi
 
 from state import client, kill, players
 
@@ -15,9 +15,8 @@ async def transcript(
     upper=True,
 ):
     initial_id = message.guild.voice_client.source.id
-    transcript_list = youtube_transcript_api.YouTubeTranscriptApi.list_transcripts(
-        initial_id,
-    )
+    transcript_list = YouTubeTranscriptApi().list(initial_id)
+
     try:
         transcript = transcript_list.find_manually_created_transcript(languages).fetch()
     except Exception:
