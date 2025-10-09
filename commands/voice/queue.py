@@ -254,7 +254,7 @@ async def skip(message):
     if not command_allowed(message):
         return
 
-    if not players[message.guild.id].queue:
+    if not players[message.guild.id] or not players[message.guild.id].queue:
         message.guild.voice_client.stop()
         await utils.reply(
             message,
