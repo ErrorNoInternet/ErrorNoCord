@@ -15,7 +15,7 @@ async def cleanup():
 
         targets = []
         for guild_id, player in players.items():
-            if len(player.queue) == 0:
+            if len(player.queue) == 0 and not player.current:
                 targets.append(guild_id)
         for target in targets:
             del players[target]
