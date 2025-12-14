@@ -1,5 +1,6 @@
+import ctypes
 import time
-from logging import error, info
+from logging import debug, error
 from pathlib import Path
 
 import disnake
@@ -63,16 +64,13 @@ async def channel_send(message, *args, **kwargs):
 
 
 def load_opus():
-    for path in filter(
-        lambda p: Path(p).exists(),
-        ["/usr/lib64/libopus.so.0", "/usr/lib/libopus.so.0"],
-    ):
-        try:
-            disnake.opus.load_opus(path)
-            info(f"successfully loaded opus from {path}")
-            return
-        except Exception as e:
-            error(f"failed to load opus from {path}: {e}")
+    path = ctypes.util._findLib_ld("opus")
+    try:
+        disnake.opus.load_opus(path)
+        debug(f"successfully loaded opus from {path}")
+        return
+    except Exception as e:
+        error(f"failed to load opus from {path}: {e}")
     raise Exception("could not locate working opus library")
 
 
