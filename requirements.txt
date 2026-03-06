@@ -1,6 +1,6 @@
 aiohttp
 audioop-lts
-disnake
+disnake @ https://github.com/DisnakeDev/disnake/archive/master.tar.gz
 disnake_paginator
 psutil
 PyNaCl
