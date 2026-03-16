@@ -139,8 +139,9 @@ async def queue_or_play(message, edited=False):
             and len(
                 list(
                     filter(
-                        lambda queued: queued.trigger_message.author.id
-                        == message.author.id,
+                        lambda queued: (
+                            queued.trigger_message.author.id == message.author.id
+                        ),
                         players[message.guild.id].queue,
                     ),
                 ),

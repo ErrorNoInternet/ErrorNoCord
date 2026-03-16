@@ -167,9 +167,11 @@ def rreload(reloaded_modules, module):
     reloaded_modules.add(module.__name__)
 
     for submodule in filter(
-        lambda sm: inspect.ismodule(sm)
-        and sm.__name__ in RELOADABLE_MODULES
-        and sm.__name__ not in reloaded_modules,
+        lambda sm: (
+            inspect.ismodule(sm)
+            and sm.__name__ in RELOADABLE_MODULES
+            and sm.__name__ not in reloaded_modules
+        ),
         vars(module).values(),
     ):
         rreload(reloaded_modules, submodule)

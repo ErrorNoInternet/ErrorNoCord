@@ -31,9 +31,7 @@ async def transcript(
         ):
             continue
 
-        while (
-            players[message.guild.id].current.player.original.progress < line.start
-        ):
+        while players[message.guild.id].current.player.original.progress < line.start:
             await asyncio.sleep(0.2)
 
         messages.insert(
