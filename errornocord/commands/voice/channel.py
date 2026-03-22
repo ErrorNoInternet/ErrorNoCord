@@ -1,5 +1,4 @@
-import utils
-
+from ... import utils
 from .utils import command_allowed
 
 

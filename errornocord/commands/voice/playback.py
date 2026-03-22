@@ -1,12 +1,8 @@
 import disnake_paginator
 
-import arguments
-import commands
-import sponsorblock
-import utils
-from constants import EMBED_COLOR
-from state import players
-
+from ... import arguments, commands, sponsorblock, utils
+from ...constants import EMBED_COLOR
+from ...state import players
 from .utils import command_allowed
 
 

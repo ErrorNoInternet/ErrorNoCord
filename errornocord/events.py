@@ -2,11 +2,8 @@ import asyncio
 import threading
 from logging import debug, info, warning
 
-import commands
-import core
-import fun
-import tasks
-from state import client
+from . import commands, core, fun, tasks
+from .state import client
 
 
 def prepare():

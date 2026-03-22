@@ -1,0 +1,10 @@
+[project]
+name = "errornocord"
+version = "0.1.0"
+
+[project.scripts]
+errornocord = "errornocord.main:main"
+
+[tool.setuptools.packages.find]
+where = ["."]
+include = ["errornocord*"]

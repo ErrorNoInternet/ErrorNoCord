@@ -4,8 +4,7 @@ from typing import Any, Optional
 import disnake
 import yt_dlp
 
-from constants import YTDL_OPTIONS
-
+from ..constants import YTDL_OPTIONS
 from .discord import PCMVolumeTransformer, TrackedAudioSource
 
 ytdl = yt_dlp.YoutubeDL(YTDL_OPTIONS)

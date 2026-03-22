@@ -2,7 +2,7 @@ import time
 
 import disnake
 
-from utils import LimitedSizeDict
+from .utils import LimitedSizeDict
 
 intents = disnake.Intents.default()
 intents.message_content = True

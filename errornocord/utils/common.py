@@ -1,6 +1,6 @@
 from collections import OrderedDict
 
-from constants import SECRETS
+from ..constants import SECRETS
 
 
 def surround(inner: str, outer="```") -> str:

@@ -1,11 +1,8 @@
 import disnake
 
-import audio
-import sponsorblock
-import utils
-from constants import EMBED_COLOR, SPONSORBLOCK_CATEGORY_NAMES
-from state import players
-
+from ... import audio, sponsorblock, utils
+from ...constants import EMBED_COLOR, SPONSORBLOCK_CATEGORY_NAMES
+from ...state import players
 from .utils import command_allowed
 
 

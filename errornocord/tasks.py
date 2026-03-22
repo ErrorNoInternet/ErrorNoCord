@@ -4,7 +4,7 @@ from logging import debug, error
 
 import disnake
 
-from state import client, idle_tracker, players
+from .state import client, idle_tracker, players
 
 
 async def cleanup():

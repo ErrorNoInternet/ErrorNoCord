@@ -12,11 +12,10 @@ from logging import debug
 import disnake
 import disnake_paginator
 
-import commands
-import utils
-from commands import Command as C
-from constants import EMBED_COLOR, OWNERS, PREFIX, RELOADABLE_MODULES
-from state import client, command_cooldowns, command_locks, idle_tracker
+from . import commands, utils
+from .commands import Command as C
+from .constants import EMBED_COLOR, OWNERS, PREFIX, RELOADABLE_MODULES
+from .state import client, command_cooldowns, command_locks, idle_tracker
 
 
 async def on_message(message, edited=False):

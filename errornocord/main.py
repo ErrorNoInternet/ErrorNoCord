@@ -1,10 +1,10 @@
 import logging
 
-import constants
-import events
-from state import client
+from . import constants, events
+from .state import client
 
-if __name__ == "__main__":
+
+def main():
     logging.basicConfig(
         format=(
             "%(asctime)s %(levelname)s %(name)s:%(module)s %(message)s"
@@ -18,3 +18,7 @@ if __name__ == "__main__":
 
     events.prepare()
     client.run(constants.SECRETS["TOKEN"])
+
+
+if __name__ == "__main__":
+    main()

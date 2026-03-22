@@ -6,11 +6,10 @@ import disnake
 import psutil
 from yt_dlp import version
 
-import arguments
-import commands
-from constants import EMBED_COLOR
-from state import client, start_time
-from utils import format_duration, reply, surround
+from .. import arguments, commands
+from ..constants import EMBED_COLOR
+from ..state import client, start_time
+from ..utils import format_duration, reply, surround
 
 
 async def status(message):

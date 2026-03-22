@@ -1,0 +1,26 @@
+{
+  "pins": {
+    "disnake": {
+      "type": "Git",
+      "repository": {
+        "type": "GitHub",
+        "owner": "DisnakeDev",
+        "repo": "disnake"
+      },
+      "branch": "master",
+      "submodules": false,
+      "revision": "79afc2d8673299f43636730d4a1518e7901f95fa",
+      "url": "https://github.com/DisnakeDev/disnake/archive/79afc2d8673299f43636730d4a1518e7901f95fa.tar.gz",
+      "hash": "sha256-7gsHFnqTyANdV+eosLI4MlzsMyebLdYZShEVObJPhl8="
+    },
+    "disnake-paginator": {
+      "type": "PyPi",
+      "name": "disnake-paginator",
+      "version_upper_bound": null,
+      "version": "1.0.8",
+      "url": "https://files.pythonhosted.org/packages/8c/db/3a86b247c7653a3f1676d16a316daf400edcf76295098ab60544f2a8f8b7/disnake_paginator-1.0.8.tar.gz",
+      "hash": "sha256-Sn0qbKNkJIdX8GCRRRPxwWutBtG9c1Zt7JnQAsl5I4s="
+    }
+  },
+  "version": 7
+}

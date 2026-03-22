@@ -2,7 +2,7 @@ import argparse
 import contextlib
 import io
 
-import utils
+from . import utils
 
 
 class ArgumentParser:

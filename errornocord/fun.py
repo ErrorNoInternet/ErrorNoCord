@@ -1,7 +1,7 @@
 import random
 
-import commands
-from constants import REACTIONS
+from . import commands
+from .constants import REACTIONS
 
 
 async def on_message(message):

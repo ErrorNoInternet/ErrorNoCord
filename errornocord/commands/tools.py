@@ -3,11 +3,9 @@ import re
 import aiohttp
 import disnake
 
-import arguments
-import commands
-import utils
-from constants import APPLICATION_FLAGS, BADGE_EMOJIS, EMBED_COLOR, PUBLIC_FLAGS
-from state import client
+from .. import arguments, commands, utils
+from ..constants import APPLICATION_FLAGS, BADGE_EMOJIS, EMBED_COLOR, PUBLIC_FLAGS
+from ..state import client
 
 
 async def lookup(message):

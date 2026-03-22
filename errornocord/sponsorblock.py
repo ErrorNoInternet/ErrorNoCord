@@ -3,7 +3,7 @@ import json
 
 import aiohttp
 
-from state import sponsorblock_cache
+from .state import sponsorblock_cache
 
 categories = json.dumps(
     [

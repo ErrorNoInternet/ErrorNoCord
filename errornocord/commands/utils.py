@@ -1,7 +1,7 @@
 from enum import Enum
 from functools import lru_cache
 
-import constants
+from .. import constants
 
 
 class Command(Enum):

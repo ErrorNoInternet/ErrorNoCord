@@ -3,13 +3,9 @@ import itertools
 import disnake
 import disnake_paginator
 
-import arguments
-import audio
-import commands
-import utils
-from constants import EMBED_COLOR
-from state import client, players, trusted_users
-
+from ... import arguments, audio, commands, utils
+from ...constants import EMBED_COLOR
+from ...state import client, players, trusted_users
 from .playback import resume
 from .utils import command_allowed, ensure_joined, play_next
 
