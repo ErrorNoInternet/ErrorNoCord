@@ -23,7 +23,8 @@
           devShells.default = pkgs.mkShell {
             name = "errornocord";
 
-            buildInputs = [
+            buildInputs = with pkgs; [
+              ffmpeg
               self'.packages.default
             ];
           };
