@@ -1,4 +1,5 @@
 from ... import utils
+from ...state import players
 from .utils import command_allowed
 
 
@@ -19,5 +20,8 @@ async def leave(message):
     if not command_allowed(message):
         return
 
+    if message.guild.id in players:
+        del players[message.guild.id]
     await message.guild.voice_client.disconnect()
+
     await utils.add_check_reaction(message)
