@@ -187,8 +187,8 @@ def rreload(reloaded_modules, module):
 
 def reload(*_):
     reloaded_modules = set()
-    rreload(reloaded_modules, __import__("core"))
-    rreload(reloaded_modules, __import__("extra"))
+    rreload(reloaded_modules, __import__("errornocord.core"))
+    rreload(reloaded_modules, __import__("errornocord.extra"))
     for module in filter(
         lambda v: inspect.ismodule(v) and v.__name__ in RELOADABLE_MODULES,
         globals().values(),

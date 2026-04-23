@@ -4,7 +4,7 @@ import string
 import disnake
 from youtube_transcript_api._api import YouTubeTranscriptApi
 
-from state import client, kill, players
+from .state import client, kill, players
 
 
 async def transcript(
