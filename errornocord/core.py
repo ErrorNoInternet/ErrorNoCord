@@ -148,22 +148,20 @@ async def on_message(message, edited=False):
         command_locks[(message.guild.id, message.author.id)].release()
 
 
-async def on_voice_state_update(_, before, after):
-    if not before.channel and after.channel:
-        return
-
-    if before.channel and not after.channel:
-        if before.channel.guild.id in players:
-            del players[before.channel.guild.id]
-        return
-
-    def is_empty(channel):
+async def on_voice_state_update(member, before, after):
+    def is_alone(channel):
         return [m.id for m in (channel.members if channel else [])] == [client.user.id]
 
-    if is_empty(after.channel):
-        if after.channel.guild.id in players:
-            del players[after.channel.guild.id]
+    if member.id == client.user.id and is_alone(after.channel):
+        if before.channel.guild.id in players:
+            del players[before.channel.guild.id]
         await after.channel.guild.voice_client.disconnect()
+        return
+
+    if is_alone(before.channel):
+        if before.channel.guild.id in players:
+            del players[before.channel.guild.id]
+        await before.channel.guild.voice_client.disconnect()
 
 
 def rreload(reloaded_modules, module):
