@@ -6,11 +6,7 @@
   };
 
   outputs =
-    {
-      flake-parts,
-      self,
-      ...
-    }@inputs:
+    { flake-parts, self, ... }@inputs:
     flake-parts.lib.mkFlake { inherit inputs; } {
       systems = [
         "aarch64-linux"
@@ -22,20 +18,17 @@
         {
           devShells.default = pkgs.mkShell {
             name = "errornocord";
-
-            buildInputs = with pkgs; [
-              ffmpeg
-              self'.packages.default
-            ];
+            buildInputs = [ self'.packages.default ];
+            inputsFrom = [ self'.packages.default ];
           };
 
           packages = rec {
-            errornocord = pkgs.callPackage ./. { inherit self; };
+            errornocord = pkgs.callPackage ./nix/package.nix { inherit self; };
             default = errornocord;
           };
         };
 
-      flake.pins = import ./npins;
+      flake.pins = import ./nix/npins;
     };
 
   description = "Hot-reloadable Discord music bot";

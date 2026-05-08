@@ -1,5 +1,18 @@
 {
   "pins": {
+    "dave.py": {
+      "type": "Git",
+      "repository": {
+        "type": "GitHub",
+        "owner": "DisnakeDev",
+        "repo": "dave.py"
+      },
+      "branch": "main",
+      "submodules": true,
+      "revision": "6653dd0f53553ab8af1593eae32f6128f969c8ff",
+      "url": null,
+      "hash": "sha256-bfHVl+KHeMEQNBYcmmEcdw8ZNtP2Apxhjix85yqJ+3M="
+    },
     "disnake": {
       "type": "Git",
       "repository": {
@@ -20,6 +33,19 @@
       "version": "1.0.8",
       "url": "https://files.pythonhosted.org/packages/8c/db/3a86b247c7653a3f1676d16a316daf400edcf76295098ab60544f2a8f8b7/disnake_paginator-1.0.8.tar.gz",
       "hash": "sha256-Sn0qbKNkJIdX8GCRRRPxwWutBtG9c1Zt7JnQAsl5I4s="
+    },
+    "mlspp": {
+      "type": "Git",
+      "repository": {
+        "type": "GitHub",
+        "owner": "cisco",
+        "repo": "mlspp"
+      },
+      "branch": "main",
+      "submodules": false,
+      "revision": "92aaa4134fa45ec39957a7c81a342401fba7feb2",
+      "url": "https://github.com/cisco/mlspp/archive/92aaa4134fa45ec39957a7c81a342401fba7feb2.tar.gz",
+      "hash": "sha256-HElw0fvL7ClDSXBDYRw1qcPw73oWvbMfi7skQokyftY="
     }
   },
   "version": 7

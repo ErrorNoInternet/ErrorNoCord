@@ -1,10 +1,14 @@
 {
+  callPackage,
+  ffmpeg,
   lib,
+  libopus,
   python3Packages,
   self,
-  ...
 }:
 let
+  dave_py = callPackage ./dave_py.nix { inherit self; };
+
   disnake = python3Packages.disnake.overrideAttrs (old: {
     src = self.pins.disnake;
 
@@ -12,6 +16,7 @@ let
       with python3Packages;
       old.propagatedBuildInputs
       ++ [
+        dave_py
         typing-extensions
         versioningit
       ];
@@ -39,7 +44,7 @@ python3Packages.buildPythonApplication {
   pname = "errornocord";
   version = "0.1.0";
 
-  src = lib.cleanSource ./.;
+  src = lib.cleanSource ../.;
 
   pyproject = true;
   build-system = [ python3Packages.setuptools ];
@@ -47,13 +52,24 @@ python3Packages.buildPythonApplication {
   propagatedBuildInputs = with python3Packages; [
     aiohttp
     audioop-lts
-    disnake
-    disnake_paginator
     psutil
     typing-extensions
     youtube-transcript-api
     yt-dlp
+
+    disnake
+    disnake_paginator
+
+    ffmpeg
+    libopus
   ];
 
   doCheck = false;
+
+  meta = {
+    description = "Hot-reloadable Discord music bot";
+    homepage = "https://github.com/ErrorNoInternet/ErrorNoCord";
+    license = lib.licenses.gpl3Only;
+    mainProgram = "errornocord";
+  };
 }
