@@ -153,13 +153,17 @@ async def queue_or_play(message, edited=False):
             return
 
         try:
-            async with message.channel.typing():
-                player = await audio.youtubedl.YTDLSource.from_url(
-                    " ".join(query),
-                    loop=client.loop,
-                    stream=True,
-                )
-                player.volume = float(args.volume) / 100.0
+            await message.channel.trigger_typing()
+        except Exception:
+            pass
+
+        try:
+            player = await audio.youtubedl.YTDLSource.from_url(
+                " ".join(query),
+                loop=client.loop,
+                stream=True,
+            )
+            player.volume = float(args.volume) / 100.0
         except Exception as e:
             await utils.reply(message, f"failed to queue: `{e}`")
             return
