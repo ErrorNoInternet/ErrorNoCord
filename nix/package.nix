@@ -27,10 +27,10 @@ let
   disnake_paginator = python3Packages.buildPythonPackage {
     pname = "disnake-paginator";
     version = "1.0.8";
+    pyproject = true;
 
     src = self.pins.disnake-paginator;
 
-    pyproject = true;
     build-system = [ python3Packages.setuptools ];
 
     propagatedBuildInputs = [
@@ -43,10 +43,10 @@ in
 python3Packages.buildPythonApplication {
   pname = "errornocord";
   version = "0.1.0";
+  pyproject = true;
 
   src = lib.cleanSource ../.;
 
-  pyproject = true;
   build-system = [ python3Packages.setuptools ];
 
   propagatedBuildInputs = with python3Packages; [

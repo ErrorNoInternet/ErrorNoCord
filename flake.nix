@@ -18,13 +18,13 @@
         {
           devShells.default = pkgs.mkShell {
             name = "errornocord";
-            buildInputs = [ self'.packages.default ];
             inputsFrom = [ self'.packages.default ];
+            buildInputs = [ self'.packages.default ];
           };
 
           packages = rec {
-            errornocord = pkgs.callPackage ./nix/package.nix { inherit self; };
             default = errornocord;
+            errornocord = pkgs.callPackage ./nix/package.nix { inherit self; };
           };
         };
 
