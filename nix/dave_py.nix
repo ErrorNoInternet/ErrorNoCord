@@ -44,9 +44,9 @@ let
     };
   };
 in
-python3Packages.buildPythonPackage {
+python3Packages.buildPythonPackage rec {
   pname = "dave.py";
-  version = self.pins."dave.py".revision;
+  version = src.revision;
   pyproject = true;
 
   src = self.pins."dave.py";
