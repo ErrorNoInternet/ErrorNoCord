@@ -3,7 +3,7 @@ from collections import OrderedDict
 from ..constants import SECRETS
 
 
-def surround(inner: str, outer="```") -> str:
+def surround(inner: str | int, outer="```") -> str:
     return outer + str(inner) + outer
 
 
