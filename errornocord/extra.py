@@ -50,7 +50,10 @@ async def transcript(
             except Exception:
                 pass
 
-        if (message.guild.voice_client.source.id != initial_id) or kill["transcript"]:
+        if (
+            message.guild.voice_client.source
+            and (message.guild.voice_client.source.id != initial_id)
+        ) or kill["transcript"]:
             kill["transcript"] = False
             break
 
