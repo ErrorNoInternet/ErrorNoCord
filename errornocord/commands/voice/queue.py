@@ -203,21 +203,21 @@ async def queue_or_play(message, edited=False):
                 natural=True,
             )
 
-            def embed(description):
-                e = disnake.Embed(
+            def create_embed(description):
+                embed = disnake.Embed(
                     description=description,
                     color=EMBED_COLOR,
                 )
                 if formatted_duration and len(players[message.guild.id].queue) > 1:
-                    e.set_footer(text=f"{formatted_duration} in total")
-                return e
+                    embed.set_footer(text=f"{formatted_duration} in total")
+                return embed
 
             await disnake_paginator.ButtonPaginator(
                 invalid_user_function=utils.invalid_user_handler,
                 color=EMBED_COLOR,
                 segments=list(
                     map(
-                        embed,
+                        create_embed,
                         [
                             "\n\n".join(
                                 [
