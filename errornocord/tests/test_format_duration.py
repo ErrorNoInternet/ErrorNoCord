@@ -1,7 +1,6 @@
 import unittest
 
-import audio
-import utils
+from errornocord import audio, utils
 
 
 class TestFormatDuration(unittest.TestCase):

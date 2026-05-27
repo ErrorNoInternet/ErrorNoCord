@@ -1,6 +1,6 @@
 import unittest
 
-import utils
+from errornocord import utils
 
 
 class TestFilterSecrets(unittest.TestCase):

@@ -1,4 +1,4 @@
-import ctypes
+import ctypes.util
 import time
 from logging import debug, error
 
