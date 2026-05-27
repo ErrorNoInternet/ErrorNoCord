@@ -1,5 +1,6 @@
-/.direnv
-/.env
-/.venv
-/result*
+.direnv
+.env
+.mypy_cache
+.venv
 __pycache__
+result*
