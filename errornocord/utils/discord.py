@@ -4,12 +4,13 @@ from logging import debug, error
 
 import disnake
 
-from .. import commands
 from ..constants import OWNERS
 from ..state import command_cooldowns, message_responses
 
 
 def cooldown(message, cooldown_time: int):
+    from .. import commands
+
     if message.author.id in OWNERS:
         return
 
