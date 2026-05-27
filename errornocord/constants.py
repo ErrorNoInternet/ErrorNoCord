@@ -94,6 +94,7 @@ SPONSORBLOCK_CATEGORY_NAMES = {
     "selfpromo": "self promotion",
     "sponsor": "sponsored",
 }
+USER_QUEUE_MAX = 5
 YTDL_OPTIONS = {
     "color": "never",
     "default_search": "auto",

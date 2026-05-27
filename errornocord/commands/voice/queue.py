@@ -4,7 +4,7 @@ import disnake
 import disnake_paginator
 
 from ... import arguments, audio, commands, utils
-from ...constants import EMBED_COLOR
+from ...constants import EMBED_COLOR, USER_QUEUE_MAX
 from ...state import client, players, trusted_users
 from .playback import resume
 from .utils import command_allowed, ensure_joined, play_next
@@ -142,13 +142,13 @@ async def queue_or_play(message, edited=False):
                     ),
                 ),
             )
-            >= 5
+            >= USER_QUEUE_MAX
             and not len(message.guild.voice_client.channel.members) == 2
             and message.author.id not in trusted_users
         ):
             await utils.reply(
                 message,
-                "you can only queue **5 items** without the manage channels permission!",
+                f"you can only queue **{USER_QUEUE_MAX} items** without the manage channels permission!",
             )
             return
 
