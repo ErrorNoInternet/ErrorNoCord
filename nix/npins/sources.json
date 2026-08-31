@@ -1,30 +1,36 @@
 {
   "pins": {
     "dave.py": {
-      "type": "Git",
+      "type": "GitRelease",
       "repository": {
         "type": "GitHub",
         "owner": "DisnakeDev",
         "repo": "dave.py"
       },
-      "branch": "main",
+      "pre_releases": false,
+      "version_upper_bound": null,
+      "release_prefix": null,
       "submodules": true,
-      "revision": "6653dd0f53553ab8af1593eae32f6128f969c8ff",
+      "version": "v1.0.0",
+      "revision": "86d0858234464a02fa572f53a9dbb0a72f934ce3",
       "url": null,
-      "hash": "sha256-bfHVl+KHeMEQNBYcmmEcdw8ZNtP2Apxhjix85yqJ+3M="
+      "hash": "sha256-Ej4l9U4THfHG3XienHvuz3fyUJyTgYSw0Mn2nKPzkek="
     },
     "disnake": {
-      "type": "Git",
+      "type": "GitRelease",
       "repository": {
         "type": "GitHub",
         "owner": "DisnakeDev",
         "repo": "disnake"
       },
-      "branch": "master",
-      "submodules": false,
-      "revision": "79afc2d8673299f43636730d4a1518e7901f95fa",
-      "url": "https://github.com/DisnakeDev/disnake/archive/79afc2d8673299f43636730d4a1518e7901f95fa.tar.gz",
-      "hash": "sha256-7gsHFnqTyANdV+eosLI4MlzsMyebLdYZShEVObJPhl8="
+      "pre_releases": false,
+      "version_upper_bound": null,
+      "release_prefix": null,
+      "submodules": true,
+      "version": "v2.12.1",
+      "revision": "2320277e56d9bcfa9a2193cd03b862989d14c9ad",
+      "url": null,
+      "hash": "sha256-nORD+Y+z7j4Wm5jNINiPecv8lkhIfp69+pb9++5lik4="
     },
     "disnake-paginator": {
       "type": "PyPi",
@@ -48,5 +54,5 @@
       "hash": "sha256-HElw0fvL7ClDSXBDYRw1qcPw73oWvbMfi7skQokyftY="
     }
   },
-  "version": 7
+  "version": 8
 }

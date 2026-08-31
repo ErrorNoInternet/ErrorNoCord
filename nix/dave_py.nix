@@ -46,9 +46,9 @@ let
 in
 python3Packages.buildPythonPackage rec {
   pname = "dave.py";
-  version = src.revision;
-  pyproject = true;
+  inherit (src) version;
 
+  pyproject = true;
   src = self.pins."dave.py";
 
   build-system = with python3Packages; [
@@ -58,7 +58,7 @@ python3Packages.buildPythonPackage rec {
 
   postPatch = ''
         substituteInPlace pyproject.toml \
-          --replace-fail "nanobind~=2.10.2" "nanobind>=2.10.2"
+          --replace-fail "nanobind~=2.14.0" "nanobind>=2.13.0"
 
         substituteInPlace CMakeLists.txt \
           --replace-fail \

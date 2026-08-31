@@ -9,20 +9,54 @@
 let
   dave_py = callPackage ./dave_py.nix { inherit self; };
 
-  disnake = python3Packages.disnake.overrideAttrs (old: {
-    src = self.pins.disnake;
+  disnake = python3Packages.disnake.overrideAttrs (
+    old:
+    let
+      version = lib.strings.removePrefix "v" self.pins.disnake.version;
+      versionParts = lib.splitVersion version;
+    in
+    {
+      src = self.pins.disnake;
+      inherit version;
 
-    propagatedBuildInputs =
-      with python3Packages;
-      old.propagatedBuildInputs
-      ++ [
-        dave_py
-        typing-extensions
-        versioningit
+      propagatedBuildInputs =
+        with python3Packages;
+        old.propagatedBuildInputs
+        ++ [
+          dave_py
+          typing-extensions
+          versioningit
+        ];
+
+      nativeBuildInputs = old.nativeBuildInputs ++ [
+        python3Packages.hatchling
+        python3Packages.pyprojectVersionPatchHook
       ];
 
-    nativeBuildInputs = old.nativeBuildInputs ++ [ python3Packages.hatchling ];
-  });
+      postPatch = (old.postPatch or "") + ''
+        cat > disnake/_version.py <<EOF
+        # SPDX-License-Identifier: MIT
+
+        from typing import Literal, NamedTuple
+
+        __version__ = "${version}"
+
+
+        class VersionInfo(NamedTuple):
+            major: int
+            minor: int
+            micro: int
+            releaselevel: Literal["alpha", "beta", "candidate", "final"]
+            serial: int
+
+        version_info: VersionInfo = VersionInfo(${builtins.elemAt versionParts 0}, ${builtins.elemAt versionParts 1}, ${builtins.elemAt versionParts 2}, "final", 0)
+        EOF
+      '';
+
+      doCheck = false;
+      dontUsePytestCheck = true;
+    }
+  );
 
   disnake_paginator = python3Packages.buildPythonPackage {
     pname = "disnake-paginator";
