@@ -139,11 +139,21 @@ async def on_message(message, edited=False):
             case C.SPONSORBLOCK:
                 await commands.voice.sponsorblock_command(message)
     except Exception as e:
-        await utils.reply(
-            message,
-            f"exception occurred while processing command: ```\n{''.join(traceback.format_exception(e)).replace('`', '\\`')}```",
-        )
-        raise e
+        exception = "".join(traceback.format_exception(e)).replace("`", "\\`")
+        if len(exception) >= 2000:
+            await disnake_paginator.ButtonPaginator(
+                prefix="```\n",
+                suffix="```",
+                invalid_user_function=utils.invalid_user_handler,
+                color=EMBED_COLOR,
+                segments=disnake_paginator.split(exception),
+            ).start(utils.MessageInteractionWrapper(message))
+        else:
+            await utils.reply(
+                message,
+                f"```\n{exception}```",
+            )
+        raise
     finally:
         command_locks[(message.guild.id, message.author.id)].release()
 
