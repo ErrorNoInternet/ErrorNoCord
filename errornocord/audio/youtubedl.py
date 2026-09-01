@@ -25,11 +25,13 @@ class YTDLSource(PCMVolumeTransformer):
         self.id = data.get("id")
         self.like_count = data.get("like_count")
         self.original_url = data.get("original_url")
+        self.webpage_url = data.get("webpage_url")
         self.thumbnail_url = data.get("thumbnail")
         self.timestamp = data.get("timestamp")
         self.title = data.get("title")
         self.uploader = data.get("uploader")
         self.uploader_url = data.get("uploader_url")
+        self.url = data.get("url")
         self.view_count = data.get("view_count")
 
     @classmethod

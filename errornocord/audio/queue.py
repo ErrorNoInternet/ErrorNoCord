@@ -15,7 +15,7 @@ class Song:
     trigger_message: disnake.Message
 
     def format(self, show_queuer=False, hide_preview=False, multiline=False) -> str:
-        title = f"[`{self.player.title}`]({'<' if hide_preview else ''}{self.player.original_url}{'>' if hide_preview else ''})"
+        title = f"[`{self.player.title}`]({'<' if hide_preview else ''}{self.player.webpage_url}{'>' if hide_preview else ''})"
         duration = (
             format_duration(self.player.duration) if self.player.duration else "stream"
         )
@@ -40,7 +40,7 @@ class Song:
         embed = disnake.Embed(
             color=EMBED_COLOR,
             title=self.player.title,
-            url=self.player.original_url,
+            url=self.player.webpage_url,
             description=(
                 f"{'⏸️ ' if is_paused else ''}"
                 f"`[{'#' * int(progress * BAR_LENGTH)}{'-' * int((1 - progress) * BAR_LENGTH)}]` "

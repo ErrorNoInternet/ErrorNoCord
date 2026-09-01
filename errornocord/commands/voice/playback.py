@@ -34,7 +34,7 @@ async def playing(message):
                     segments=disnake_paginator.split(description),
                 )
                 for embed in paginator.embeds:
-                    embed.url = source.original_url
+                    embed.url = source.webpage_url
                 await paginator.start(utils.MessageInteractionWrapper(message))
             else:
                 await utils.reply(
