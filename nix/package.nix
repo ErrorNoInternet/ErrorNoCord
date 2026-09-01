@@ -76,7 +76,7 @@ let
 in
 python3Packages.buildPythonApplication {
   pname = "errornocord";
-  version = "0.1.0";
+  version = self.rev or self.dirtyRev or "0.1.0";
   pyproject = true;
 
   src = lib.cleanSource ../.;
