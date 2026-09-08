@@ -97,6 +97,7 @@ SPONSORBLOCK_CATEGORY_NAMES = {
 USER_QUEUE_MAX = 5
 YTDL_OPTIONS = {
     "color": "never",
+    "cookiefile": "cookies.txt",
     "default_search": "auto",
     "format": "bestaudio/best",
     "ignoreerrors": False,

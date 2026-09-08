@@ -3,4 +3,5 @@
 .mypy_cache
 .venv
 __pycache__
+cookies.txt
 result*
