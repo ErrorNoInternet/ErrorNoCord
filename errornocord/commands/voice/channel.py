@@ -4,6 +4,10 @@ from .utils import command_allowed
 
 
 async def join(message):
+    if not message.guild:
+        await utils.reply(message, "cannot join a voice channel in direct messages!")
+        return
+
     if message.author.voice:
         if message.guild.voice_client:
             await message.guild.voice_client.move_to(message.channel)

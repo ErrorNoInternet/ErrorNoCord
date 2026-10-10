@@ -10,7 +10,7 @@ def play_after_callback(e, message, once):
     if e:
         error(f"player error: {e}")
     if not once:
-        play_next(message)
+        client.loop.call_soon_threadsafe(play_next, message)
 
 
 def play_next(message, once=False, first=False):
@@ -52,15 +52,22 @@ def remove_queued(messages):
 
 
 async def ensure_joined(message):
+    if not message.guild:
+        await utils.reply(message, "cannot join a voice channel in direct messages!")
+        return False
+
     if message.guild.voice_client is None:
         if message.author.voice:
             await message.author.voice.channel.connect()
         else:
             await utils.reply(message, "you are not connected to a voice channel!")
+            return False
+
+    return True
 
 
 def command_allowed(message, immutable=False):
-    if not message.guild.voice_client:
+    if not message.guild or not message.guild.voice_client:
         return False
 
     if immutable:

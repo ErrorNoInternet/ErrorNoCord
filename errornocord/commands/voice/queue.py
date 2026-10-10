@@ -67,7 +67,9 @@ async def queue_or_play(message, edited=False):
     if not (args := await parser.parse_args(message, tokens)):
         return
 
-    await ensure_joined(message)
+    if not await ensure_joined(message):
+        return
+
     if len(tokens) == 1 and tokens[0].lower() != "play":
         if not command_allowed(message, immutable=True):
             return
@@ -143,7 +145,7 @@ async def queue_or_play(message, edited=False):
                 ),
             )
             >= USER_QUEUE_MAX
-            and not len(message.guild.voice_client.channel.members) == 2
+            and len(message.guild.voice_client.channel.members) != 2
             and message.author.id not in trusted_users
         ):
             await utils.reply(
@@ -168,14 +170,14 @@ async def queue_or_play(message, edited=False):
             await utils.reply(message, f"failed to queue: `{e}`")
             return
 
-        try:
-            queued = audio.queue.Song(player, message)
-            if args.now or args.next:
-                players[message.guild.id].queue_push_front(queued)
-            else:
-                players[message.guild.id].queue_push(queued)
-        except Exception:
+        if message.guild.id not in players or not message.guild.voice_client:
             return
+
+        queued = audio.queue.Song(player, message)
+        if args.now or args.next:
+            players[message.guild.id].queue_push_front(queued)
+        else:
+            players[message.guild.id].queue_push(queued)
 
         if not message.guild.voice_client:
             await utils.reply(message, "unexpected disconnect from voice channel!")
@@ -257,7 +259,14 @@ async def skip(message):
     if not command_allowed(message):
         return
 
-    if message.guild.id in players and not players[message.guild.id].queue:
+    if message.guild.id not in players:
+        await utils.reply(
+            message,
+            "nothing is playing!",
+        )
+        return
+
+    if not players[message.guild.id].queue:
         del players[message.guild.id]
         message.guild.voice_client.stop()
         await utils.reply(

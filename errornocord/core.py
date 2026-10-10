@@ -48,15 +48,17 @@ async def on_message(message, edited=False):
     await command_locks[lock_key].acquire()
 
     try:
-        if (cooldowns := command_cooldowns.get(message.author.id)) and not edited:
-            if (end_time := cooldowns.get(matched)) and (
-                remaining_time := round(end_time - time.time()) > 0
-            ):
-                await utils.reply(
-                    message,
-                    f"please wait **{utils.format_duration(remaining_time, natural=True)}** before using this command again!",
-                )
-                return
+        if (
+            not edited
+            and (cooldowns := command_cooldowns.get(message.author.id))
+            and (end_time := cooldowns.get(matched))
+            and (remaining_time := round(end_time - time.time()) > 0)
+        ):
+            await utils.reply(
+                message,
+                f"please wait **{utils.format_duration(remaining_time, natural=True)}** before using this command again!",
+            )
+            return
 
         match matched:
             case C.RELOAD if message.author.id in OWNERS:
@@ -72,8 +74,7 @@ async def on_message(message, edited=False):
             case C.EXECUTE if message.author.id in OWNERS:
                 code = message.content[len(tokens[0]) + 1 :].strip().strip("`")
                 for replacement in ["python", "py"]:
-                    if code.startswith(replacement):
-                        code = code[len(replacement) :]
+                    code = code.removeprefix(replacement)
 
                 try:
                     stdout = io.StringIO()

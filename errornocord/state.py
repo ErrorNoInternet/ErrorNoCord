@@ -9,8 +9,8 @@ intents.message_content = True
 intents.members = True
 client = disnake.Client(intents=intents)
 
-command_cooldowns = LimitedSizeDict()
-command_locks = LimitedSizeDict()
+command_cooldowns = {}
+command_locks = {}
 idle_tracker = {"is_idle": False, "last_used": time.time()}
 kill = {"transcript": False}
 message_responses = LimitedSizeDict()

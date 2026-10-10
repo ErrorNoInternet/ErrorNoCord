@@ -1,3 +1,5 @@
+import asyncio
+
 import disnake_paginator
 
 from ... import arguments, commands, sponsorblock, utils
@@ -128,7 +130,10 @@ async def fast_forward(message):
             return
 
     message.guild.voice_client.pause()
-    message.guild.voice_client.source.original.fast_forward(seconds)
+    original = message.guild.voice_client.source.original
+    await asyncio.get_running_loop().run_in_executor(
+        None, lambda: original.fast_forward(seconds)
+    )
     message.guild.voice_client.resume()
 
     await utils.add_check_reaction(message)
