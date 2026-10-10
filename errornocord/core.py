@@ -42,9 +42,10 @@ async def on_message(message, edited=False):
         return
     matched = matched[0]
 
-    if (message.guild.id, message.author.id) not in command_locks:
-        command_locks[(message.guild.id, message.author.id)] = asyncio.Lock()
-    await command_locks[(message.guild.id, message.author.id)].acquire()
+    lock_key = (message.guild.id or None, message.author.id)
+    if lock_key not in command_locks:
+        command_locks[lock_key] = asyncio.Lock()
+    await command_locks[lock_key].acquire()
 
     try:
         if (cooldowns := command_cooldowns.get(message.author.id)) and not edited:
@@ -155,7 +156,7 @@ async def on_message(message, edited=False):
             )
         raise
     finally:
-        command_locks[(message.guild.id, message.author.id)].release()
+        command_locks[lock_key].release()
 
 
 async def on_voice_state_update(member, before, after):
