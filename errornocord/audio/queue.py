@@ -1,6 +1,5 @@
 import collections
-from dataclasses import dataclass
-from typing import ClassVar, Optional
+from dataclasses import dataclass, field
 
 import disnake
 
@@ -93,8 +92,8 @@ class Song:
 
 @dataclass
 class Player:
-    queue: ClassVar = collections.deque()
-    current: Optional[Song] = None
+    queue: collections.deque = field(default_factory=collections.deque)
+    current: Song | None = None
 
     def queue_pop(self):
         popped = self.queue.popleft()
