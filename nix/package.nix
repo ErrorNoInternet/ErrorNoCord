@@ -58,6 +58,11 @@ let
     }
   );
 
+  yt_dlp = python3Packages.yt-dlp.overrideAttrs (old: {
+    src = self.pins.yt-dlp;
+    version = "0-unstable-${builtins.substring 0 7 self.pins.yt-dlp.revision}";
+  });
+
   disnake_paginator = python3Packages.buildPythonPackage {
     pname = "disnake-paginator";
     version = "1.0.8";
@@ -89,7 +94,7 @@ python3Packages.buildPythonApplication {
     psutil
     typing-extensions
     youtube-transcript-api
-    yt-dlp
+    yt_dlp
 
     disnake
     disnake_paginator

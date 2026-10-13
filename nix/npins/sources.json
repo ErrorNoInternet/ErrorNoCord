@@ -52,6 +52,19 @@
       "revision": "92aaa4134fa45ec39957a7c81a342401fba7feb2",
       "url": "https://github.com/cisco/mlspp/archive/92aaa4134fa45ec39957a7c81a342401fba7feb2.tar.gz",
       "hash": "sha256-HElw0fvL7ClDSXBDYRw1qcPw73oWvbMfi7skQokyftY="
+    },
+    "yt-dlp": {
+      "type": "Git",
+      "repository": {
+        "type": "GitHub",
+        "owner": "yt-dlp",
+        "repo": "yt-dlp"
+      },
+      "branch": "master",
+      "submodules": false,
+      "revision": "897341241f2bfb2439fe0367f4c7c9ccd29a3828",
+      "url": "https://github.com/yt-dlp/yt-dlp/archive/897341241f2bfb2439fe0367f4c7c9ccd29a3828.tar.gz",
+      "hash": "sha256-BiCa0iQA4jLZxBxOxGpcuCXH13cSt+2iOFqCeLlwI3k="
     }
   },
   "version": 8
