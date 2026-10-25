@@ -27,10 +27,10 @@
       "version_upper_bound": null,
       "release_prefix": null,
       "submodules": true,
-      "version": "v2.12.1",
-      "revision": "2320277e56d9bcfa9a2193cd03b862989d14c9ad",
+      "version": "v2.12.2",
+      "revision": "483dadb2b9090f5926ccb2e0411aa184dae98bdc",
       "url": null,
-      "hash": "sha256-nORD+Y+z7j4Wm5jNINiPecv8lkhIfp69+pb9++5lik4="
+      "hash": "sha256-PfCehTiJb7LGIRYccenS+ga1UWUeGq17Xr4a46ZHBas="
     },
     "disnake-paginator": {
       "type": "PyPi",
@@ -49,9 +49,9 @@
       },
       "branch": "main",
       "submodules": false,
-      "revision": "92aaa4134fa45ec39957a7c81a342401fba7feb2",
-      "url": "https://github.com/cisco/mlspp/archive/92aaa4134fa45ec39957a7c81a342401fba7feb2.tar.gz",
-      "hash": "sha256-HElw0fvL7ClDSXBDYRw1qcPw73oWvbMfi7skQokyftY="
+      "revision": "fc724c3100ce3b5d8565dbd6d93648a440991a8c",
+      "url": "https://github.com/cisco/mlspp/archive/fc724c3100ce3b5d8565dbd6d93648a440991a8c.tar.gz",
+      "hash": "sha256-N6s35lrRpR8Zu/cJXqL8lePYqdbJLeyz82ZAbOVGB1M="
     },
     "yt-dlp": {
       "type": "Git",
@@ -62,9 +62,9 @@
       },
       "branch": "master",
       "submodules": false,
-      "revision": "897341241f2bfb2439fe0367f4c7c9ccd29a3828",
-      "url": "https://github.com/yt-dlp/yt-dlp/archive/897341241f2bfb2439fe0367f4c7c9ccd29a3828.tar.gz",
-      "hash": "sha256-BiCa0iQA4jLZxBxOxGpcuCXH13cSt+2iOFqCeLlwI3k="
+      "revision": "fa9886678eb65103303c627b8e013f13f8999b41",
+      "url": "https://github.com/yt-dlp/yt-dlp/archive/fa9886678eb65103303c627b8e013f13f8999b41.tar.gz",
+      "hash": "sha256-qTAPZ+Dzsf23Er8IYkh+DRpxkS9x6XPBp+2EZa+Ly0k="
     }
   },
   "version": 8
