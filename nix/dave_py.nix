@@ -1,5 +1,6 @@
 {
   cmake,
+  fetchFromGitHub,
   lib,
   ninja,
   nlohmann_json,
@@ -9,6 +10,18 @@
   stdenv,
 }:
 let
+  nanobind = python3Packages.nanobind.overridePythonAttrs (old: {
+    version = "3.1.0";
+    src = fetchFromGitHub {
+      owner = "wjakob";
+      repo = "nanobind";
+      tag = "v3.1.0";
+      fetchSubmodules = true;
+      hash = "sha256-k7TIsx+BcOaZKC01cMs4ZqCWG2uWbx1TkilbMq1qkdI=";
+    };
+    dependencies = [ ];
+  });
+
   mlspp = stdenv.mkDerivation {
     pname = "mlspp";
     version = self.pins.mlspp.revision;
@@ -51,15 +64,12 @@ python3Packages.buildPythonPackage rec {
   pyproject = true;
   src = self.pins."dave.py";
 
-  build-system = with python3Packages; [
+  build-system = [
     nanobind
-    scikit-build-core
+    python3Packages.scikit-build-core
   ];
 
   postPatch = ''
-        substituteInPlace pyproject.toml \
-          --replace-fail "nanobind~=2.14.0" "nanobind>=2.13.0"
-
         substituteInPlace CMakeLists.txt \
           --replace-fail \
             'set(VCPKG_MANIFEST_DIR "''${LIBDAVE_SRC_PATH}/vcpkg-alts/''${LIBDAVE_CRYPTO}" CACHE STRING "")' \
