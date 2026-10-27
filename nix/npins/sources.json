@@ -11,10 +11,10 @@
       "version_upper_bound": null,
       "release_prefix": null,
       "submodules": true,
-      "version": "v1.0.0",
-      "revision": "86d0858234464a02fa572f53a9dbb0a72f934ce3",
+      "version": "v1.1.0",
+      "revision": "4d54389ddacca178651bc39465372e3e7d7b4712",
       "url": null,
-      "hash": "sha256-Ej4l9U4THfHG3XienHvuz3fyUJyTgYSw0Mn2nKPzkek="
+      "hash": "sha256-6GQSxjSoRf5WQpOs6YFSpFGi1xC9Hq6XLBHeQGPrnrI="
     },
     "disnake": {
       "type": "GitRelease",
@@ -62,9 +62,9 @@
       },
       "branch": "master",
       "submodules": false,
-      "revision": "fa9886678eb65103303c627b8e013f13f8999b41",
-      "url": "https://github.com/yt-dlp/yt-dlp/archive/fa9886678eb65103303c627b8e013f13f8999b41.tar.gz",
-      "hash": "sha256-qTAPZ+Dzsf23Er8IYkh+DRpxkS9x6XPBp+2EZa+Ly0k="
+      "revision": "f264a6cbd1f630894da0f368df00f8aae50140e0",
+      "url": "https://github.com/yt-dlp/yt-dlp/archive/f264a6cbd1f630894da0f368df00f8aae50140e0.tar.gz",
+      "hash": "sha256-0gX99Q45+1L4eH0YK0942DVTq5Wwscq3Qkj+N/EjHek="
     }
   },
   "version": 8
