@@ -102,7 +102,6 @@ YTDL_OPTIONS = {
     "format": "bestaudio/best",
     "ignoreerrors": False,
     "logtostderr": False,
-    "no_warnings": True,
     "noplaylist": True,
     "outtmpl": "%(extractor)s-%(id)s-%(title)s.%(ext)s",
     "quiet": True,
