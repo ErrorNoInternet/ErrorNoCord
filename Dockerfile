@@ -1,6 +1,6 @@
 FROM python:3.13-alpine
 
-RUN apk --no-cache add ffmpeg gcc linux-headers musl-dev opus python3-dev
+RUN apk --no-cache add deno ffmpeg gcc linux-headers musl-dev opus python3-dev
 
 WORKDIR /bot
 COPY . .

@@ -101,6 +101,7 @@ python3Packages.buildPythonApplication {
 
     ffmpeg
     libopus
+    pkgs.deno
   ];
 
   doCheck = false;
