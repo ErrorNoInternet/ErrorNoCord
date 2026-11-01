@@ -19,10 +19,7 @@
           devShells.default = pkgs.mkShell {
             name = "errornocord";
             inputsFrom = [ self'.packages.default ];
-            buildInputs = [
-              pkgs.npins
-              self'.packages.default
-            ];
+            buildInputs = [ pkgs.npins ];
           };
 
           packages = rec {
