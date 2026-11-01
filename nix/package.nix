@@ -1,8 +1,10 @@
 {
   callPackage,
+  deno,
   ffmpeg,
   lib,
   libopus,
+  nodejs-slim,
   python3Packages,
   self,
 }:
@@ -64,9 +66,9 @@ let
   });
 
   bgutil-ytdlp-pot-provider = python3Packages.bgutil-ytdlp-pot-provider.overrideAttrs (old: {
-    propagatedBuildInputs = builtins.filter
-      (p: (p.pname or "") != "yt-dlp")
-      (old.propagatedBuildInputs or [ ]);
+    propagatedBuildInputs = builtins.filter (p: (p.pname or "") != "yt-dlp") (
+      old.propagatedBuildInputs or [ ]
+    );
   });
 
   disnake_paginator = python3Packages.buildPythonPackage {
@@ -105,10 +107,10 @@ python3Packages.buildPythonApplication {
     disnake
     disnake_paginator
 
+    deno
     ffmpeg
     libopus
-    pkgs.deno
-    pkgs.nodejs-slim
+    nodejs-slim
 
     bgutil-ytdlp-pot-provider
   ];
