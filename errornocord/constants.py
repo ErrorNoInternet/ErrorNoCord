@@ -1,4 +1,20 @@
+import importlib.util
 import os
+from pathlib import Path
+
+
+def _bgutil_home():
+    try:
+        spec = importlib.util.find_spec("yt_dlp_plugins.extractor.getpot_bgutil_script")
+    except (ImportError, ModuleNotFoundError):
+        return None
+    if not spec or not spec.origin:
+        return None
+    path = Path(spec.origin).parents[5] / "share" / "bgutil-ytdlp-pot-provider"
+    return str(path) if (path / "build" / "generate_once.js").is_file() else None
+
+
+_bgutil_home = _bgutil_home()
 
 APPLICATION_FLAGS = {
     1 << 12: "Presence Intent",
@@ -97,6 +113,10 @@ SPONSORBLOCK_CATEGORY_NAMES = {
 USER_QUEUE_MAX = 5
 YTDL_OPTIONS = {
     "color": "never",
+    "extractor_args": {
+        "youtube": {"fetch_pot": ["always"], "player_client": ["visionos"]},
+        "youtubepot-bgutilscript": {"server_home": [_bgutil_home]},
+    },
     "default_search": "auto",
     "format": "bestaudio/best",
     "ignoreerrors": False,

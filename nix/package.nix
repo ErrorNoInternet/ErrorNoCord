@@ -63,6 +63,12 @@ let
     version = "0-unstable-${builtins.substring 0 7 self.pins.yt-dlp.revision}";
   });
 
+  bgutil-ytdlp-pot-provider = python3Packages.bgutil-ytdlp-pot-provider.overrideAttrs (old: {
+    propagatedBuildInputs = builtins.filter
+      (p: (p.pname or "") != "yt-dlp")
+      (old.propagatedBuildInputs or [ ]);
+  });
+
   disnake_paginator = python3Packages.buildPythonPackage {
     pname = "disnake-paginator";
     version = "1.0.8";
@@ -102,9 +108,16 @@ python3Packages.buildPythonApplication {
     ffmpeg
     libopus
     pkgs.deno
+    pkgs.nodejs-slim
+
+    bgutil-ytdlp-pot-provider
   ];
 
   doCheck = false;
+
+  postFixup = ''
+    sed -i '2i unset PYTHONPATH' $out/bin/errornocord
+  '';
 
   meta = {
     description = "Hot-reloadable Discord music bot";
